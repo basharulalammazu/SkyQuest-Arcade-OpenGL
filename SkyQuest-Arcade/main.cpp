@@ -1,5 +1,8 @@
 #include <GL/glut.h>
 #include <iostream>
+#include<math.h>>
+
+# define PI           3.14159265358979323846
 
 int currentSelection = 0; // 0 = Level 1, 1 = Level 2, 2 = Level 3
 const char *levels[] = {"Level 1", "Level 2", "Level 3"};
@@ -14,14 +17,53 @@ void keyboard(unsigned char key, int x, int y);
 
 
 
-// *******************  Display function for Level 1  ***************************
+void circle() {
+    int i;
+
+	GLfloat x=0.0f; GLfloat y= -1.0f; GLfloat radius =1.0f;
+	int triangleAmount = 100; //# of lines used to draw circle
+
+	//GLfloat radius = 0.8f; //radius
+	GLfloat twicePi = 2.0f * PI;
+
+	glColor3ub(220, 0, 0);
+	glBegin(GL_TRIANGLE_FAN);
+		glVertex2f(x, y); // center of circle
+		for(i = 0; i <= triangleAmount;i++) {
+			glVertex2f( x + (radius * cos(i *  twicePi / triangleAmount)),
+                        y + (radius * sin(i * twicePi / triangleAmount)) );
+		}
+	glEnd();
+}
+
+
+
+
+
+
+
+
+
+// Display function for Level 1
 void level1Display() {
     glClear(GL_COLOR_BUFFER_BIT);
-    glColor3f(1.0f, 1.0f, 1.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to gray and opaque
+
+
+    glColor3ub(50, 50, 50);
+    glBegin(GL_POLYGON);
+    glVertex2f (1.0f, 1.0f);
+    glVertex2f (-1.0f, 1.0f);
+    glVertex2f (-1.0f, -1.0f);
+    glVertex2f (1.0f, -1.0f);
+    glEnd();
+
+    circle();
 
     // Show message for Level 1
-    glRasterPos2i(-300, 0);  // Use integer positions
-    const char *msg = "Level 1: Collect items (Press Esc to go back)";
+    glColor3ub(244, 244, 244);
+    glRasterPos2f(-0.95f, 0.9f);
+    const char *msg = "Score: ";
     for (const char *c = msg; *c != '\0'; ++c) {
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
     }
@@ -34,13 +76,17 @@ void level1Display() {
 
 
 
-// ********************  Display function for Level 2  **************************
+
+
+
+
+// Display function for Level 2
 void level2Display() {
     glClear(GL_COLOR_BUFFER_BIT);
-    glColor3f(1.0f, 1.0f, 1.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to gray and opaque
 
     // Show message for Level 2
-    glRasterPos2i(-300, 0);  // Use integer positions
+    glRasterPos2f(-0.3f, 0.0f);
     const char *msg = "Level 2: Avoid obstacles (Press Esc to go back)";
     for (const char *c = msg; *c != '\0'; ++c) {
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
@@ -55,13 +101,17 @@ void level2Display() {
 
 
 
-// ********************  Display function for Level 3  **************************
+
+
+
+// Display function for Level 3
 void level3Display() {
     glClear(GL_COLOR_BUFFER_BIT);
-    glColor3f(1.0f, 1.0f, 1.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to gray and opaque
 
     // Show message for Level 3
-    glRasterPos2i(-300, 0);  // Use integer positions
+    glColor3ub(244, 244, 244);
+    glRasterPos2f(-0.3f, 0.0f);
     const char *msg = "Level 3: Bombs falling from the sky (Press Esc to go back)";
     for (const char *c = msg; *c != '\0'; ++c) {
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
@@ -77,13 +127,16 @@ void level3Display() {
 
 
 
+
+
+
 // Display function for the main menu (level selector)
 void drawButtons() {
     glClear(GL_COLOR_BUFFER_BIT);
     glColor3f(1.0f, 1.0f, 1.0f);
 
     // Title
-    glRasterPos2i(-100, 200);  // Use integer positions
+    glRasterPos2f(-0.2f, 0.4f);
     const char *title = "Select Level:";
     for (const char *c = title; *c != '\0'; ++c) {
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
@@ -96,7 +149,7 @@ void drawButtons() {
         else
             glColor3f(1.0, 1.0, 1.0); // Normal color
 
-        glRasterPos2i(-100, 100 - i * 50); // Position buttons with integer positions
+        glRasterPos2f(-0.1f, 0.2f - i * 0.2f); // Position buttons
         for (const char *c = levels[i]; *c != '\0'; ++c) {
             glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
         }
@@ -104,6 +157,12 @@ void drawButtons() {
 
     glFlush();
 }
+
+
+
+
+
+
 
 
 
@@ -185,7 +244,6 @@ void keyboard(unsigned char key, int x, int y) {
 
 
 
-
 void display() {
     drawButtons();
 }
@@ -193,17 +251,14 @@ void display() {
 
 
 
-
-
 int main(int argc, char **argv) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
-    glutInitWindowSize(500, 400);
-    glutInitWindowPosition(100, 100);
+    glutInitWindowSize(700, 400);
+    glutInitWindowPosition(300, 100);
     mainWindow = glutCreateWindow("Level Selector");
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color for the main menu
 
-    glOrtho(-682, 682, -372, 372, -1, 1); // Set orthographic projection to integer values
     glutDisplayFunc(display);
     glutKeyboardFunc(keyboard); // Register keyboard callback for main window
 

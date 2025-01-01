@@ -1,7 +1,8 @@
 # depslib dependency file v1.0
-1735579713 source:c:\.tanjim\varsity\6. fall 24-25\computer graphics\skyquest-arcade-opengl\skyquest-arcade\main.cpp
+1735723189 source:c:\.tanjim\varsity\6. fall 24-25\computer graphics\skyquest-arcade-opengl\skyquest-arcade\main.cpp
 	<GL/glut.h>
 	<iostream>
+	<math.h>
 
 1632060800 c:\program files\codeblocks\mingw\x86_64-w64-mingw32\include\gl\glut.h
 	"freeglut_std.h"
@@ -872,4 +873,7 @@
 
 1720559270 c:\program files\codeblocks\mingw\x86_64-w64-mingw32\include\gl\glu.h
 	<GL/gl.h>
+
+1720557764 c:\program files\codeblocks\mingw\x86_64-w64-mingw32\include\math.h
+	<crtdefs.h>
 
