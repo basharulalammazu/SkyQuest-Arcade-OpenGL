@@ -38,6 +38,111 @@ void circle() {
 
 
 
+void item(){
+    int i;
+
+	GLfloat x=0.0f; GLfloat y= -1.0f; GLfloat radius =1.0f;
+	int triangleAmount = 100; //# of lines used to draw circle
+
+	//GLfloat radius = 0.8f; //radius
+	GLfloat twicePi = 2.0f * PI;
+
+	glColor3ub(220, 0, 0);
+	glBegin(GL_TRIANGLE_FAN);
+		glVertex2f(x, y); // center of circle
+		for(i = 0; i <= triangleAmount;i++) {
+			glVertex2f( x + (radius * cos(i *  twicePi / triangleAmount)),
+                        y + (radius * sin(i * twicePi / triangleAmount)) );
+		}
+	glEnd();
+}
+
+
+
+
+
+
+
+void bg(){
+    glColor3ub(50, 50, 50);
+    glBegin(GL_POLYGON);
+    glVertex2f (1.0f, 1.0f);
+    glVertex2f (-1.0f, 1.0f);
+    glVertex2f (-1.0f, -1.0f);
+    glVertex2f (1.0f, -1.0f);
+    glEnd();
+}
+
+
+
+
+
+
+
+void aircraft(){
+    glColor3ub(244, 244, 244);
+    glRasterPos2f(-0.95f, 0.9f);
+
+    glBegin(GL_POLYGON);
+    glVertex2f (-0.18f, 0.35f);
+    glVertex2f (-0.2f, 0.35f);
+    glVertex2f (-0.2f, 0.28f);
+    glVertex2f (-0.18f, 0.28f);
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    glVertex2f (-0.17f, 0.35f);
+    glVertex2f (0.075f, 0.35f);
+    glVertex2f (0.085f, 0.329f);
+    glVertex2f (0.085f, 0.329f);
+    glVertex2f (0.15f, 0.315f);
+    glVertex2f (0.085f, 0.305f);
+    glVertex2f (0.075f, 0.28f);
+    glVertex2f (-0.17f, 0.28f);
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    glVertex2f (-0.11f, 0.363f);
+    glVertex2f (-0.13f, 0.58f);
+    glVertex2f (-0.09f, 0.58f);
+    glVertex2f (-0.013f, 0.363f);
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    glVertex2f (-0.11f, 0.267f);
+    glVertex2f (-0.13f, 0.063f);
+    glVertex2f (-0.09f, 0.063f);
+    glVertex2f (-0.013f, 0.267f);
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    glVertex2f (-0.135f, 0.363);
+    glVertex2f (-0.175f, 0.398f);
+    glVertex2f (-0.195f, 0.45f);
+    glVertex2f (-0.185f, 0.45f);
+    glVertex2f (-0.178f, 0.363f);
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    glVertex2f (-0.135f, 0.267);
+    glVertex2f (-0.175f, 0.254f);
+    glVertex2f (-0.195f, 0.18f);
+    glVertex2f (-0.185f, 0.18f);
+    glVertex2f (-0.178f, 0.267f);
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    glVertex2f (-0.048f, 0.485);
+    glVertex2f (-0.055f, 0.51f);
+    glVertex2f (0.015f, 0.495f);
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    glVertex2f (-0.055f, 0.002+0.123);
+    glVertex2f (-0.048f, 0.032f+0.123);
+    glVertex2f (0.014f, 0.013f+0.123);
+    glEnd();
+}
 
 
 
@@ -49,16 +154,11 @@ void level1Display() {
     glClear(GL_COLOR_BUFFER_BIT);
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to gray and opaque
 
-
-    glColor3ub(50, 50, 50);
-    glBegin(GL_POLYGON);
-    glVertex2f (1.0f, 1.0f);
-    glVertex2f (-1.0f, 1.0f);
-    glVertex2f (-1.0f, -1.0f);
-    glVertex2f (1.0f, -1.0f);
-    glEnd();
-
+    bg();
+    aircraft();
     circle();
+
+
 
     // Show message for Level 1
     glColor3ub(244, 244, 244);
@@ -85,8 +185,12 @@ void level2Display() {
     glClear(GL_COLOR_BUFFER_BIT);
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to gray and opaque
 
+    bg();
+    circle();
+
     // Show message for Level 2
-    glRasterPos2f(-0.3f, 0.0f);
+    glColor3ub(244, 244, 244);
+    glRasterPos2f(-0.95f, 0.9f);
     const char *msg = "Level 2: Avoid obstacles (Press Esc to go back)";
     for (const char *c = msg; *c != '\0'; ++c) {
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
@@ -109,9 +213,12 @@ void level3Display() {
     glClear(GL_COLOR_BUFFER_BIT);
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to gray and opaque
 
+    bg();
+    circle();
+
     // Show message for Level 3
     glColor3ub(244, 244, 244);
-    glRasterPos2f(-0.3f, 0.0f);
+    glRasterPos2f(-0.95f, 0.9f);
     const char *msg = "Level 3: Bombs falling from the sky (Press Esc to go back)";
     for (const char *c = msg; *c != '\0'; ++c) {
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
@@ -256,7 +363,7 @@ int main(int argc, char **argv) {
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
     glutInitWindowSize(700, 400);
     glutInitWindowPosition(300, 100);
-    mainWindow = glutCreateWindow("Level Selector");
+    mainWindow = glutCreateWindow("SkyQuest");
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color for the main menu
 
     glutDisplayFunc(display);

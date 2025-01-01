@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1735723189 source:c:\.tanjim\varsity\6. fall 24-25\computer graphics\skyquest-arcade-opengl\skyquest-arcade\main.cpp
+1735751691 source:c:\.tanjim\varsity\6. fall 24-25\computer graphics\skyquest-arcade-opengl\skyquest-arcade\main.cpp
 	<GL/glut.h>
 	<iostream>
 	<math.h>
