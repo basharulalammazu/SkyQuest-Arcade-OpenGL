@@ -26,7 +26,7 @@ void circle() {
 	//GLfloat radius = 0.8f; //radius
 	GLfloat twicePi = 2.0f * PI;
 
-	glColor3ub(220, 0, 0);
+	glColor3ub(220, 240, 255);
 	glBegin(GL_TRIANGLE_FAN);
 		glVertex2f(x, y); // center of circle
 		for(i = 0; i <= triangleAmount;i++) {
@@ -180,24 +180,309 @@ void level1Display() {
 
 
 
-// Display function for Level 2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void drawCircle(float cx, float cy, float r, int num_segments) {
+    glBegin(GL_TRIANGLE_FAN);
+    glVertex2f(cx, cy);
+    for (int i = 0; i <= num_segments; i++) {
+        float theta = 2.0f * PI * float(i) / float(num_segments);
+        float x = r * cosf(theta);
+        float y = r * sinf(theta);
+        glVertex2f(x + cx, y + cy);
+    }
+    glEnd();
+}
+
 void level2Display() {
     glClear(GL_COLOR_BUFFER_BIT);
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to gray and opaque
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+     circle();
 
-    bg();
-    circle();
 
-    // Show message for Level 2
-    glColor3ub(244, 244, 244);
+     //Background of level 2
+    glBegin(GL_POLYGON);
+     glColor3f(0.0f, 0.0f, 0.2f); // Dark blue
+    glVertex2f (1.0f, 1.0f);
+    glVertex2f (-1.0f, 1.0f);
+    glColor3f(0.1f, 0.1f, 0.3f); // light blue
+    glVertex2f (-1.0f, -1.0f);
+    glVertex2f (1.0f, -1.0f);
+    glEnd();
+     glColor3ub(230, 245, 255);
+    drawCircle(-0.8f, 0.6f, 0.02f, 20); //snowflake
+    drawCircle(-0.4f, 0.7f, 0.02f, 20);
+    drawCircle(0.3f, 0.5f, 0.02f, 20);
+    drawCircle(0.6f, 0.8f, 0.02f, 20);
+    drawCircle(-0.1f, 0.9f, 0.02f, 20);
+
+     glEnd();     // moon
+     circle();
+       glColor3ub(255, 236, 179); // yellow
+       drawCircle(0.7f, 0.7f, 0.15f, 100);
+
+
+        glColor4f(1.0f, 0.925f, 0.702f, 0.2f); // light yellow
+        drawCircle(0.7f, 0.7f, 0.18f, 100);
+
+
+
+
+
+    // house 1
+    glColor3ub(100, 100, 150); // Dim colors for night
+    glBegin(GL_POLYGON);
+        glVertex2f(-0.2f, -0.5f);
+        glVertex2f(0.2f, -0.5f);
+        glVertex2f(0.2f, -0.2f);
+        glVertex2f(-0.2f, -0.2f);
+    glEnd();
+
+    // house 1 roof
+    glColor3ub(80, 50, 50);
+    glBegin(GL_TRIANGLES);
+        glVertex2f(-0.25f, -0.2f);
+        glVertex2f(0.25f, -0.2f);
+        glVertex2f(0.0f, 0.0f);
+    glEnd();
+
+    // house 1 door
+    glColor3ub(60, 40, 30);
+     glBegin(GL_POLYGON);
+        glVertex2f(-0.05f, -0.5f);
+        glVertex2f(0.05f, -0.5f);
+        glVertex2f(0.05f, -0.35f);
+        glVertex2f(-0.05f, -0.35f);
+    glEnd();
+
+
+    // house 2 base
+    glColor3ub(120, 120, 180);
+    glBegin(GL_POLYGON);
+        glVertex2f(0.3f, -0.5f);
+        glVertex2f(0.7f, -0.5f);
+        glVertex2f(0.7f, -0.2f);
+        glVertex2f(0.3f, -0.2f);
+    glEnd();
+
+    // house 2 roof
+    glColor3ub(90, 60, 60);
+    glBegin(GL_TRIANGLES);
+        glVertex2f(0.25f, -0.2f);
+        glVertex2f(0.75f, -0.2f);
+        glVertex2f(0.5f, 0.0f);
+    glEnd();
+
+    // house 2 door
+    glColor3ub(60, 40, 30);
+    glBegin(GL_POLYGON);
+        glVertex2f(0.45f, -0.5f);
+        glVertex2f(0.55f, -0.5f);
+        glVertex2f(0.55f, -0.35f);
+        glVertex2f(0.45f, -0.35f);
+    glEnd();
+
+
+// Draw trees
+    // Tree 1
+    glColor3ub(101, 67, 33);
+    glBegin(GL_POLYGON);
+        glVertex2f(-0.6f, -0.5f);
+        glVertex2f(-0.55f, -0.5f);
+        glVertex2f(-0.55f, -0.35f);
+        glVertex2f(-0.6f, -0.35f);
+    glEnd();
+    glColor3ub(34, 139, 34);
+    drawCircle(-0.575f, -0.3f, 0.1f, 100);
+
+    // Tree 2
+    glColor3ub(101, 67, 33);
+    glBegin(GL_POLYGON);
+        glVertex2f(-0.4f, -0.5f);
+        glVertex2f(-0.35f, -0.5f);
+        glVertex2f(-0.35f, -0.35f);
+        glVertex2f(-0.4f, -0.35f);
+    glEnd();
+    glColor3ub(34, 139, 34);
+    drawCircle(-0.375f, -0.3f, 0.1f, 100);
+
+    // Tree 3
+    glColor3ub(101, 67, 33);
+    glBegin(GL_POLYGON);
+        glVertex2f(-0.8f, -0.5f);
+        glVertex2f(-0.75f, -0.5f);
+        glVertex2f(-0.75f, -0.35f);
+        glVertex2f(-0.8f, -0.35f);
+    glEnd();
+    glColor3ub(34, 139, 34);
+    drawCircle(-0.775f, -0.3f, 0.1f, 100);
+      //Tree 4
+    glColor3ub(101, 67, 33);
+    glBegin(GL_POLYGON);
+        glVertex2f(0.75f, -0.5f);
+        glVertex2f(0.8f, -0.5f);
+        glVertex2f(0.8f, -0.35f);
+        glVertex2f(0.75f, -0.35f);
+    glEnd();
+    glColor3ub(34, 139, 34);
+    drawCircle(0.775f, -0.3f, 0.1f, 100);
+
+
+     //  clouds
+    glColor3ub(80, 80, 80); // Gray color
+    drawCircle(-0.9f, 0.5f, 0.08f, 100);
+    drawCircle(-0.8f, 0.55f, 0.12f, 100);
+    drawCircle(-0.7f, 0.5f, 0.08f, 100);
+
+    drawCircle(0.1f, 0.6f, 0.1f, 100);
+    drawCircle(0.2f, 0.65f, 0.12f, 100);
+    drawCircle(0.3f, 0.6f, 0.1f, 100);
+
+    drawCircle(0.1f, 0.6f, 0.1f, 100);
+    drawCircle(-0.2f, 0.65f, 0.12f, 100);
+    drawCircle(-0.3f, 0.6f, 0.1f, 100);
+
+    drawCircle(0.9f, 0.5f, 0.08f, 100);
+    drawCircle(0.8f, 0.55f, 0.12f, 100);
+    drawCircle(0.7f, 0.5f, 0.08f, 100);
+
+    // Draw message for Level 2
+    glColor3ub(255, 255, 255);
     glRasterPos2f(-0.95f, 0.9f);
-    const char *msg = "Level 2: Avoid obstacles (Press Esc to go back)";
+    const char *msg = "Level 2: Avoid obstacles (Press Esc to go back";
     for (const char *c = msg; *c != '\0'; ++c) {
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
     }
 
     glFlush();
 }
+
+
 
 
 
