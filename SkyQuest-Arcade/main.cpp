@@ -1171,6 +1171,86 @@ void snowclouds(float cx, float cy, float r, int num_segments) {
 }
 
 
+void wave(float cx, float cy, float r, int num_segments) {
+    glBegin(GL_TRIANGLE_FAN);
+    glVertex2f(cx, cy);
+    for (int i = 0; i <= num_segments; i++) {
+        float theta = 2.0f * PI * float(i) / float(num_segments);
+        float x = r * cosf(theta);
+        float y = r * sinf(theta);
+        glVertex2f(x + cx, y + cy);
+    }
+    glEnd();
+}
+
+
+
+
+//level3 sky
+
+
+void dayskyL3() {
+    glBegin(GL_QUADS);
+
+    // Top color (light blue)
+    glColor3ub(135,206,235);
+    glVertex2f(-1.0, 1.0); // Top-left
+    glVertex2f(1.0, 1.0);  // Top-right
+
+    // Bottom color (darker blue)
+    glColor3ub(255,255,200);
+    glVertex2f(1.0, -1.0); // Bottom-right
+    glVertex2f(-1.0, -1.0); // Bottom-left
+
+    glEnd();
+}
+
+
+void itemL3(GLfloat x, GLfloat y) {
+
+    int i;
+
+    GLfloat radius = 0.05f; // Radius of the circle
+    int triangleAmount = 200; // Number of triangles used to draw the circle
+    GLfloat twicePi = 2.0f * PI;
+
+    glColor3ub(255, 215, 0); // Set color of the circle
+    glBegin(GL_TRIANGLE_FAN);
+        glVertex2f(x, y); // Center of the circle
+        for(i = 0; i <= triangleAmount; i++) {
+            glVertex2f(
+                x + (radius * cos(i * twicePi / triangleAmount)),
+                y + (radius * sin(i * twicePi / triangleAmount))
+            );
+        }
+    glEnd();
+}
+
+
+
+void obstaclesL3(GLfloat x, GLfloat y){
+    int i;
+
+    GLfloat radius = 0.065f; // Radius of the circle
+    int triangleAmount = 200; // Number of triangles used to draw the circle
+    GLfloat twicePi = 2.0f * PI;
+
+    // Draw the hexagon
+    glColor3ub(74,71,51);
+    glBegin(GL_POLYGON); // Use line loop to draw sharp sides
+        for (i = 0; i < 6; i++) {
+            glVertex2f(
+                x + (radius * cos(i * twicePi / 6)), // 6 for hexagon
+                y + (radius * sin(i * twicePi / 6))
+            );
+        }
+    glEnd();
+}
+
+
+
+
+
 
 
 // Display function for Level 3
@@ -1179,48 +1259,138 @@ void level3Display() {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to gray and opaque
 
     bg();
-    circle();
+    dayskyL3();
+
+
+
 
 
     //  clouds
-    glColor3ub(100, 100, 100); // Gray color
-    snowclouds(-0.95f, 0.98f, 0.18f, 100);
-    snowclouds(-0.85f, 0.98f, 0.21f, 100);
-    snowclouds(-0.75f, 0.98f, 0.18f, 100);
-    snowclouds(-0.65f, 0.98f, 0.18f, 100);
-    snowclouds(-0.55f, 0.98f, 0.21f, 100);
-    snowclouds(-0.45f, 0.98f, 0.18f, 100);
-    snowclouds(-0.35f, 0.98f, 0.18f, 100);
-    snowclouds(-0.25f, 0.98f, 0.21f, 100);
-    snowclouds(-0.15f, 0.98f, 0.18f, 100);
-    snowclouds(-0.05f, 0.98f, 0.18f, 100);
-    snowclouds(0.05f, 0.98f, 0.21f, 100);
-    snowclouds(0.15f, 0.98f, 0.18f, 100);
-    snowclouds(0.25f, 0.98f, 0.18f, 100);
-    snowclouds(0.35f, 0.98f, 0.21f, 100);
-    snowclouds(0.45f, 0.98f, 0.18f, 100);
-    snowclouds(0.55f, 0.98f, 0.18f, 100);
-    snowclouds(0.65f, 0.98f, 0.21f, 100);
-    snowclouds(0.75f, 0.98f, 0.18f, 100);
-    snowclouds(0.85f, 0.98f, 0.18f, 100);
-    snowclouds(0.95f, 0.98f, 0.21f, 100);
-    snowclouds(1.05f, 0.98f, 0.18f, 100);
+    glColor3ub(235, 235, 235);
+    dayclouds(-0.9f, 0.5f, 0.08f, 200);
+    dayclouds(-0.8f, 0.55f, 0.12f, 200);
+    dayclouds(-0.7f, 0.5f, 0.08f, 200);
+
+    glColor3ub(235, 235, 235);
+    dayclouds(-0.35f, 0.25f, 0.08f, 200);
+    dayclouds(-0.25f, 0.3f, 0.12f, 200);
+    dayclouds(-0.15f, 0.25f, 0.08f, 200);
+
+    glColor3ub(235, 235, 235);
+    dayclouds(0.35f, 0.6f, 0.08f, 200);
+    dayclouds(0.25f, 0.65f, 0.12f, 200);
+    dayclouds(0.15f, 0.6f, 0.08f, 200);
+
+    glColor3ub(235, 235, 235);
+    dayclouds(0.75f, 0.05f, 0.08f, 200);
+    dayclouds(0.65f, 0.1f, 0.12f, 200);
+    dayclouds(0.55f, 0.05f, 0.08f, 200);
+
+    glColor3ub(235, 235, 235);
+    dayclouds(-0.8f, -0.1f, 0.08f, 200);
+    dayclouds(-0.7f, -0.05f, 0.12f, 200);
+    dayclouds(-0.6f, -0.1f, 0.08f, 200);
+
+    glColor3ub(235, 235, 235);
+    dayclouds(1.15f, 0.8f, 0.08f, 200);
+    dayclouds(0.95f, 0.85f, 0.12f, 200);
+    dayclouds(0.85f, 0.8f, 0.08f, 200);
+
+
+//wave 3
+    glColor3ub(127,205,255); // light occen color
+    wave(-0.95f, -0.80f, 0.18f, 100);
+    wave(-0.85f, -0.80, 0.21f, 100);
+    wave(-0.75f, -0.80, 0.18f, 100);
+    wave(-0.65f, -0.80, 0.18f, 100);
+    wave(-0.55f, -0.80, 0.21f, 100);
+    wave(-0.45f, -0.80, 0.18f, 100);
+    wave(-0.35f, -0.80, 0.18f, 100);
+    wave(-0.25f, -0.80, 0.21f, 100);
+    wave(-0.15f,-0.80, 0.18f, 100);
+    wave(-0.05f, -0.80, 0.18f, 100);
+    wave(0.05f, -0.80, 0.21f, 100);
+    wave(0.15f, -0.80, 0.18f, 100);
+    wave(0.25f, -0.80, 0.18f, 100);
+    wave(0.35f, -0.80, 0.21f, 100);
+    wave(0.45f, -0.80, 0.18f, 100);
+    wave(0.55f, -0.80, 0.18f, 100);
+    wave(0.65f, -0.80, 0.21f, 100);
+    wave(0.75f, -0.80, 0.18f, 100);
+    wave(0.85f, -0.80, 0.18f, 100);
+    wave(0.95f, -0.80, 0.21f, 100);
+    wave(1.05f, -0.90f, 0.18f, 100);
+
+
+
+//  wave2
+    glColor3ub(29,162,216); // Gray color
+    wave(-0.95f+.2f, -0.90f, 0.18f, 100);
+    wave(-0.85f+.2f, -0.90f, 0.21f, 100);
+    wave(-0.75f+.2f, -0.90f, 0.18f, 100);
+    wave(-0.65f+.2f, -0.90f, 0.18f, 100);
+    wave(-0.55f+.2f, -0.90f, 0.21f, 100);
+    wave(-0.45f+.2f, -0.90f, 0.18f, 100);
+    wave(-0.35f+.2f, -0.90f, 0.18f, 100);
+    wave(-0.25f+.2f, -0.90f, 0.21f, 100);
+    wave(-0.15f+.2f,-0.90f, 0.18f, 100);
+    wave(-0.05f+.2f, -0.90f, 0.18f, 100);
+    wave(0.05f+.2f, -0.90f, 0.21f, 100);
+    wave(0.15f+.2f, -0.90f, 0.18f, 100);
+    wave(0.25f+.2f, -0.90f, 0.18f, 100);
+    wave(0.35f+.2f, -0.90f, 0.21f, 100);
+    wave(0.45f+.2f, -0.90f, 0.18f, 100);
+    wave(0.55f+.2f, -0.90f, 0.18f, 100);
+    wave(0.65f+.2f, -0.90f, 0.21f, 100);
+    wave(0.75f+.2f, -0.90f, 0.18f, 100);
+    wave(0.85f+.2f, -0.90f, 0.18f, 100);
+    wave(0.95f+.2f, -0.90f, 0.21f, 100);
+    wave(1.05f+.2f, -0.90f, 0.18f, 100);
+
+
+    //  wave
+    glColor3ub(72, 191, 185); // occen green color
+    wave(-0.95f, -0.98f, 0.18f, 100);
+    wave(-0.85f, -0.98f, 0.21f, 100);
+    wave(-0.75f, -0.98f, 0.18f, 100);
+    wave(-0.65f, -0.98f, 0.18f, 100);
+    wave(-0.55f, -0.98f, 0.21f, 100);
+    wave(-0.45f, -0.98f, 0.18f, 100);
+    wave(-0.35f, -0.98f, 0.18f, 100);
+    wave(-0.25f, -0.98f, 0.21f, 100);
+    wave(-0.15f,-0.98f, 0.18f, 100);
+    wave(-0.05f, -0.98f, 0.18f, 100);
+    wave(0.05f, -0.98f, 0.21f, 100);
+    wave(0.15f, -0.98f, 0.18f, 100);
+    wave(0.25f, -0.98f, 0.18f, 100);
+    wave(0.35f, -0.98f, 0.21f, 100);
+    wave(0.45f, -0.98f, 0.18f, 100);
+    wave(0.55f, -0.98f, 0.18f, 100);
+    wave(0.65f, -0.98f, 0.21f, 100);
+    wave(0.75f, -0.98f, 0.18f, 100);
+    wave(0.85f, -0.98f, 0.18f, 100);
+    wave(0.95f, -0.98f, 0.21f, 100);
+    wave(1.05f, -0.98f, 0.18f, 100);
+
+
+
+
 
 
     //collectibles
-    item(0.75, 0.8);
-    item(0.6, 0.42);
-    item(0.8, 0.16);
-    item(0.5, 0.05);
-    item(0.9, -0.3);
+    itemL3(0.75, 0.8);
+    itemL3(0.6, 0.42);
+    itemL3(0.8, 0.16);
+    itemL3(0.5, 0.05);
+    itemL3(0.9, -0.3);
 
     //obstacles
-    obstacles(0.68, -0.2);
-    obstacles(0.9, 0.62);
-    obstacles(0.4, 0.62);
-    obstacles(0.3, 0.15);
-    obstacles(0.32, -0.25);
-    obstacles(0.98, 0.2);
+    obstaclesL3(0.68, -0.2);
+    obstaclesL3(0.9, 0.62);
+    obstaclesL3(0.4, 0.62);
+    obstaclesL3(0.3, 0.15);
+    obstaclesL3(0.32, -0.25);
+    obstaclesL3(0.98, 0.2);
 
     //bomb
     bomb(-0.3f, 0.8f);
