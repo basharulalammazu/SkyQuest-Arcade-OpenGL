@@ -37,7 +37,10 @@ int mainWindow; // Main menu window ID
 int levelWindow; // Level window ID
 float cloud1X = -0.9f, cloud2X = -0.35f, cloud3X = 0.35f, cloud4X = 0.75f, cloud5X = -0.8f, cloud6X = 1.15f;
 float waveOffsetX = 0.0f;  // Horizontal offset for waves
-
+GLfloat itemPosY[] = {0.8f, 0.42f, 0.16f, 0.05f, -0.3f};
+GLfloat obstaclePosY[] = {-0.2f, 0.62f, 0.62f, 0.15f, -0.25f, 0.2f};
+GLfloat bombPosY[] = {0.8f, 0.6f, 0.3f, 0.5f};
+GLfloat speed = 0.005f; // Speed of animation
 
 
 
@@ -1333,6 +1336,36 @@ void updateWave(int value)
 }
 
 
+void updateLevel3(int value)
+{
+    // Update item positions
+    for (int i = 0; i < 5; i++) {
+        itemPosY[i] -= speed;
+        if (itemPosY[i] < -1.2f) {
+            itemPosY[i] = 1.2f; // Reset position to top
+        }
+    }
+
+    // Update obstacle positions
+    for (int i = 0; i < 6; i++) {
+        obstaclePosY[i] -= speed * 1.2f; // Slightly faster than items
+        if (obstaclePosY[i] < -1.2f) {
+            obstaclePosY[i] = 1.2f;
+        }
+    }
+
+    // Update bomb positions
+    for (int i = 0; i < 4; i++) {
+        bombPosY[i] -= speed * 1.5f; // Faster than obstacles
+        if (bombPosY[i] < -1.2f) {
+            bombPosY[i] = 1.2f;
+        }
+    }
+
+    glutPostRedisplay(); // Redraw the scene
+    glutTimerFunc(16, updateLevel3, 0); // Schedule the next update (16ms for ~60 FPS)
+}
+
 
 // Display function for Level 3
 void level3Display()
@@ -1499,26 +1532,27 @@ void level3Display()
     wave(0.95f-.2f + waveOffsetX, -1.06f, 0.21f, 100);
     wave(1.05f-.2f + waveOffsetX, -1.06f, 0.18f, 100);
 
-    //collectibles
-    itemL3(0.75, 0.8);
-    itemL3(0.6, 0.42);
-    itemL3(0.8, 0.16);
-    itemL3(0.5, 0.05);
-    itemL3(0.9, -0.3);
+    // Draw collectibles
+    itemL3(0.75f, itemPosY[0]);
+    itemL3(0.6f, itemPosY[1]);
+    itemL3(0.8f, itemPosY[2]);
+    itemL3(0.5f, itemPosY[3]);
+    itemL3(0.9f, itemPosY[4]);
 
-    //obstacles
-    obstaclesL3(0.68, -0.2);
-    obstaclesL3(0.9, 0.62);
-    obstaclesL3(0.4, 0.62);
-    obstaclesL3(0.3, 0.15);
-    obstaclesL3(0.32, -0.25);
-    obstaclesL3(0.98, 0.2);
+    // Draw obstacles
+    obstaclesL3(0.68f, obstaclePosY[0]);
+    obstaclesL3(0.9f, obstaclePosY[1]);
+    obstaclesL3(0.4f, obstaclePosY[2]);
+    obstaclesL3(0.3f, obstaclePosY[3]);
+    obstaclesL3(0.32f, obstaclePosY[4]);
+    obstaclesL3(0.98f, obstaclePosY[5]);
 
-    //bomb
-    bomb(-0.3f, 0.8f);
-    bomb(-0.8f, 0.6f);
-    bomb(-0.6f, 0.3f);
-    bomb(0.2f, 0.5f);
+    // Draw bombs
+    bomb(-0.3f, bombPosY[0]);
+    bomb(-0.8f, bombPosY[1]);
+    bomb(-0.6f, bombPosY[2]);
+    bomb(0.2f, bombPosY[3]);
+
 
     aircraft();
 
@@ -1618,6 +1652,7 @@ void openLevel3()
     glutDisplayFunc(level3Display); // Register display callback for Level 3
     glutTimerFunc(16, updateSky, 0);
     glutTimerFunc(16, updateWave, 0);  // Start animation by calling update every 16ms
+    glutTimerFunc(16, updateLevel3, 0); // Start animation by calling update every 16ms
     glutPostRedisplay(); // Redraw to display Level 3 content
 }
 
