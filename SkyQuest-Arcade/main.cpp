@@ -1,45 +1,72 @@
 #include <GL/glut.h>
 #include <iostream>
 #include<math.h>>
+#include<cmath>
+# define PI 3.14159265358979323846
 
-# define PI           3.14159265358979323846
 
+// Function
+void keyboard(unsigned char key, int x, int y);
+void circle();
+void item(GLfloat x, GLfloat y);
+void bg();
+void aircraft();
+void hills_trees();
+void dayclouds(float x, float y, float radius, int segments);
+void daysky();
+void updateSky(int value);
+void level1Display();
+void darkclouds(float cx, float cy, float r, int num_segments);
+void obstacles(GLfloat x, GLfloat y);
+void level2Display();
+void bomb(GLfloat x, GLfloat y);
+void snow(GLfloat x, GLfloat y);
+void snowclouds(float cx, float cy, float r, int num_segments);
+void wave(float cx, float cy, float r, int num_segments);
+void dayskyL3();
+void itemL3(GLfloat x, GLfloat y);
+void obstaclesL3(GLfloat x, GLfloat y);
+
+
+
+
+// Variable
 int currentSelection = 0; // 0 = Level 1, 1 = Level 2, 2 = Level 3
 const char *levels[] = {"Level 1", "Level 2", "Level 3"};
 int mainWindow; // Main menu window ID
 int levelWindow; // Level window ID
-
-// Declare the keyboard function prototype
-void keyboard(unsigned char key, int x, int y);
+float cloud1X = -0.9f, cloud2X = -0.35f, cloud3X = 0.35f, cloud4X = 0.75f, cloud5X = -0.8f, cloud6X = 1.15f;
 
 
 
 
-
-
-void circle() {
+void circle()
+{
     int i;
 
-	GLfloat x=0.0f; GLfloat y= -1.4f; GLfloat radius =1.0f;
-	int triangleAmount = 100; //# of lines used to draw circle
+    GLfloat x=0.0f;
+    GLfloat y= -1.4f;
+    GLfloat radius =1.0f;
+    int triangleAmount = 100; //# of lines used to draw circle
 
-	//GLfloat radius = 0.8f; //radius
-	GLfloat twicePi = 2.0f * PI;
+    //GLfloat radius = 0.8f; //radius
+    GLfloat twicePi = 2.0f * PI;
 
-	glColor3ub(38, 18, 0);
-	glBegin(GL_TRIANGLE_FAN);
-		glVertex2f(x, y); // center of circle
-		for(i = 0; i <= triangleAmount;i++) {
-			glVertex2f( x + (radius * cos(i *  twicePi / triangleAmount)),
-                        y + (radius * sin(i * twicePi / triangleAmount)) );
-		}
-	glEnd();
+    glColor3ub(38, 18, 0);
+    glBegin(GL_TRIANGLE_FAN);
+    glVertex2f(x, y); // center of circle
+    for(i = 0; i <= triangleAmount; i++)
+    {
+        glVertex2f( x + (radius * cos(i *  twicePi / triangleAmount)),
+                    y + (radius * sin(i * twicePi / triangleAmount)) );
+    }
+    glEnd();
 }
 
 
 
-void item(GLfloat x, GLfloat y) {
-
+void item(GLfloat x, GLfloat y)
+{
     int i;
 
     GLfloat radius = 0.05f; // Radius of the circle
@@ -48,24 +75,19 @@ void item(GLfloat x, GLfloat y) {
 
     glColor3ub(221, 136, 4); // Set color of the circle
     glBegin(GL_TRIANGLE_FAN);
-        glVertex2f(x, y); // Center of the circle
-        for(i = 0; i <= triangleAmount; i++) {
-            glVertex2f(
-                x + (radius * cos(i * twicePi / triangleAmount)),
-                y + (radius * sin(i * twicePi / triangleAmount))
-            );
-        }
+    glVertex2f(x, y); // Center of the circle
+    for(i = 0; i <= triangleAmount; i++)
+    {
+        glVertex2f(
+            x + (radius * cos(i * twicePi / triangleAmount)),
+            y + (radius * sin(i * twicePi / triangleAmount))
+        );
+    }
     glEnd();
 }
 
-
-
-
-
-
-
-
-void bg(){
+void bg()
+{
     glColor3ub(50, 50, 50);
     glBegin(GL_POLYGON);
     glVertex2f (1.0f, 1.0f);
@@ -81,7 +103,8 @@ void bg(){
 
 
 
-void aircraft(){
+void aircraft()
+{
     glColor3ub(140, 140, 140);
 
     glBegin(GL_POLYGON);
@@ -114,26 +137,30 @@ void aircraft(){
 
     int i;
 
-	GLfloat x=0.0465f; GLfloat y= 0.428f; GLfloat radius =0.0204f;
-	int triangleAmount = 300; //# of lines used to draw circle
+    GLfloat x=0.0465f;
+    GLfloat y= 0.428f;
+    GLfloat radius =0.0204f;
+    int triangleAmount = 300; //# of lines used to draw circle
 
-	//GLfloat radius = 0.8f; //radius
-	GLfloat twicePi = 2.0f * PI;
+    //GLfloat radius = 0.8f; //radius
+    GLfloat twicePi = 2.0f * PI;
 
-	glColor3ub(10, 10, 10);
-	glBegin(GL_TRIANGLE_FAN);
-		glVertex2f(x, y); // center of circle
-		for(i = 0; i <= triangleAmount;i++) {
-			glVertex2f( x + (radius * cos(i *  twicePi / triangleAmount)),
-                        y + (radius * sin(i * twicePi / triangleAmount)) );
-		}
-	glEnd();
+    glColor3ub(10, 10, 10);
+    glBegin(GL_TRIANGLE_FAN);
+    glVertex2f(x, y); // center of circle
+    for(i = 0; i <= triangleAmount; i++)
+    {
+        glVertex2f( x + (radius * cos(i *  twicePi / triangleAmount)),
+                    y + (radius * sin(i * twicePi / triangleAmount)) );
+    }
+    glEnd();
 }
 
 
 
 
-void hills_trees(){
+void hills_trees()
+{
     //Hills
 
     glBegin(GL_POLYGON);
@@ -497,19 +524,23 @@ void hills_trees(){
 }
 
 
-void dayclouds(float cx, float cy, float r, int num_segments) {
-    glBegin(GL_TRIANGLE_FAN);
-    glVertex2f(cx, cy);
-    for (int i = 0; i <= num_segments; i++) {
-        float theta = 2.0f * PI * float(i) / float(num_segments);
-        float x = r * cosf(theta);
-        float y = r * sinf(theta);
-        glVertex2f(x + cx, y + cy);
+
+// Function to draw clouds
+void dayclouds(float x, float y, float radius, int segments)
+{
+    glBegin(GL_POLYGON);
+    for (int i = 0; i < segments; i++)
+    {
+        float theta = 2.0f * 3.1415926f * float(i) / float(segments);
+        float dx = radius * cosf(theta);
+        float dy = radius * sinf(theta);
+        glVertex2f(x + dx, y + dy);
     }
     glEnd();
 }
 
-void daysky(){
+void daysky()
+{
     glBegin(GL_POLYGON);
     glColor3ub(0, 79, 190);
     glVertex2f (1.0, 1.0);
@@ -681,10 +712,31 @@ void daysky(){
 
 
 
+void updateSky(int value)
+{
+    // Update cloud positions
+    cloud1X += 0.01f;
+    cloud2X += 0.01f;
+    cloud3X += 0.01f;
+    cloud4X += 0.01f;
+    cloud5X += 0.01f;
+    cloud6X += 0.01f;
 
+    // Reset positions when clouds move off-screen
+    if (cloud1X > 1.2f) cloud1X = -1.2f;
+    if (cloud2X > 1.2f) cloud2X = -1.2f;
+    if (cloud3X > 1.2f) cloud3X = -1.2f;
+    if (cloud4X > 1.2f) cloud4X = -1.2f;
+    if (cloud5X > 1.2f) cloud5X = -1.2f;
+    if (cloud6X > 1.2f) cloud6X = -1.2f;
+
+    glutPostRedisplay();              // Request a redraw
+    glutTimerFunc(16, updateSky, 0);    // Call update again after 16ms (~60 FPS)
+}
 
 // Display function for Level 1
-void level1Display() {
+void level1Display()
+{
     glClear(GL_COLOR_BUFFER_BIT);
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to gray and opaque
 
@@ -694,34 +746,34 @@ void level1Display() {
 
     //  clouds
     glColor3ub(235, 235, 235);
-    dayclouds(-0.9f, 0.5f, 0.08f, 200);
-    dayclouds(-0.8f, 0.55f, 0.12f, 200);
-    dayclouds(-0.7f, 0.5f, 0.08f, 200);
+    dayclouds(cloud1X, 0.5f, 0.08f, 200);
+    dayclouds(cloud1X + 0.1f, 0.55f, 0.12f, 200);
+    dayclouds(cloud1X + 0.2f, 0.5f, 0.08f, 200);
 
     glColor3ub(235, 235, 235);
-    dayclouds(-0.35f, 0.25f, 0.08f, 200);
-    dayclouds(-0.25f, 0.3f, 0.12f, 200);
-    dayclouds(-0.15f, 0.25f, 0.08f, 200);
+    dayclouds(cloud2X, 0.25f, 0.08f, 200);
+    dayclouds(cloud2X + 0.1f, 0.3f, 0.12f, 200);
+    dayclouds(cloud2X + 0.2f, 0.25f, 0.08f, 200);
 
     glColor3ub(235, 235, 235);
-    dayclouds(0.35f, 0.6f, 0.08f, 200);
-    dayclouds(0.25f, 0.65f, 0.12f, 200);
-    dayclouds(0.15f, 0.6f, 0.08f, 200);
+    dayclouds(cloud3X, 0.6f, 0.08f, 200);
+    dayclouds(cloud3X + 0.1f, 0.65f, 0.12f, 200);
+    dayclouds(cloud3X + 0.2f, 0.6f, 0.08f, 200);
 
     glColor3ub(235, 235, 235);
-    dayclouds(0.75f, 0.05f, 0.08f, 200);
-    dayclouds(0.65f, 0.1f, 0.12f, 200);
-    dayclouds(0.55f, 0.05f, 0.08f, 200);
+    dayclouds(cloud4X, 0.05f, 0.08f, 200);
+    dayclouds(cloud4X + 0.1f, 0.1f, 0.12f, 200);
+    dayclouds(cloud4X + 0.2f, 0.05f, 0.08f, 200);
 
     glColor3ub(235, 235, 235);
-    dayclouds(-0.8f, -0.1f, 0.08f, 200);
-    dayclouds(-0.7f, -0.05f, 0.12f, 200);
-    dayclouds(-0.6f, -0.1f, 0.08f, 200);
+    dayclouds(cloud5X, -0.1f, 0.08f, 200);
+    dayclouds(cloud5X + 0.1f, -0.05f, 0.12f, 200);
+    dayclouds(cloud5X + 0.2f, -0.1f, 0.08f, 200);
 
     glColor3ub(235, 235, 235);
-    dayclouds(1.15f, 0.8f, 0.08f, 200);
-    dayclouds(0.95f, 0.85f, 0.12f, 200);
-    dayclouds(0.85f, 0.8f, 0.08f, 200);
+    dayclouds(cloud6X, 0.8f, 0.08f, 200);
+    dayclouds(cloud6X - 0.2f, 0.85f, 0.12f, 200);
+    dayclouds(cloud6X - 0.3f, 0.8f, 0.08f, 200);
 
 
     //collectibles
@@ -740,7 +792,8 @@ void level1Display() {
     glColor3ub(244, 244, 244);
     glRasterPos2f(-0.95f, 0.9f);
     const char *msg = "Score: ";
-    for (const char *c = msg; *c != '\0'; ++c) {
+    for (const char *c = msg; *c != '\0'; ++c)
+    {
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
     }
 
@@ -883,10 +936,12 @@ void level1Display() {
 
 
 
-void darkclouds(float cx, float cy, float r, int num_segments) {
+void darkclouds(float cx, float cy, float r, int num_segments)
+{
     glBegin(GL_TRIANGLE_FAN);
     glVertex2f(cx, cy);
-    for (int i = 0; i <= num_segments; i++) {
+    for (int i = 0; i <= num_segments; i++)
+    {
         float theta = 2.0f * PI * float(i) / float(num_segments);
         float x = r * cosf(theta);
         float y = r * sinf(theta);
@@ -898,7 +953,8 @@ void darkclouds(float cx, float cy, float r, int num_segments) {
 
 
 
-void obstacles(GLfloat x, GLfloat y){
+void obstacles(GLfloat x, GLfloat y)
+{
     int i;
 
     GLfloat radius = 0.065f; // Radius of the circle
@@ -908,23 +964,25 @@ void obstacles(GLfloat x, GLfloat y){
     // Draw the hexagon
     glColor3ub(0, 0, 0);
     glBegin(GL_POLYGON); // Use line loop to draw sharp sides
-        for (i = 0; i < 6; i++) {
-            glVertex2f(
-                x + (radius * cos(i * twicePi / 6)), // 6 for hexagon
-                y + (radius * sin(i * twicePi / 6))
-            );
-        }
+    for (i = 0; i < 6; i++)
+    {
+        glVertex2f(
+            x + (radius * cos(i * twicePi / 6)), // 6 for hexagon
+            y + (radius * sin(i * twicePi / 6))
+        );
+    }
     glEnd();
 }
 
 
-void level2Display() {
+void level2Display()
+{
     glClear(GL_COLOR_BUFFER_BIT);
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-     circle();
+    circle();
 
 
-     //Background of level 2
+    //Background of level 2
     glBegin(GL_POLYGON);
     glColor3f(0.0f, 0.0f, 0.2f); // Dark blue
     glVertex2f (1.0f, 1.0f);
@@ -952,7 +1010,7 @@ void level2Display() {
 
 
 
-     //  clouds
+    //  clouds
     glColor3ub(80, 80, 80); // Gray color
     darkclouds(-0.9f, -0.15f, 0.08f, 100);
     darkclouds(-0.8f, -0.1f, 0.12f, 100);
@@ -992,7 +1050,8 @@ void level2Display() {
     glColor3ub(255, 255, 255);
     glRasterPos2f(-0.95f, 0.9f);
     const char *msg = "Level 2: Avoid obstacles (Press Esc to go back";
-    for (const char *c = msg; *c != '\0'; ++c) {
+    for (const char *c = msg; *c != '\0'; ++c)
+    {
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
     }
 
@@ -1096,7 +1155,8 @@ void level2Display() {
 
 
 
-void bomb(GLfloat x, GLfloat y){
+void bomb(GLfloat x, GLfloat y)
+{
     int i;
 
     GLfloat radius = 0.04f; // Radius of the circle
@@ -1106,13 +1166,14 @@ void bomb(GLfloat x, GLfloat y){
 
     glBegin(GL_TRIANGLE_FAN);
     glColor3ub(0, 0, 0); // Set color of the circle
-        glVertex2f(x, y); // Center of the circle
-        for(i = 0; i <= triangleAmount; i++) {
-            glVertex2f(
-                x + (radius * cos(i * twicePi / triangleAmount)),
-                y + (radius * sin(i * twicePi / triangleAmount))
-            );
-        }
+    glVertex2f(x, y); // Center of the circle
+    for(i = 0; i <= triangleAmount; i++)
+    {
+        glVertex2f(
+            x + (radius * cos(i * twicePi / triangleAmount)),
+            y + (radius * sin(i * twicePi / triangleAmount))
+        );
+    }
     glEnd();
 
 
@@ -1134,7 +1195,8 @@ void bomb(GLfloat x, GLfloat y){
 
 
 
-void snow(GLfloat x, GLfloat y) {
+void snow(GLfloat x, GLfloat y)
+{
 
     int i;
 
@@ -1144,13 +1206,14 @@ void snow(GLfloat x, GLfloat y) {
 
     glColor3ub(244, 244, 244); // Set color of the circle
     glBegin(GL_TRIANGLE_FAN);
-        glVertex2f(x, y); // Center of the circle
-        for(i = 0; i <= triangleAmount; i++) {
-            glVertex2f(
-                x + (radius * cos(i * twicePi / triangleAmount)),
-                y + (radius * sin(i * twicePi / triangleAmount))
-            );
-        }
+    glVertex2f(x, y); // Center of the circle
+    for(i = 0; i <= triangleAmount; i++)
+    {
+        glVertex2f(
+            x + (radius * cos(i * twicePi / triangleAmount)),
+            y + (radius * sin(i * twicePi / triangleAmount))
+        );
+    }
     glEnd();
 }
 
@@ -1158,10 +1221,12 @@ void snow(GLfloat x, GLfloat y) {
 
 
 
-void snowclouds(float cx, float cy, float r, int num_segments) {
+void snowclouds(float cx, float cy, float r, int num_segments)
+{
     glBegin(GL_TRIANGLE_FAN);
     glVertex2f(cx, cy);
-    for (int i = 0; i <= num_segments; i++) {
+    for (int i = 0; i <= num_segments; i++)
+    {
         float theta = 2.0f * PI * float(i) / float(num_segments);
         float x = r * cosf(theta);
         float y = r * sinf(theta);
@@ -1171,10 +1236,12 @@ void snowclouds(float cx, float cy, float r, int num_segments) {
 }
 
 
-void wave(float cx, float cy, float r, int num_segments) {
+void wave(float cx, float cy, float r, int num_segments)
+{
     glBegin(GL_TRIANGLE_FAN);
     glVertex2f(cx, cy);
-    for (int i = 0; i <= num_segments; i++) {
+    for (int i = 0; i <= num_segments; i++)
+    {
         float theta = 2.0f * PI * float(i) / float(num_segments);
         float x = r * cosf(theta);
         float y = r * sinf(theta);
@@ -1189,7 +1256,8 @@ void wave(float cx, float cy, float r, int num_segments) {
 //level3 sky
 
 
-void dayskyL3() {
+void dayskyL3()
+{
     glBegin(GL_QUADS);
 
     // Top color (light blue)
@@ -1206,7 +1274,8 @@ void dayskyL3() {
 }
 
 
-void itemL3(GLfloat x, GLfloat y) {
+void itemL3(GLfloat x, GLfloat y)
+{
 
     int i;
 
@@ -1216,19 +1285,21 @@ void itemL3(GLfloat x, GLfloat y) {
 
     glColor3ub(255, 215, 0); // Set color of the circle
     glBegin(GL_TRIANGLE_FAN);
-        glVertex2f(x, y); // Center of the circle
-        for(i = 0; i <= triangleAmount; i++) {
-            glVertex2f(
-                x + (radius * cos(i * twicePi / triangleAmount)),
-                y + (radius * sin(i * twicePi / triangleAmount))
-            );
-        }
+    glVertex2f(x, y); // Center of the circle
+    for(i = 0; i <= triangleAmount; i++)
+    {
+        glVertex2f(
+            x + (radius * cos(i * twicePi / triangleAmount)),
+            y + (radius * sin(i * twicePi / triangleAmount))
+        );
+    }
     glEnd();
 }
 
 
 
-void obstaclesL3(GLfloat x, GLfloat y){
+void obstaclesL3(GLfloat x, GLfloat y)
+{
     int i;
 
     GLfloat radius = 0.065f; // Radius of the circle
@@ -1238,12 +1309,13 @@ void obstaclesL3(GLfloat x, GLfloat y){
     // Draw the hexagon
     glColor3ub(74,71,51);
     glBegin(GL_POLYGON); // Use line loop to draw sharp sides
-        for (i = 0; i < 6; i++) {
-            glVertex2f(
-                x + (radius * cos(i * twicePi / 6)), // 6 for hexagon
-                y + (radius * sin(i * twicePi / 6))
-            );
-        }
+    for (i = 0; i < 6; i++)
+    {
+        glVertex2f(
+            x + (radius * cos(i * twicePi / 6)), // 6 for hexagon
+            y + (radius * sin(i * twicePi / 6))
+        );
+    }
     glEnd();
 }
 
@@ -1251,10 +1323,9 @@ void obstaclesL3(GLfloat x, GLfloat y){
 
 
 
-
-
 // Display function for Level 3
-void level3Display() {
+void level3Display()
+{
     glClear(GL_COLOR_BUFFER_BIT);
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to gray and opaque
 
@@ -1262,39 +1333,31 @@ void level3Display() {
     dayskyL3();
 
 
-
-
-
     //  clouds
     glColor3ub(235, 235, 235);
-    dayclouds(-0.9f, 0.5f, 0.08f, 200);
-    dayclouds(-0.8f, 0.55f, 0.12f, 200);
-    dayclouds(-0.7f, 0.5f, 0.08f, 200);
+    dayclouds(cloud1X, 0.5f, 0.08f, 200);
+    dayclouds(cloud1X + 0.1f, 0.55f, 0.12f, 200);
+    dayclouds(cloud1X + 0.2f, 0.5f, 0.08f, 200);
 
-    glColor3ub(235, 235, 235);
-    dayclouds(-0.35f, 0.25f, 0.08f, 200);
-    dayclouds(-0.25f, 0.3f, 0.12f, 200);
-    dayclouds(-0.15f, 0.25f, 0.08f, 200);
+    dayclouds(cloud2X, 0.25f, 0.08f, 200);
+    dayclouds(cloud2X + 0.1f, 0.3f, 0.12f, 200);
+    dayclouds(cloud2X + 0.2f, 0.25f, 0.08f, 200);
 
-    glColor3ub(235, 235, 235);
-    dayclouds(0.35f, 0.6f, 0.08f, 200);
-    dayclouds(0.25f, 0.65f, 0.12f, 200);
-    dayclouds(0.15f, 0.6f, 0.08f, 200);
+    dayclouds(cloud3X, 0.6f, 0.08f, 200);
+    dayclouds(cloud3X + 0.1f, 0.65f, 0.12f, 200);
+    dayclouds(cloud3X + 0.2f, 0.6f, 0.08f, 200);
 
-    glColor3ub(235, 235, 235);
-    dayclouds(0.75f, 0.05f, 0.08f, 200);
-    dayclouds(0.65f, 0.1f, 0.12f, 200);
-    dayclouds(0.55f, 0.05f, 0.08f, 200);
+    dayclouds(cloud4X, 0.05f, 0.08f, 200);
+    dayclouds(cloud4X + 0.1f, 0.1f, 0.12f, 200);
+    dayclouds(cloud4X + 0.2f, 0.05f, 0.08f, 200);
 
-    glColor3ub(235, 235, 235);
-    dayclouds(-0.8f, -0.1f, 0.08f, 200);
-    dayclouds(-0.7f, -0.05f, 0.12f, 200);
-    dayclouds(-0.6f, -0.1f, 0.08f, 200);
+    dayclouds(cloud5X, -0.1f, 0.08f, 200);
+    dayclouds(cloud5X + 0.1f, -0.05f, 0.12f, 200);
+    dayclouds(cloud5X + 0.2f, -0.1f, 0.08f, 200);
 
-    glColor3ub(235, 235, 235);
-    dayclouds(1.15f, 0.8f, 0.08f, 200);
-    dayclouds(0.95f, 0.85f, 0.12f, 200);
-    dayclouds(0.85f, 0.8f, 0.08f, 200);
+    dayclouds(cloud6X, 0.8f, 0.08f, 200);
+    dayclouds(cloud6X - 0.2f, 0.85f, 0.12f, 200);
+    dayclouds(cloud6X - 0.3f, 0.8f, 0.08f, 200);
 
 
 
@@ -1402,7 +1465,7 @@ void level3Display() {
 
 
 //wave0
-glColor3ub(222,243,246); // occen green color
+    glColor3ub(222,243,246); // occen green color
     wave(-0.95f-.2f, -1.06f, 0.18f, 100);
     wave(-0.85f-.2f, -1.06f, 0.21f, 100);
     wave(-0.75f-.2f, -1.06f, 0.18f, 100);
@@ -1453,7 +1516,8 @@ glColor3ub(222,243,246); // occen green color
     glColor3ub(244, 244, 244);
     glRasterPos2f(-0.95f, 0.9f);
     const char *msg = "Level 3: Bombs falling from the sky (Press Esc to go back)";
-    for (const char *c = msg; *c != '\0'; ++c) {
+    for (const char *c = msg; *c != '\0'; ++c)
+    {
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
     }
 
@@ -1471,26 +1535,30 @@ glColor3ub(222,243,246); // occen green color
 
 
 // Display function for the main menu (level selector)
-void drawButtons() {
+void drawButtons()
+{
     glClear(GL_COLOR_BUFFER_BIT);
     glColor3f(1.0f, 1.0f, 1.0f);
 
     // Title
     glRasterPos2f(-0.2f, 0.4f);
     const char *title = "Select Level:";
-    for (const char *c = title; *c != '\0'; ++c) {
+    for (const char *c = title; *c != '\0'; ++c)
+    {
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
     }
 
     // Draw buttons
-    for (int i = 0; i < 3; ++i) {
+    for (int i = 0; i < 3; ++i)
+    {
         if (i == currentSelection)
             glColor3f(0.0, 1.0, 0.0); // Highlight selected button
         else
             glColor3f(1.0, 1.0, 1.0); // Normal color
 
         glRasterPos2f(-0.1f, 0.2f - i * 0.2f); // Position buttons
-        for (const char *c = levels[i]; *c != '\0'; ++c) {
+        for (const char *c = levels[i]; *c != '\0'; ++c)
+        {
             glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
         }
     }
@@ -1511,22 +1579,26 @@ void drawButtons() {
 
 
 // Switch to the main menu (level selector)
-void returnToMainMenu() {
+void returnToMainMenu()
+{
     glutSetWindow(mainWindow); // Switch back to the main window
     glutDisplayFunc(drawButtons); // Set display function to the main menu
     glutPostRedisplay(); // Redraw the level selector screen
 }
 
 // Switch to Level 1 view
-void openLevel1() {
+void openLevel1()
+{
     glutSetWindow(mainWindow); // Keep using the same window
     glClearColor(0.2f, 0.2f, 0.2f, 1.0f); // Set background color for Level 1
     glutDisplayFunc(level1Display); // Register display callback for Level 1
+    glutTimerFunc(16, updateSky, 0);         // Start animation for Level 1
     glutPostRedisplay(); // Redraw to display Level 1 content
 }
 
 // Switch to Level 2 view
-void openLevel2() {
+void openLevel2()
+{
     glutSetWindow(mainWindow); // Keep using the same window
     glClearColor(0.2f, 0.2f, 0.2f, 1.0f); // Set background color for Level 2
     glutDisplayFunc(level2Display); // Register display callback for Level 2
@@ -1534,10 +1606,12 @@ void openLevel2() {
 }
 
 // Switch to Level 3 view
-void openLevel3() {
+void openLevel3()
+{
     glutSetWindow(mainWindow); // Keep using the same window
     glClearColor(0.2f, 0.2f, 0.2f, 1.0f); // Set background color for Level 3
     glutDisplayFunc(level3Display); // Register display callback for Level 3
+    glutTimerFunc(16, updateSky, 0);
     glutPostRedisplay(); // Redraw to display Level 3 content
 }
 
@@ -1552,29 +1626,34 @@ void openLevel3() {
 
 
 
-void keyboard(unsigned char key, int x, int y) {
-    if (key == 27) {  // 27 is the ASCII code for Esc key
+void keyboard(unsigned char key, int x, int y)
+{
+    if (key == 27)    // 27 is the ASCII code for Esc key
+    {
         returnToMainMenu(); // Return to the level selector
-    } else {
-        switch (key) {
-            case 'w': // Move up
-            case 'W':
-                if (currentSelection > 0)
-                    currentSelection--;
-                break;
-            case 's': // Move down
-            case 'S':
-                if (currentSelection < 2)
-                    currentSelection++;
-                break;
-            case 13: // Enter key
-                if (currentSelection == 0)
-                    openLevel1();
-                else if (currentSelection == 1)
-                    openLevel2();
-                else if (currentSelection == 2)
-                    openLevel3();
-                break;
+    }
+    else
+    {
+        switch (key)
+        {
+        case 'w': // Move up
+        case 'W':
+            if (currentSelection > 0)
+                currentSelection--;
+            break;
+        case 's': // Move down
+        case 'S':
+            if (currentSelection < 2)
+                currentSelection++;
+            break;
+        case 13: // Enter key
+            if (currentSelection == 0)
+                openLevel1();
+            else if (currentSelection == 1)
+                openLevel2();
+            else if (currentSelection == 2)
+                openLevel3();
+            break;
         }
     }
     glutPostRedisplay();
@@ -1584,14 +1663,16 @@ void keyboard(unsigned char key, int x, int y) {
 
 
 
-void display() {
+void display()
+{
     drawButtons();
 }
 
 
 
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
     glutInitWindowSize(700, 400);
