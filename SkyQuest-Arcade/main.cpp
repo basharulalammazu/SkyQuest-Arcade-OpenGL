@@ -1,7 +1,9 @@
-#include <GL/glut.h>
-#include <iostream>
+#include<GL/glut.h>
+#include<iostream>
 #include<math.h>>
 #include<cmath>
+#include<stdlib.h>
+#include<time.h>
 # define PI 3.14159265358979323846
 
 
@@ -27,7 +29,7 @@ void dayskyL3();
 void itemL3(GLfloat x, GLfloat y);
 void obstaclesL3(GLfloat x, GLfloat y);
 void updateWave(int value);
-
+void initializeRandomPositions();
 
 
 // Variable
@@ -36,9 +38,38 @@ const char *levels[] = {"Level 1", "Level 2", "Level 3"};
 int mainWindow; // Main menu window ID
 int levelWindow; // Level window ID
 float cloud1X = -0.9f, cloud2X = -0.35f, cloud3X = 0.35f, cloud4X = 0.75f, cloud5X = -0.8f, cloud6X = 1.15f;
-float waveOffsetX = 0.0f;  // Horizontal offset for waves
+float waveOffsetX = 0.0f, waveOffsetY = 0.0f;  // Horizontal offset for waves
+GLfloat itemPosY[] = {0.8f, 0.42f, 0.16f, 0.05f, -0.3f};
+GLfloat obstaclePosY[] = {-0.2f, 0.62f, 0.62f, 0.15f, -0.25f, 0.2f};
+GLfloat bombPosY[] = {0.8f, 0.6f, 0.3f, 0.5f};
+GLfloat speed = 0.005f; // Speed of animation
 
 
+GLfloat generateRandomFloat()
+{
+    return (GLfloat)rand() / RAND_MAX * 2.0f - 1.0f; // Normalize rand() to range -1 to 1
+}
+
+void initializeRandomPositions()
+{
+    // Seed the random number generator
+    srand(time(0));
+
+    // Generate random values for item positions
+    for (int i = 0; i < 5; i++)
+        itemPosY[i] = generateRandomFloat();
+
+
+    // Generate random values for obstacle positions
+    for (int i = 0; i < 6; i++)
+        obstaclePosY[i] = generateRandomFloat();
+
+
+    // Generate random values for bomb positions
+    for (int i = 0; i < 4; i++)
+        bombPosY[i] = generateRandomFloat();
+
+}
 
 
 void circle()
@@ -1324,14 +1355,50 @@ void obstaclesL3(GLfloat x, GLfloat y)
 void updateWave(int value)
 {
     waveOffsetX += 0.005f;  // Move the waves to the right over time
+    waveOffsetY = 0.1f * sin(waveOffsetX * 3.14f);
     if (waveOffsetX > 2.0f) {
-        waveOffsetX = -2.0f;  // Reset position when it moves off-screen
+        waveOffsetX =  1.05f;  // Reset position when it moves off-screen
     }
 
     glutPostRedisplay();   // Request a redraw
     glutTimerFunc(16, updateWave, 0);  // Update every 16ms (~60 FPS)
 }
 
+
+void updateLevel3(int value)
+{
+    // Update item positions
+    for (int i = 0; i < 5; i++) {
+        itemPosY[i] -= speed;
+        if (itemPosY[i] < -1.2f) {
+            itemPosY[i] = 1.2f; // Reset position to top
+            // initializeRandomPositions();
+        }
+    }
+
+    // Update obstacle positions
+    for (int i = 0; i < 6; i++) {
+        obstaclePosY[i] -= speed * 1.2f; // Slightly faster than items
+        if (obstaclePosY[i] < -1.2f) {
+            obstaclePosY[i] = 1.2f;
+            // initializeRandomPositions();
+        }
+    }
+
+    // Update bomb positions
+    for (int i = 0; i < 4; i++) {
+        bombPosY[i] -= speed * 1.5f; // Faster than obstacles
+        if (bombPosY[i] < -1.2f) {
+            bombPosY[i] = 1.2f;
+            // initializeRandomPositions();
+        }
+    }
+
+    glutPostRedisplay(); // Redraw the scene
+    glutTimerFunc(16, updateLevel3, 0); // Schedule the next update (16ms for ~60 FPS)
+
+
+}
 
 
 // Display function for Level 3
@@ -1374,151 +1441,265 @@ void level3Display()
 
     //  wave4
     glColor3ub(6,66,115); // Gray color
-    wave(-0.95f-.2f + waveOffsetX, -0.72f, 0.18f, 100);
-    wave(-0.85f-.2f + waveOffsetX, -0.72f, 0.21f, 100);
-    wave(-0.75f-.2f + waveOffsetX, -0.72f, 0.18f, 100);
-    wave(-0.65f-.2f + waveOffsetX, -0.72f, 0.18f, 100);
-    wave(-0.55f-.2f + waveOffsetX, -0.72f, 0.21f, 100);
-    wave(-0.45f-.2f + waveOffsetX, -0.72f, 0.18f, 100);
-    wave(-0.35f-.2f + waveOffsetX, -0.72f, 0.18f, 100);
-    wave(-0.25f-.2f + waveOffsetX, -0.72f, 0.21f, 100);
-    wave(-0.15f-.2f + waveOffsetX,-0.72f, 0.18f, 100);
-    wave(-0.05f-.2f + waveOffsetX, -0.72f, 0.18f, 100);
-    wave(0.05f-.2f + waveOffsetX, -0.72f, 0.21f, 100);
-    wave(0.15f-.2f + waveOffsetX, -0.72f, 0.18f, 100);
-    wave(0.25f-.2f + waveOffsetX, -0.72f, 0.18f, 100);
-    wave(0.35f-.2f + waveOffsetX, -0.72f, 0.21f, 100);
-    wave(0.45f-.2f + waveOffsetX, -0.72f, 0.18f, 100);
-    wave(0.55f-.2f + waveOffsetX, -0.72f, 0.18f, 100);
-    wave(0.65f-.2f + waveOffsetX, -0.72f, 0.21f, 100);
-    wave(0.75f-.2f + waveOffsetX, -0.72f, 0.18f, 100);
-    wave(0.85f-.2f + waveOffsetX, -0.72f, 0.18f, 100);
-    wave(0.95f-.2f + waveOffsetX, -0.72f, 0.21f, 100);
-    wave(1.05f-.2f + waveOffsetX, -0.72f, 0.18f, 100);
+    wave(-2.95f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.18f, 100);
+    wave(-2.85f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.21f, 100);
+    wave(-2.75f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.18f, 100);
+    wave(-2.65f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.18f, 100);
+    wave(-2.55f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.21f, 100);
+    wave(-2.45f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.18f, 100);
+    wave(-2.35f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.18f, 100);
+    wave(-2.25f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.21f, 100);
+    wave(-2.15f-.2f + waveOffsetX,-0.72f + waveOffsetY, 0.18f, 100);
+    wave(-2.05f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.18f, 100);
+
+    wave(-1.95f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.18f, 100);
+    wave(-1.85f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.21f, 100);
+    wave(-1.75f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.18f, 100);
+    wave(-1.65f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.18f, 100);
+    wave(-1.55f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.21f, 100);
+    wave(-1.45f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.18f, 100);
+    wave(-1.35f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.18f, 100);
+    wave(-1.25f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.21f, 100);
+    wave(-1.15f-.2f + waveOffsetX,-0.72f + waveOffsetY, 0.18f, 100);
+    wave(-1.05f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.18f, 100);
+
+    wave(-0.95f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.18f, 100);
+    wave(-0.85f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.21f, 100);
+    wave(-0.75f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.18f, 100);
+    wave(-0.65f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.18f, 100);
+    wave(-0.55f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.21f, 100);
+    wave(-0.45f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.18f, 100);
+    wave(-0.35f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.18f, 100);
+    wave(-0.25f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.21f, 100);
+    wave(-0.15f-.2f + waveOffsetX,-0.72f + waveOffsetY, 0.18f, 100);
+    wave(-0.05f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.18f, 100);
+    wave(0.05f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.21f, 100);
+    wave(0.15f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.18f, 100);
+    wave(0.25f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.18f, 100);
+    wave(0.35f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.21f, 100);
+    wave(0.45f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.18f, 100);
+    wave(0.55f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.18f, 100);
+    wave(0.65f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.21f, 100);
+    wave(0.75f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.18f, 100);
+    wave(0.85f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.18f, 100);
+    wave(0.95f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.21f, 100);
+    wave(1.05f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.18f, 100);
 
 
 
 
     //wave 3
     glColor3ub(118,182,196); // light occen color
-    wave(-0.95f + waveOffsetX, -0.80f, 0.18f, 100);
-    wave(-0.85f + waveOffsetX, -0.80, 0.21f, 100);
-    wave(-0.75f + waveOffsetX, -0.80, 0.18f, 100);
-    wave(-0.65f + waveOffsetX, -0.80, 0.18f, 100);
-    wave(-0.55f + waveOffsetX, -0.80, 0.21f, 100);
-    wave(-0.45f + waveOffsetX, -0.80, 0.18f, 100);
-    wave(-0.35f + waveOffsetX, -0.80, 0.18f, 100);
-    wave(-0.25f + waveOffsetX, -0.80, 0.21f, 100);
-    wave(-0.15f + waveOffsetX,-0.80, 0.18f, 100);
-    wave(-0.05f + waveOffsetX, -0.80, 0.18f, 100);
-    wave(0.05f + waveOffsetX, -0.80, 0.21f, 100);
-    wave(0.15f + waveOffsetX, -0.80, 0.18f, 100);
-    wave(0.25f + waveOffsetX, -0.80, 0.18f, 100);
-    wave(0.35f + waveOffsetX, -0.80, 0.21f, 100);
-    wave(0.45f + waveOffsetX, -0.80, 0.18f, 100);
-    wave(0.55f + waveOffsetX, -0.80, 0.18f, 100);
-    wave(0.65f + waveOffsetX, -0.80, 0.21f, 100);
-    wave(0.75f + waveOffsetX, -0.80, 0.18f, 100);
-    wave(0.85f + waveOffsetX, -0.80, 0.18f, 100);
-    wave(0.95f + waveOffsetX, -0.80, 0.21f, 100);
-    wave(1.05f + waveOffsetX, -0.80f, 0.18f, 100);
+    wave(-2.95f + waveOffsetX, -0.80f + waveOffsetY, 0.18f, 100);
+    wave(-2.85f + waveOffsetX, -0.80 + waveOffsetY, 0.21f, 100);
+    wave(-2.75f + waveOffsetX, -0.80 + waveOffsetY, 0.18f, 100);
+    wave(-2.65f + waveOffsetX, -0.80 + waveOffsetY, 0.18f, 100);
+    wave(-2.55f + waveOffsetX, -0.80 + waveOffsetY, 0.21f, 100);
+    wave(-2.45f + waveOffsetX, -0.80 + waveOffsetY, 0.18f, 100);
+    wave(-2.35f + waveOffsetX, -0.80 + waveOffsetY, 0.18f, 100);
+    wave(-2.25f + waveOffsetX, -0.80 + waveOffsetY, 0.21f, 100);
+    wave(-2.15f + waveOffsetX,-0.80 + waveOffsetY, 0.18f, 100);
+    wave(-2.05f + waveOffsetX, -0.80 + waveOffsetY, 0.18f, 100);
+
+    wave(-1.95f + waveOffsetX, -0.80f + waveOffsetY, 0.18f, 100);
+    wave(-1.85f + waveOffsetX, -0.80 + waveOffsetY, 0.21f, 100);
+    wave(-1.75f + waveOffsetX, -0.80 + waveOffsetY, 0.18f, 100);
+    wave(-1.65f + waveOffsetX, -0.80 + waveOffsetY, 0.18f, 100);
+    wave(-1.55f + waveOffsetX, -0.80 + waveOffsetY, 0.21f, 100);
+    wave(-1.45f + waveOffsetX, -0.80 + waveOffsetY, 0.18f, 100);
+    wave(-1.35f + waveOffsetX, -0.80 + waveOffsetY, 0.18f, 100);
+    wave(-1.25f + waveOffsetX, -0.80 + waveOffsetY, 0.21f, 100);
+    wave(-1.15f + waveOffsetX,-0.80 + waveOffsetY, 0.18f, 100);
+    wave(-1.05f + waveOffsetX, -0.80 + waveOffsetY, 0.18f, 100);
+
+
+    wave(-0.95f + waveOffsetX, -0.80f + waveOffsetY, 0.18f, 100);
+    wave(-0.85f + waveOffsetX, -0.80 + waveOffsetY, 0.21f, 100);
+    wave(-0.75f + waveOffsetX, -0.80 + waveOffsetY, 0.18f, 100);
+    wave(-0.65f + waveOffsetX, -0.80 + waveOffsetY, 0.18f, 100);
+    wave(-0.55f + waveOffsetX, -0.80 + waveOffsetY, 0.21f, 100);
+    wave(-0.45f + waveOffsetX, -0.80 + waveOffsetY, 0.18f, 100);
+    wave(-0.35f + waveOffsetX, -0.80 + waveOffsetY, 0.18f, 100);
+    wave(-0.25f + waveOffsetX, -0.80 + waveOffsetY, 0.21f, 100);
+    wave(-0.15f + waveOffsetX,-0.80 + waveOffsetY, 0.18f, 100);
+    wave(-0.05f + waveOffsetX, -0.80 + waveOffsetY, 0.18f, 100);
+    wave(0.05f + waveOffsetX, -0.80 + waveOffsetY, 0.21f, 100);
+    wave(0.15f + waveOffsetX, -0.80 + waveOffsetY, 0.18f, 100);
+    wave(0.25f + waveOffsetX, -0.80 + waveOffsetY, 0.18f, 100);
+    wave(0.35f + waveOffsetX, -0.80 + waveOffsetY, 0.21f, 100);
+    wave(0.45f + waveOffsetX, -0.80 + waveOffsetY, 0.18f, 100);
+    wave(0.55f + waveOffsetX, -0.80 + waveOffsetY, 0.18f, 100);
+    wave(0.65f + waveOffsetX, -0.80 + waveOffsetY, 0.21f, 100);
+    wave(0.75f + waveOffsetX, -0.80 + waveOffsetY, 0.18f, 100);
+    wave(0.85f + waveOffsetX, -0.80 + waveOffsetY, 0.18f, 100);
+    wave(0.95f + waveOffsetX, -0.80 + waveOffsetY, 0.21f, 100);
+    wave(1.05f + waveOffsetX, -0.80f + waveOffsetY, 0.18f, 100);
 
 
 
     //  wave2
     glColor3ub(127,205,255); // Gray color
-    wave(-0.95f+.2f + waveOffsetX, -0.90f, 0.18f, 100);
-    wave(-0.85f+.2f + waveOffsetX, -0.90f, 0.21f, 100);
-    wave(-0.75f+.2f + waveOffsetX, -0.90f, 0.18f, 100);
-    wave(-0.65f+.2f + waveOffsetX, -0.90f, 0.18f, 100);
-    wave(-0.55f+.2f + waveOffsetX, -0.90f, 0.21f, 100);
-    wave(-0.45f+.2f + waveOffsetX, -0.90f, 0.18f, 100);
-    wave(-0.35f+.2f + waveOffsetX, -0.90f, 0.18f, 100);
-    wave(-0.25f+.2f + waveOffsetX, -0.90f, 0.21f, 100);
-    wave(-0.15f+.2f + waveOffsetX,-0.90f, 0.18f, 100);
-    wave(-0.05f+.2f + waveOffsetX, -0.90f, 0.18f, 100);
-    wave(0.05f+.2f + waveOffsetX, -0.90f, 0.21f, 100);
-    wave(0.15f+.2f + waveOffsetX, -0.90f, 0.18f, 100);
-    wave(0.25f+.2f + waveOffsetX, -0.90f, 0.18f, 100);
-    wave(0.35f+.2f + waveOffsetX, -0.90f, 0.21f, 100);
-    wave(0.45f+.2f + waveOffsetX, -0.90f, 0.18f, 100);
-    wave(0.55f+.2f + waveOffsetX, -0.90f, 0.18f, 100);
-    wave(0.65f+.2f + waveOffsetX, -0.90f, 0.21f, 100);
-    wave(0.75f+.2f + waveOffsetX, -0.90f, 0.18f, 100);
-    wave(0.85f+.2f + waveOffsetX, -0.90f, 0.18f, 100);
-    wave(0.95f+.2f + waveOffsetX, -0.90f, 0.21f, 100);
-    wave(1.05f+.2f + waveOffsetX, -0.90f, 0.18f, 100);
+    wave(-2.95f+.2f + waveOffsetX, -0.90f + waveOffsetY, 0.18f, 100);
+    wave(-2.85f+.2f + waveOffsetX, -0.90f + waveOffsetY, 0.21f, 100);
+    wave(-2.75f+.2f + waveOffsetX, -0.90f + waveOffsetY, 0.18f, 100);
+    wave(-2.65f+.2f + waveOffsetX, -0.90f + waveOffsetY, 0.18f, 100);
+    wave(-2.55f+.2f + waveOffsetX, -0.90f + waveOffsetY, 0.21f, 100);
+    wave(-2.45f+.2f + waveOffsetX, -0.90f + waveOffsetY, 0.18f, 100);
+    wave(-2.35f+.2f + waveOffsetX, -0.90f + waveOffsetY, 0.18f, 100);
+    wave(-2.25f+.2f + waveOffsetX, -0.90f + waveOffsetY, 0.21f, 100);
+    wave(-2.15f+.2f + waveOffsetX,-0.90f + waveOffsetY, 0.18f, 100);
+    wave(-2.05f+.2f + waveOffsetX, -0.90f + waveOffsetY, 0.18f, 100);
+
+    wave(-1.95f+.2f + waveOffsetX, -0.90f + waveOffsetY, 0.18f, 100);
+    wave(-1.85f+.2f + waveOffsetX, -0.90f + waveOffsetY, 0.21f, 100);
+    wave(-1.75f+.2f + waveOffsetX, -0.90f + waveOffsetY, 0.18f, 100);
+    wave(-1.65f+.2f + waveOffsetX, -0.90f + waveOffsetY, 0.18f, 100);
+    wave(-1.55f+.2f + waveOffsetX, -0.90f + waveOffsetY, 0.21f, 100);
+    wave(-1.45f+.2f + waveOffsetX, -0.90f + waveOffsetY, 0.18f, 100);
+    wave(-1.35f+.2f + waveOffsetX, -0.90f + waveOffsetY, 0.18f, 100);
+    wave(-1.25f+.2f + waveOffsetX, -0.90f + waveOffsetY, 0.21f, 100);
+    wave(-1.15f+.2f + waveOffsetX,-0.90f + waveOffsetY, 0.18f, 100);
+    wave(-1.05f+.2f + waveOffsetX, -0.90f + waveOffsetY, 0.18f, 100);
+
+    wave(-0.95f+.2f + waveOffsetX, -0.90f + waveOffsetY, 0.18f, 100);
+    wave(-0.85f+.2f + waveOffsetX, -0.90f + waveOffsetY, 0.21f, 100);
+    wave(-0.75f+.2f + waveOffsetX, -0.90f + waveOffsetY, 0.18f, 100);
+    wave(-0.65f+.2f + waveOffsetX, -0.90f + waveOffsetY, 0.18f, 100);
+    wave(-0.55f+.2f + waveOffsetX, -0.90f + waveOffsetY, 0.21f, 100);
+    wave(-0.45f+.2f + waveOffsetX, -0.90f + waveOffsetY, 0.18f, 100);
+    wave(-0.35f+.2f + waveOffsetX, -0.90f + waveOffsetY, 0.18f, 100);
+    wave(-0.25f+.2f + waveOffsetX, -0.90f + waveOffsetY, 0.21f, 100);
+    wave(-0.15f+.2f + waveOffsetX,-0.90f + waveOffsetY, 0.18f, 100);
+    wave(-0.05f+.2f + waveOffsetX, -0.90f + waveOffsetY, 0.18f, 100);
+    wave(0.05f+.2f + waveOffsetX, -0.90f + waveOffsetY, 0.21f, 100);
+    wave(0.15f+.2f + waveOffsetX, -0.90f + waveOffsetY, 0.18f, 100);
+    wave(0.25f+.2f + waveOffsetX, -0.90f + waveOffsetY, 0.18f, 100);
+    wave(0.35f+.2f + waveOffsetX, -0.90f + waveOffsetY, 0.21f, 100);
+    wave(0.45f+.2f + waveOffsetX, -0.90f + waveOffsetY , 0.18f, 100);
+    wave(0.45f+.2f + waveOffsetX, -0.90f + waveOffsetY, 0.18f, 100);
+    wave(0.55f+.2f + waveOffsetX, -0.90f  + waveOffsetY, 0.18f, 100);
+    wave(0.65f+.2f + waveOffsetX, -0.90f + waveOffsetY, 0.21f, 100);
+    wave(0.75f+.2f + waveOffsetX, -0.90f + waveOffsetY, 0.18f, 100);
+    wave(0.85f+.2f + waveOffsetX, -0.90f + waveOffsetY, 0.18f, 100);
+    wave(0.95f+.2f + waveOffsetX, -0.90f + waveOffsetY, 0.21f, 100);
+    wave(1.05f+.2f + waveOffsetX, -0.90f + waveOffsetY, 0.18f, 100);
 
 
     //  wave
     glColor3ub(29,162,216); // occen green color
-    wave(-0.95f + waveOffsetX, -0.98f, 0.18f, 100);
-    wave(-0.85f + waveOffsetX, -0.98f, 0.21f, 100);
-    wave(-0.75f + waveOffsetX, -0.98f, 0.18f, 100);
-    wave(-0.65f + waveOffsetX, -0.98f, 0.18f, 100);
-    wave(-0.55f + waveOffsetX, -0.98f, 0.21f, 100);
-    wave(-0.45f + waveOffsetX, -0.98f, 0.18f, 100);
-    wave(-0.35f + waveOffsetX, -0.98f, 0.18f, 100);
-    wave(-0.25f + waveOffsetX, -0.98f, 0.21f, 100);
-    wave(-0.15f + waveOffsetX,-0.98f, 0.18f, 100);
-    wave(-0.05f + waveOffsetX, -0.98f, 0.18f, 100);
-    wave(0.05f + waveOffsetX, -0.98f, 0.21f, 100);
-    wave(0.15f + waveOffsetX, -0.98f, 0.18f, 100);
-    wave(0.25f + waveOffsetX, -0.98f, 0.18f, 100);
-    wave(0.35f + waveOffsetX, -0.98f, 0.21f, 100);
-    wave(0.45f + waveOffsetX, -0.98f, 0.18f, 100);
-    wave(0.55f + waveOffsetX, -0.98f, 0.18f, 100);
-    wave(0.65f + waveOffsetX, -0.98f, 0.21f, 100);
-    wave(0.75f + waveOffsetX, -0.98f, 0.18f, 100);
-    wave(0.85f + waveOffsetX, -0.98f, 0.18f, 100);
-    wave(0.95f + waveOffsetX, -0.98f, 0.21f, 100);
-    wave(1.05f + waveOffsetX, -0.98f, 0.18f, 100);
+     wave(-2.95f + waveOffsetX, -0.98f + waveOffsetY, 0.18f, 100);
+    wave(-2.85f + waveOffsetX, -0.98f + waveOffsetY, 0.21f, 100);
+    wave(-2.75f + waveOffsetX, -0.98f + waveOffsetY, 0.18f, 100);
+    wave(-2.65f + waveOffsetX, -0.98f + waveOffsetY, 0.18f, 100);
+    wave(-2.55f + waveOffsetX, -0.98f + waveOffsetY, 0.21f, 100);
+    wave(-2.45f + waveOffsetX, -0.98f + waveOffsetY, 0.18f, 100);
+    wave(-2.35f + waveOffsetX, -0.98f + waveOffsetY, 0.18f, 100);
+    wave(-2.25f + waveOffsetX, -0.98f + waveOffsetY, 0.21f, 100);
+    wave(-2.15f + waveOffsetX,-0.98f + waveOffsetY, 0.18f, 100);
+    wave(-2.05f + waveOffsetX, -0.98f + waveOffsetY, 0.18f, 100);
+
+     wave(-1.95f + waveOffsetX, -0.98f + waveOffsetY, 0.18f, 100);
+    wave(-1.85f + waveOffsetX, -0.98f + waveOffsetY, 0.21f, 100);
+    wave(-1.75f + waveOffsetX, -0.98f + waveOffsetY, 0.18f, 100);
+    wave(-1.65f + waveOffsetX, -0.98f + waveOffsetY, 0.18f, 100);
+    wave(-1.55f + waveOffsetX, -0.98f + waveOffsetY, 0.21f, 100);
+    wave(-1.45f + waveOffsetX, -0.98f + waveOffsetY, 0.18f, 100);
+    wave(-1.35f + waveOffsetX, -0.98f + waveOffsetY, 0.18f, 100);
+    wave(-1.25f + waveOffsetX, -0.98f + waveOffsetY, 0.21f, 100);
+    wave(-1.15f + waveOffsetX,-0.98f + waveOffsetY, 0.18f, 100);
+    wave(-1.05f + waveOffsetX, -0.98f + waveOffsetY, 0.18f, 100);
+
+    wave(-0.95f + waveOffsetX, -0.98f + waveOffsetY, 0.18f, 100);
+    wave(-0.85f + waveOffsetX, -0.98f + waveOffsetY, 0.21f, 100);
+    wave(-0.75f + waveOffsetX, -0.98f + waveOffsetY, 0.18f, 100);
+    wave(-0.65f + waveOffsetX, -0.98f + waveOffsetY, 0.18f, 100);
+    wave(-0.55f + waveOffsetX, -0.98f + waveOffsetY, 0.21f, 100);
+    wave(-0.45f + waveOffsetX, -0.98f + waveOffsetY, 0.18f, 100);
+    wave(-0.35f + waveOffsetX, -0.98f + waveOffsetY, 0.18f, 100);
+    wave(-0.25f + waveOffsetX, -0.98f + waveOffsetY, 0.21f, 100);
+    wave(-0.15f + waveOffsetX,-0.98f + waveOffsetY, 0.18f, 100);
+    wave(-0.05f + waveOffsetX, -0.98f + waveOffsetY, 0.18f, 100);
+    wave(0.05f + waveOffsetX, -0.98f + waveOffsetY, 0.21f, 100);
+    wave(0.15f + waveOffsetX, -0.98f + waveOffsetY, 0.18f, 100);
+    wave(0.25f + waveOffsetX, -0.98f + waveOffsetY, 0.18f, 100);
+    wave(0.35f + waveOffsetX, -0.98f + waveOffsetY, 0.21f, 100);
+    wave(0.45f + waveOffsetX, -0.98f + waveOffsetY, 0.18f, 100);
+    wave(0.55f + waveOffsetX, -0.98f + waveOffsetY, 0.18f, 100);
+    wave(0.65f + waveOffsetX, -0.98f + waveOffsetY, 0.21f, 100);
+    wave(0.75f + waveOffsetX, -0.98f + waveOffsetY, 0.18f, 100);
+    wave(0.85f + waveOffsetX, -0.98f + waveOffsetY, 0.18f, 100);
+    wave(0.95f + waveOffsetX, -0.98f + waveOffsetY, 0.21f, 100);
+    wave(1.05f + waveOffsetX, -0.98f + waveOffsetY, 0.18f, 100);
 
 
     //wave0
     glColor3ub(222,243,246); // occen green color
-    wave(-0.95f-.2f + waveOffsetX, -1.06f, 0.18f, 100);
-    wave(-0.85f-.2f + waveOffsetX, -1.06f, 0.21f, 100);
-    wave(-0.75f-.2f + waveOffsetX, -1.06f, 0.18f, 100);
-    wave(-0.65f-.2f + waveOffsetX, -1.06f, 0.18f, 100);
-    wave(-0.55f-.2f + waveOffsetX, -1.06f, 0.21f, 100);
-    wave(-0.45f-.2f + waveOffsetX, -1.06f, 0.18f, 100);
-    wave(-0.35f-.2f + waveOffsetX, -1.06f, 0.18f, 100);
-    wave(-0.25f-.2f + waveOffsetX, -1.06f, 0.21f, 100);
-    wave(-0.15f-.2f + waveOffsetX,-1.06f, 0.18f, 100);
-    wave(-0.05f-.2f + waveOffsetX, -1.06f, 0.18f, 100);
-    wave(0.05f-.2f + waveOffsetX, -1.06f, 0.21f, 100);
-    wave(0.15f-.2f + waveOffsetX, -1.06f, 0.18f, 100);
-    wave(0.25f-.2f + waveOffsetX, -1.06f, 0.18f, 100);
-    wave(0.35f-.2f + waveOffsetX, -1.06f, 0.21f, 100);
-    wave(0.45f-.2f + waveOffsetX, -1.06f, 0.18f, 100);
-    wave(0.55f-.2f + waveOffsetX, -1.06f, 0.18f, 100);
-    wave(0.65f-.2f + waveOffsetX, -1.06f, 0.21f, 100);
-    wave(0.75f-.2f + waveOffsetX, -1.06f, 0.18f, 100);
-    wave(0.85f-.2f + waveOffsetX, -1.06f, 0.18f, 100);
-    wave(0.95f-.2f + waveOffsetX, -1.06f, 0.21f, 100);
-    wave(1.05f-.2f + waveOffsetX, -1.06f, 0.18f, 100);
+    wave(-2.95f-.2f + waveOffsetX, -1.06f + waveOffsetY, 0.18f, 100);
+    wave(-2.85f-.2f + waveOffsetX, -1.06f + waveOffsetY, 0.21f, 100);
+    wave(-2.75f-.2f + waveOffsetX, -1.06f + waveOffsetY, 0.18f, 100);
+    wave(-2.65f-.2f + waveOffsetX, -1.06f + waveOffsetY, 0.18f, 100);
+    wave(-2.55f-.2f + waveOffsetX, -1.06f + waveOffsetY, 0.21f, 100);
+    wave(-2.45f-.2f + waveOffsetX, -1.06f + waveOffsetY, 0.18f, 100);
+    wave(-2.35f-.2f + waveOffsetX, -1.06f + waveOffsetY, 0.18f, 100);
+    wave(-2.25f-.2f + waveOffsetX, -1.06f + waveOffsetY, 0.21f, 100);
+    wave(-2.15f-.2f + waveOffsetX,-1.06f + waveOffsetY, 0.18f, 100);
+    wave(-2.05f-.2f + waveOffsetX, -1.06f + waveOffsetY, 0.18f, 100);
 
-    //collectibles
-    itemL3(0.75, 0.8);
-    itemL3(0.6, 0.42);
-    itemL3(0.8, 0.16);
-    itemL3(0.5, 0.05);
-    itemL3(0.9, -0.3);
+    wave(-1.95f-.2f + waveOffsetX, -1.06f + waveOffsetY, 0.18f, 100);
+    wave(-1.85f-.2f + waveOffsetX, -1.06f + waveOffsetY, 0.21f, 100);
+    wave(-1.75f-.2f + waveOffsetX, -1.06f + waveOffsetY, 0.18f, 100);
+    wave(-1.65f-.2f + waveOffsetX, -1.06f + waveOffsetY, 0.18f, 100);
+    wave(-1.55f-.2f + waveOffsetX, -1.06f + waveOffsetY, 0.21f, 100);
+    wave(-1.45f-.2f + waveOffsetX, -1.06f + waveOffsetY, 0.18f, 100);
+    wave(-1.35f-.2f + waveOffsetX, -1.06f + waveOffsetY, 0.18f, 100);
+    wave(-1.25f-.2f + waveOffsetX, -1.06f + waveOffsetY, 0.21f, 100);
+    wave(-1.15f-.2f + waveOffsetX,-1.06f + waveOffsetY, 0.18f, 100);
+    wave(-1.05f-.2f + waveOffsetX, -1.06f + waveOffsetY, 0.18f, 100);
 
-    //obstacles
-    obstaclesL3(0.68, -0.2);
-    obstaclesL3(0.9, 0.62);
-    obstaclesL3(0.4, 0.62);
-    obstaclesL3(0.3, 0.15);
-    obstaclesL3(0.32, -0.25);
-    obstaclesL3(0.98, 0.2);
 
-    //bomb
-    bomb(-0.3f, 0.8f);
-    bomb(-0.8f, 0.6f);
-    bomb(-0.6f, 0.3f);
-    bomb(0.2f, 0.5f);
+    wave(-0.95f-.2f + waveOffsetX, -1.06f + waveOffsetY, 0.18f, 100);
+    wave(-0.85f-.2f + waveOffsetX, -1.06f + waveOffsetY, 0.21f, 100);
+    wave(-0.75f-.2f + waveOffsetX, -1.06f + waveOffsetY, 0.18f, 100);
+    wave(-0.65f-.2f + waveOffsetX, -1.06f + waveOffsetY, 0.18f, 100);
+    wave(-0.55f-.2f + waveOffsetX, -1.06f + waveOffsetY, 0.21f, 100);
+    wave(-0.45f-.2f + waveOffsetX, -1.06f + waveOffsetY, 0.18f, 100);
+    wave(-0.35f-.2f + waveOffsetX, -1.06f + waveOffsetY, 0.18f, 100);
+    wave(-0.25f-.2f + waveOffsetX, -1.06f + waveOffsetY, 0.21f, 100);
+    wave(-0.15f-.2f + waveOffsetX,-1.06f + waveOffsetY, 0.18f, 100);
+    wave(-0.05f-.2f + waveOffsetX, -1.06f + waveOffsetY, 0.18f, 100);
+    wave(0.05f-.2f + waveOffsetX, -1.06f + waveOffsetY, 0.21f, 100);
+    wave(0.15f-.2f + waveOffsetX, -1.06f + waveOffsetY, 0.18f, 100);
+    wave(0.25f-.2f + waveOffsetX, -1.06f + waveOffsetY, 0.18f, 100);
+    wave(0.35f-.2f + waveOffsetX, -1.06f + waveOffsetY, 0.21f, 100);
+    wave(0.45f-.2f + waveOffsetX, -1.06f + waveOffsetY, 0.18f, 100);
+    wave(0.55f-.2f + waveOffsetX, -1.06f + waveOffsetY, 0.18f, 100);
+    wave(0.65f-.2f + waveOffsetX, -1.06f + waveOffsetY, 0.21f, 100);
+    wave(0.75f-.2f + waveOffsetX, -1.06f + waveOffsetY, 0.18f, 100);
+    wave(0.85f-.2f + waveOffsetX, -1.06f + waveOffsetY, 0.18f, 100);
+    wave(0.95f-.2f + waveOffsetX, -1.06f + waveOffsetY, 0.21f, 100);
+    wave(1.05f-.2f + waveOffsetX, -1.06f + waveOffsetY, 0.18f, 100);
+
+    // Draw collectibles
+    itemL3(0.75f, itemPosY[0]);
+    itemL3(0.6f, itemPosY[1]);
+    itemL3(0.8f, itemPosY[2]);
+    itemL3(0.5f, itemPosY[3]);
+    itemL3(0.9f, itemPosY[4]);
+
+    // Draw obstacles
+    obstaclesL3(0.68f, obstaclePosY[0]);
+    obstaclesL3(0.9f, obstaclePosY[1]);
+    obstaclesL3(0.4f, obstaclePosY[2]);
+    obstaclesL3(0.3f, obstaclePosY[3]);
+    obstaclesL3(0.32f, obstaclePosY[4]);
+    obstaclesL3(0.98f, obstaclePosY[5]);
+
+    // Draw bombs
+    bomb(-0.3f, bombPosY[0]);
+    bomb(-0.8f, bombPosY[1]);
+    bomb(-0.6f, bombPosY[2]);
+    bomb(0.2f, bombPosY[3]);
+
 
     aircraft();
 
@@ -1531,7 +1712,6 @@ void level3Display()
 
     glFlush();
 }
-
 
 
 
@@ -1618,6 +1798,7 @@ void openLevel3()
     glutDisplayFunc(level3Display); // Register display callback for Level 3
     glutTimerFunc(16, updateSky, 0);
     glutTimerFunc(16, updateWave, 0);  // Start animation by calling update every 16ms
+    glutTimerFunc(16, updateLevel3, 0); // Start animation by calling update every 16ms
     glutPostRedisplay(); // Redraw to display Level 3 content
 }
 
