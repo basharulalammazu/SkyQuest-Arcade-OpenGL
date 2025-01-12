@@ -895,3 +895,11 @@
 	<stdlib.h>
 	<time.h>
 
+1736662868 source:c:\users\anany\downloads\skyquest-arcade-opengl\skyquest-arcade\main.cpp
+	<GL/glut.h>
+	<iostream>
+	<math.h>
+	<cmath>
+	<stdlib.h>
+	<time.h>
+

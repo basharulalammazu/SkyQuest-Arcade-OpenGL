@@ -39,8 +39,8 @@ int mainWindow; // Main menu window ID
 int levelWindow; // Level window ID
 float cloud1X = -0.9f, cloud2X = -0.35f, cloud3X = 0.35f, cloud4X = 0.75f, cloud5X = -0.8f, cloud6X = 1.15f;
 float waveOffsetX = 0.0f, waveOffsetY = 0.0f;  // Horizontal offset for waves
-GLfloat itemPosY[] = {0.8f, 0.42f, 0.16f, 0.05f, -0.3f};
-GLfloat obstaclePosY[] = {-0.2f, 0.62f, 0.62f, 0.15f, -0.25f, 0.2f};
+GLfloat itemPosX[] = {1.2f, 0.9f, 0.7f, 0.5f, 0.3f};  // Initial X positions for items
+GLfloat obstaclePosX[] = {1.2f, 1.5f, 1.8f, 0.8f, 0.6f, 1.0f};  // Initial X positions for obstacles
 GLfloat bombPosY[] = {0.8f, 0.6f, 0.3f, 0.5f};
 GLfloat speed = 0.005f; // Speed of animation
 
@@ -57,12 +57,12 @@ void initializeRandomPositions()
 
     // Generate random values for item positions
     for (int i = 0; i < 5; i++)
-        itemPosY[i] = generateRandomFloat();
+        itemPosX[i] = generateRandomFloat();
 
 
     // Generate random values for obstacle positions
     for (int i = 0; i < 6; i++)
-        obstaclePosY[i] = generateRandomFloat();
+        obstaclePosX[i] = generateRandomFloat();
 
 
     // Generate random values for bomb positions
@@ -746,24 +746,24 @@ void daysky()
 
 void updateSky(int value)
 {
-    // Update cloud positions
-    cloud1X += 0.01f;
-    cloud2X += 0.01f;
-    cloud3X += 0.01f;
-    cloud4X += 0.01f;
-    cloud5X += 0.01f;
-    cloud6X += 0.01f;
+    // Update cloud positions to move from right to left
+    cloud1X -= 0.0004f;
+    cloud2X -= 0.0004f;
+    cloud3X -= 0.0004f;
+    cloud4X -= 0.0004f;
+    cloud5X -= 0.0004f;
+    cloud6X -= 0.0004f;
 
-    // Reset positions when clouds move off-screen
-    if (cloud1X > 1.2f) cloud1X = -1.2f;
-    if (cloud2X > 1.2f) cloud2X = -1.2f;
-    if (cloud3X > 1.2f) cloud3X = -1.2f;
-    if (cloud4X > 1.2f) cloud4X = -1.2f;
-    if (cloud5X > 1.2f) cloud5X = -1.2f;
-    if (cloud6X > 1.2f) cloud6X = -1.2f;
+    // Reset positions when clouds move off-screen (right side)
+    if (cloud1X < -1.2f) cloud1X = 1.2f;
+    if (cloud2X < -1.2f) cloud2X = 1.2f;
+    if (cloud3X < -1.2f) cloud3X = 1.2f;
+    if (cloud4X < -1.2f) cloud4X = 1.2f;
+    if (cloud5X < -1.2f) cloud5X = 1.2f;
+    if (cloud6X < -1.2f) cloud6X = 1.2f;
 
     glutPostRedisplay();              // Request a redraw
-    glutTimerFunc(16, updateSky, 0);    // Call update again after 16ms (~60 FPS)
+    glutTimerFunc(16, updateSky, 0);   // Call update again after 16ms (~60 FPS)
 }
 
 // Display function for Level 1
@@ -1354,9 +1354,9 @@ void obstaclesL3(GLfloat x, GLfloat y)
 
 void updateWave(int value)
 {
-    waveOffsetX += 0.005f;  // Move the waves to the right over time
+    waveOffsetX -= 0.005f;  // Move the waves to the right over time
     waveOffsetY = 0.1f * sin(waveOffsetX * 3.14f);
-    if (waveOffsetX > 2.0f) {
+    if (waveOffsetX < -2.0f) {
         waveOffsetX =  1.05f;  // Reset position when it moves off-screen
     }
 
@@ -1367,27 +1367,27 @@ void updateWave(int value)
 
 void updateLevel3(int value)
 {
-    // Update item positions
+   // Update item positions (move from right to left)
     for (int i = 0; i < 5; i++) {
-        itemPosY[i] -= speed;
-        if (itemPosY[i] < -1.2f) {
-            itemPosY[i] = 1.2f; // Reset position to top
+        itemPosX[i] -= speed;  // Move items leftward
+        if (itemPosX[i] < -1.2f) {
+            itemPosX[i] = 1.2f; // Reset position to the right
             // initializeRandomPositions();
         }
     }
 
-    // Update obstacle positions
+    // Update obstacle positions (move from right to left)
     for (int i = 0; i < 6; i++) {
-        obstaclePosY[i] -= speed * 1.2f; // Slightly faster than items
-        if (obstaclePosY[i] < -1.2f) {
-            obstaclePosY[i] = 1.2f;
+        obstaclePosX[i] -= speed * 1.2f;  // Move obstacles faster than items
+        if (obstaclePosX[i] < -1.2f) {
+            obstaclePosX[i] = 1.2f;  // Reset position to the right
             // initializeRandomPositions();
         }
     }
 
     // Update bomb positions
     for (int i = 0; i < 4; i++) {
-        bombPosY[i] -= speed * 1.5f; // Faster than obstacles
+        bombPosY[i] -= speed * 0.6f; // Faster than obstacles
         if (bombPosY[i] < -1.2f) {
             bombPosY[i] = 1.2f;
             // initializeRandomPositions();
@@ -1414,28 +1414,28 @@ void level3Display()
     //  clouds
     glColor3ub(235, 235, 235);
     dayclouds(cloud1X, 0.5f, 0.08f, 200);
-    dayclouds(cloud1X + 0.1f, 0.55f, 0.12f, 200);
-    dayclouds(cloud1X + 0.2f, 0.5f, 0.08f, 200);
+    dayclouds(cloud1X - 0.1f, 0.55f, 0.12f, 200);
+    dayclouds(cloud1X - 0.2f, 0.5f, 0.08f, 200);
 
     dayclouds(cloud2X, 0.25f, 0.08f, 200);
-    dayclouds(cloud2X + 0.1f, 0.3f, 0.12f, 200);
-    dayclouds(cloud2X + 0.2f, 0.25f, 0.08f, 200);
+    dayclouds(cloud2X - 0.1f, 0.3f, 0.12f, 200);
+    dayclouds(cloud2X - 0.2f, 0.25f, 0.08f, 200);
 
     dayclouds(cloud3X, 0.6f, 0.08f, 200);
-    dayclouds(cloud3X + 0.1f, 0.65f, 0.12f, 200);
-    dayclouds(cloud3X + 0.2f, 0.6f, 0.08f, 200);
+    dayclouds(cloud3X - 0.1f, 0.65f, 0.12f, 200);
+    dayclouds(cloud3X - 0.2f, 0.6f, 0.08f, 200);
 
     dayclouds(cloud4X, 0.05f, 0.08f, 200);
-    dayclouds(cloud4X + 0.1f, 0.1f, 0.12f, 200);
-    dayclouds(cloud4X + 0.2f, 0.05f, 0.08f, 200);
+    dayclouds(cloud4X - 0.1f, 0.1f, 0.12f, 200);
+    dayclouds(cloud4X - 0.2f, 0.05f, 0.08f, 200);
 
     dayclouds(cloud5X, -0.1f, 0.08f, 200);
-    dayclouds(cloud5X + 0.1f, -0.05f, 0.12f, 200);
-    dayclouds(cloud5X + 0.2f, -0.1f, 0.08f, 200);
+    dayclouds(cloud5X - 0.1f, -0.05f, 0.12f, 200);
+    dayclouds(cloud5X - 0.2f, -0.1f, 0.08f, 200);
 
     dayclouds(cloud6X, 0.8f, 0.08f, 200);
-    dayclouds(cloud6X - 0.2f, 0.85f, 0.12f, 200);
-    dayclouds(cloud6X - 0.3f, 0.8f, 0.08f, 200);
+    dayclouds(cloud6X + 0.2f, 0.85f, 0.12f, 200);
+    dayclouds(cloud6X + 0.3f, 0.8f, 0.08f, 200);
 
 
 
@@ -1680,26 +1680,25 @@ void level3Display()
     wave(1.05f-.2f + waveOffsetX, -1.06f + waveOffsetY, 0.18f, 100);
 
     // Draw collectibles
-    itemL3(0.75f, itemPosY[0]);
-    itemL3(0.6f, itemPosY[1]);
-    itemL3(0.8f, itemPosY[2]);
-    itemL3(0.5f, itemPosY[3]);
-    itemL3(0.9f, itemPosY[4]);
+    itemL3(itemPosX[0], 0.75f);  // Move items horizontally based on updated itemPosX
+    itemL3(itemPosX[1], 0.6f);
+    itemL3(itemPosX[2], 0.8f);
+    itemL3(itemPosX[3], 0.5f);
+    itemL3(itemPosX[4], 0.9f);
 
-    // Draw obstacles
-    obstaclesL3(0.68f, obstaclePosY[0]);
-    obstaclesL3(0.9f, obstaclePosY[1]);
-    obstaclesL3(0.4f, obstaclePosY[2]);
-    obstaclesL3(0.3f, obstaclePosY[3]);
-    obstaclesL3(0.32f, obstaclePosY[4]);
-    obstaclesL3(0.98f, obstaclePosY[5]);
+    // Draw obstacles (move from right to left)
+    obstaclesL3(obstaclePosX[0], 0.68f);  // Move obstacles horizontally based on updated obstaclePosX
+    obstaclesL3(obstaclePosX[1], 0.9f);
+    obstaclesL3(obstaclePosX[2], 0.4f);
+    obstaclesL3(obstaclePosX[3], 0.3f);
+    obstaclesL3(obstaclePosX[4], 0.32f);
+    obstaclesL3(obstaclePosX[5], 0.98f);
 
     // Draw bombs
     bomb(-0.3f, bombPosY[0]);
     bomb(-0.8f, bombPosY[1]);
     bomb(-0.6f, bombPosY[2]);
     bomb(0.2f, bombPosY[3]);
-
 
     aircraft();
 
