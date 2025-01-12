@@ -41,6 +41,9 @@ float cloud1X = -0.9f, cloud2X = -0.35f, cloud3X = 0.35f, cloud4X = 0.75f, cloud
 float waveOffsetX = 0.0f, waveOffsetY = 0.0f;  // Horizontal offset for waves
 GLfloat itemPosX[] = {1.2f, 0.9f, 0.7f, 0.5f, 0.3f};  // Initial X positions for items
 GLfloat obstaclePosX[] = {1.2f, 1.5f, 1.8f, 0.8f, 0.6f, 1.0f};  // Initial X positions for obstacles
+// Fixed Y positions as provided
+GLfloat itemPosY[] = {0.75f, 0.42f, 0.16f, 0.05f, -0.3f};
+GLfloat obstaclePosY[] = {-0.2f, 0.62f, 0.62f, 0.15f, -0.25f, 0.2f};
 GLfloat bombPosY[] = {0.8f, 0.6f, 0.3f, 0.5f};
 GLfloat speed = 0.005f; // Speed of animation
 
@@ -1679,20 +1682,20 @@ void level3Display()
     wave(0.95f-.2f + waveOffsetX, -1.06f + waveOffsetY, 0.21f, 100);
     wave(1.05f-.2f + waveOffsetX, -1.06f + waveOffsetY, 0.18f, 100);
 
-    // Draw collectibles
-    itemL3(itemPosX[0], 0.75f);  // Move items horizontally based on updated itemPosX
-    itemL3(itemPosX[1], 0.6f);
-    itemL3(itemPosX[2], 0.8f);
-    itemL3(itemPosX[3], 0.5f);
-    itemL3(itemPosX[4], 0.9f);
+    // Draw collectibles (move from right to left with fixed Y positions)
+    itemL3(itemPosX[0], itemPosY[0]);
+    itemL3(itemPosX[1], itemPosY[1]);
+    itemL3(itemPosX[2], itemPosY[2]);
+    itemL3(itemPosX[3], itemPosY[3]);
+    itemL3(itemPosX[4], itemPosY[4]);
 
-    // Draw obstacles (move from right to left)
-    obstaclesL3(obstaclePosX[0], 0.68f);  // Move obstacles horizontally based on updated obstaclePosX
-    obstaclesL3(obstaclePosX[1], 0.9f);
-    obstaclesL3(obstaclePosX[2], 0.4f);
-    obstaclesL3(obstaclePosX[3], 0.3f);
-    obstaclesL3(obstaclePosX[4], 0.32f);
-    obstaclesL3(obstaclePosX[5], 0.98f);
+    // Draw obstacles (move from right to left with fixed Y positions)
+    obstaclesL3(obstaclePosX[0], obstaclePosY[0]);
+    obstaclesL3(obstaclePosX[1], obstaclePosY[1]);
+    obstaclesL3(obstaclePosX[2], obstaclePosY[2]);
+    obstaclesL3(obstaclePosX[3], obstaclePosY[3]);
+    obstaclesL3(obstaclePosX[4], obstaclePosY[4]);
+    obstaclesL3(obstaclePosX[5], obstaclePosY[5]);
 
     // Draw bombs
     bomb(-0.3f, bombPosY[0]);
