@@ -39,13 +39,14 @@ int mainWindow; // Main menu window ID
 int levelWindow; // Level window ID
 float cloud1X = -0.9f, cloud2X = -0.35f, cloud3X = 0.35f, cloud4X = 0.75f, cloud5X = -0.8f, cloud6X = 1.15f;
 float waveOffsetX = 0.0f, waveOffsetY = 0.0f;  // Horizontal offset for waves
-GLfloat itemPosX[] = {1.2f, 0.9f, 0.7f, 0.5f, 0.3f};  // Initial X positions for items
+GLfloat itemPosX[] = {0.6f, 0.8f, 1.2f, 0.0f, 0.3f, 0.0f, -0.2f};  // Initial X positions for items
 GLfloat obstaclePosX[] = {1.2f, 1.5f, 1.8f, 0.8f, 0.6f, 1.0f};  // Initial X positions for obstacles
 // Fixed Y positions as provided
-GLfloat itemPosY[] = {0.75f, 0.42f, 0.16f, 0.05f, -0.3f};
+GLfloat itemPosY[] = {0.75f, 0.42f, 0.16f, 0.05f, -0.3f, 0.0f, -0.55f};
 GLfloat obstaclePosY[] = {-0.2f, 0.62f, 0.62f, 0.15f, -0.25f, 0.2f};
 GLfloat bombPosY[] = {0.8f, 0.6f, 0.3f, 0.5f};
 GLfloat speed = 0.005f; // Speed of animation
+float translationX = 1.8f;
 
 
 GLfloat generateRandomFloat()
@@ -97,6 +98,7 @@ void circle()
     }
     glEnd();
 }
+
 
 
 
@@ -253,310 +255,80 @@ void hills_trees()
     glVertex2f (0.6, -0.5);
     glVertex2f (0.0, -0.5);
     glEnd();
+}
 
-    //Trees
 
-    //Tree 1
+
+
+void drawTree(float offsetX, float offsetY) {
+    // Tree Trunk (positioned with respect to the center)
     glBegin(GL_POLYGON);
     glColor3ub(14, 4, 4);
-    glVertex2f (-0.59, -0.7);
-    glVertex2f (-0.6, -0.7);
-    glVertex2f (-0.6, -0.61);
-    glVertex2f (-0.59, -0.61);
+    glVertex2f(-0.59f + offsetX, -0.7f + offsetY);
+    glVertex2f(-0.6f + offsetX, -0.7f + offsetY);
+    glVertex2f(-0.6f + offsetX, -0.61f + offsetY);
+    glVertex2f(-0.59f + offsetX, -0.61f + offsetY);
     glEnd();
 
+    // First Layer of Leaves (positioned with respect to the center)
     glBegin(GL_POLYGON);
     glColor3ub(14, 85, 31);
-    glVertex2f (-0.56, -0.66);
-    glVertex2f (-0.595, -0.61);
-    glVertex2f (-0.63, -0.66);
+    glVertex2f(-0.56f + offsetX, -0.66f + offsetY);
+    glVertex2f(-0.595f + offsetX, -0.61f + offsetY);
+    glVertex2f(-0.63f + offsetX, -0.66f + offsetY);
     glEnd();
 
+    // Second Layer of Leaves (positioned with respect to the center)
     glBegin(GL_POLYGON);
     glColor3ub(14, 85, 31);
-    glVertex2f (-0.56-0.005, -0.66+0.03);
-    glVertex2f (-0.595, -0.61+0.03);
-    glVertex2f (-0.63+0.005, -0.66+0.03);
-    glEnd();
-
-
-    //Tree 2
-    glBegin(GL_POLYGON);
-    glColor3ub(14, 4, 4);
-    glVertex2f (-0.59+0.2, -0.7-0.1);
-    glVertex2f (-0.6+0.2, -0.7-0.1);
-    glVertex2f (-0.6+0.2, -0.61-0.1);
-    glVertex2f (-0.59+0.2, -0.61-0.1);
-    glEnd();
-
-    glBegin(GL_POLYGON);
-    glColor3ub(14, 85, 31);
-    glVertex2f (-0.56+0.2, -0.66-0.1);
-    glVertex2f (-0.595+0.2, -0.61-0.1);
-    glVertex2f (-0.63+0.2, -0.66-0.1);
-    glEnd();
-
-    glBegin(GL_POLYGON);
-    glColor3ub(14, 85, 31);
-    glVertex2f (-0.56-0.005+0.2, -0.66+0.03-0.1);
-    glVertex2f (-0.595+0.2, -0.61+0.03-0.1);
-    glVertex2f (-0.63+0.005+0.2, -0.66+0.03-0.1);
-    glEnd();
-
-    //Tree 3
-    glBegin(GL_POLYGON);
-    glColor3ub(14, 4, 4);
-    glVertex2f (-0.59+0.5, -0.7+0.25);
-    glVertex2f (-0.6+0.5, -0.7+0.25);
-    glVertex2f (-0.6+0.5, -0.61+0.25);
-    glVertex2f (-0.59+0.5, -0.61+0.25);
-    glEnd();
-
-    glBegin(GL_POLYGON);
-    glColor3ub(14, 85, 31);
-    glVertex2f (-0.56+0.5, -0.66+0.25);
-    glVertex2f (-0.595+0.5, -0.61+0.25);
-    glVertex2f (-0.63+0.5, -0.66+0.25);
-    glEnd();
-
-    glBegin(GL_POLYGON);
-    glColor3ub(14, 85, 31);
-    glVertex2f (-0.56-0.005+0.5, -0.66+0.03+0.25);
-    glVertex2f (-0.595+0.5, -0.61+0.03+0.25);
-    glVertex2f (-0.63+0.005+0.5, -0.66+0.03+0.25);
-    glEnd();
-
-    //Tree 4
-    glBegin(GL_POLYGON);
-    glColor3ub(14, 4, 4);
-    glVertex2f (-0.59+0.6, -0.7+0.12);
-    glVertex2f (-0.6+0.6, -0.7+0.12);
-    glVertex2f (-0.6+0.6, -0.61+0.12);
-    glVertex2f (-0.59+0.6, -0.61+0.12);
-    glEnd();
-
-    glBegin(GL_POLYGON);
-    glColor3ub(14, 85, 31);
-    glVertex2f (-0.56+0.6, -0.66+0.12);
-    glVertex2f (-0.595+0.6, -0.61+0.12);
-    glVertex2f (-0.63+0.6, -0.66+0.12);
-    glEnd();
-
-    glBegin(GL_POLYGON);
-    glColor3ub(14, 85, 31);
-    glVertex2f (-0.56-0.005+0.6, -0.66+0.03+0.12);
-    glVertex2f (-0.595+0.6, -0.61+0.03+0.12);
-    glVertex2f (-0.63+0.005+0.6, -0.66+0.03+0.12);
-    glEnd();
-
-    //Tree 5
-    glBegin(GL_POLYGON);
-    glColor3ub(14, 4, 4);
-    glVertex2f (-0.59+0.25, -0.7+0.18);
-    glVertex2f (-0.6+0.25, -0.7+0.18);
-    glVertex2f (-0.6+0.25, -0.61+0.18);
-    glVertex2f (-0.59+0.25, -0.61+0.18);
-    glEnd();
-
-    glBegin(GL_POLYGON);
-    glColor3ub(14, 85, 31);
-    glVertex2f (-0.56+0.25, -0.66+0.18);
-    glVertex2f (-0.595+0.25, -0.61+0.18);
-    glVertex2f (-0.63+0.25, -0.66+0.18);
-    glEnd();
-
-    glBegin(GL_POLYGON);
-    glColor3ub(14, 85, 31);
-    glVertex2f (-0.56-0.005+0.25, -0.66+0.03+0.18);
-    glVertex2f (-0.595+0.25, -0.61+0.03+0.18);
-    glVertex2f (-0.63+0.005+0.25, -0.66+0.03+0.18);
-    glEnd();
-
-    //Tree 6
-    glBegin(GL_POLYGON);
-    glColor3ub(14, 4, 4);
-    glVertex2f (-0.59-0.15, -0.7-0.18);
-    glVertex2f (-0.6-0.15, -0.7-0.18);
-    glVertex2f (-0.6-0.15, -0.61-0.18);
-    glVertex2f (-0.59-0.15, -0.61-0.18);
-    glEnd();
-
-    glBegin(GL_POLYGON);
-    glColor3ub(14, 85, 31);
-    glVertex2f (-0.56-0.15, -0.66-0.18);
-    glVertex2f (-0.595-0.15, -0.61-0.18);
-    glVertex2f (-0.63-0.15, -0.66-0.18);
-    glEnd();
-
-    glBegin(GL_POLYGON);
-    glColor3ub(14, 85, 31);
-    glVertex2f (-0.56-0.005-0.15, -0.66+0.03-0.18);
-    glVertex2f (-0.595-0.15, -0.61+0.03-0.18);
-    glVertex2f (-0.63+0.005-0.15, -0.66+0.03-0.18);
-    glEnd();
-
-    //Tree 7
-    glBegin(GL_POLYGON);
-    glColor3ub(14, 4, 4);
-    glVertex2f (-0.59+0.35, -0.7-0.25);
-    glVertex2f (-0.6+0.35, -0.7-0.25);
-    glVertex2f (-0.6+0.35, -0.61-0.25);
-    glVertex2f (-0.59+0.35, -0.61-0.25);
-    glEnd();
-
-    glBegin(GL_POLYGON);
-    glColor3ub(14, 85, 31);
-    glVertex2f (-0.56+0.35, -0.66-0.25);
-    glVertex2f (-0.595+0.35, -0.61-0.25);
-    glVertex2f (-0.63+0.35, -0.66-0.25);
-    glEnd();
-
-    glBegin(GL_POLYGON);
-    glColor3ub(14, 85, 31);
-    glVertex2f (-0.56-0.005+0.35, -0.66+0.03-0.25);
-    glVertex2f (-0.595+0.35, -0.61+0.03-0.25);
-    glVertex2f (-0.63+0.005+0.35, -0.66+0.03-0.25);
-    glEnd();
-
-    //Tree 8
-    glBegin(GL_POLYGON);
-    glColor3ub(14, 4, 4);
-    glVertex2f (-0.59+0.6, -0.7-0.25);
-    glVertex2f (-0.6+0.6, -0.7-0.25);
-    glVertex2f (-0.6+0.6, -0.61-0.25);
-    glVertex2f (-0.59+0.6, -0.61-0.25);
-    glEnd();
-
-    glBegin(GL_POLYGON);
-    glColor3ub(14, 85, 31);
-    glVertex2f (-0.56+0.6, -0.66-0.25);
-    glVertex2f (-0.595+0.6, -0.61-0.25);
-    glVertex2f (-0.63+0.6, -0.66-0.25);
-    glEnd();
-
-    glBegin(GL_POLYGON);
-    glColor3ub(14, 85, 31);
-    glVertex2f (-0.56-0.005+0.6, -0.66+0.03-0.25);
-    glVertex2f (-0.595+0.6, -0.61+0.03-0.25);
-    glVertex2f (-0.63+0.005+0.6, -0.66+0.03-0.25);
-    glEnd();
-
-    //Tree 9
-    glBegin(GL_POLYGON);
-    glColor3ub(14, 4, 4);
-    glVertex2f (-0.59+0.75, -0.7+0.21);
-    glVertex2f (-0.6+0.75, -0.7+0.21);
-    glVertex2f (-0.6+0.75, -0.61+0.21);
-    glVertex2f (-0.59+0.75, -0.61+0.21);
-    glEnd();
-
-    glBegin(GL_POLYGON);
-    glColor3ub(14, 85, 31);
-    glVertex2f (-0.56+0.75, -0.66+0.21);
-    glVertex2f (-0.595+0.75, -0.61+0.21);
-    glVertex2f (-0.63+0.75, -0.66+0.21);
-    glEnd();
-
-    glBegin(GL_POLYGON);
-    glColor3ub(14, 85, 31);
-    glVertex2f (-0.56-0.005+0.75, -0.66+0.03+0.21);
-    glVertex2f (-0.595+0.75, -0.61+0.03+0.21);
-    glVertex2f (-0.63+0.005+0.75, -0.66+0.03+0.21);
-    glEnd();
-
-    //Tree 10
-    glBegin(GL_POLYGON);
-    glColor3ub(14, 4, 4);
-    glVertex2f (0.59-0.15, -0.7-0.18);
-    glVertex2f (0.6-0.15, -0.7-0.18);
-    glVertex2f (0.6-0.15, -0.61-0.18);
-    glVertex2f (0.59-0.15, -0.61-0.18);
-    glEnd();
-
-    glBegin(GL_POLYGON);
-    glColor3ub(14, 85, 31);
-    glVertex2f (0.56-0.15, -0.66-0.18);
-    glVertex2f (0.595-0.15, -0.61-0.18);
-    glVertex2f (0.63-0.15, -0.66-0.18);
-    glEnd();
-
-    glBegin(GL_POLYGON);
-    glColor3ub(14, 85, 31);
-    glVertex2f (0.56-0.005-0.15, -0.66+0.03-0.18);
-    glVertex2f (0.595-0.15, -0.61+0.03-0.18);
-    glVertex2f (0.63+0.005-0.15, -0.66+0.03-0.18);
-    glEnd();
-
-
-    //Tree 11
-    glBegin(GL_POLYGON);
-    glColor3ub(14, 4, 4);
-    glVertex2f (0.59, -0.7);
-    glVertex2f (0.6, -0.7);
-    glVertex2f (0.6, -0.61);
-    glVertex2f (0.59, -0.61);
-    glEnd();
-
-    glBegin(GL_POLYGON);
-    glColor3ub(14, 85, 31);
-    glVertex2f (0.56, -0.66);
-    glVertex2f (0.595, -0.61);
-    glVertex2f (0.63, -0.66);
-    glEnd();
-
-    glBegin(GL_POLYGON);
-    glColor3ub(14, 85, 31);
-    glVertex2f (0.56-0.005, -0.66+0.03);
-    glVertex2f (0.595, -0.61+0.03);
-    glVertex2f (0.63+0.005, -0.66+0.03);
-    glEnd();
-
-    //Tree 12
-    glBegin(GL_POLYGON);
-    glColor3ub(14, 4, 4);
-    glVertex2f (0.59+0.15, -0.7-0.25);
-    glVertex2f (0.6+0.15, -0.7-0.25);
-    glVertex2f (0.6+0.15, -0.61-0.25);
-    glVertex2f (0.59+0.15, -0.61-0.25);
-    glEnd();
-
-    glBegin(GL_POLYGON);
-    glColor3ub(14, 85, 31);
-    glVertex2f (0.56+0.15, -0.66-0.25);
-    glVertex2f (0.595+0.15, -0.61-0.25);
-    glVertex2f (0.63+0.15, -0.66-0.25);
-    glEnd();
-
-    glBegin(GL_POLYGON);
-    glColor3ub(14, 85, 31);
-    glVertex2f (0.56-0.005+0.15, -0.66+0.03-0.25);
-    glVertex2f (0.595+0.15, -0.61+0.03-0.25);
-    glVertex2f (0.63+0.005+0.15, -0.66+0.03-0.25);
-    glEnd();
-
-    //Tree 13
-    glBegin(GL_POLYGON);
-    glColor3ub(14, 4, 4);
-    glVertex2f (0.59-0.3, -0.7);
-    glVertex2f (0.6-0.3, -0.7);
-    glVertex2f (0.6-0.3, -0.61);
-    glVertex2f (0.59-0.3, -0.61);
-    glEnd();
-
-    glBegin(GL_POLYGON);
-    glColor3ub(14, 85, 31);
-    glVertex2f (0.56-0.3, -0.66);
-    glVertex2f (0.595-0.3, -0.61);
-    glVertex2f (0.63-0.3, -0.66);
-    glEnd();
-
-    glBegin(GL_POLYGON);
-    glColor3ub(14, 85, 31);
-    glVertex2f (0.56-0.005-0.3, -0.66+0.03);
-    glVertex2f (0.595-0.3, -0.61+0.03);
-    glVertex2f (0.63+0.005-0.3, -0.66+0.03);
+    glVertex2f(-0.56f - 0.005f + offsetX, -0.66f + 0.03f + offsetY);
+    glVertex2f(-0.595f + offsetX, -0.61f + 0.03f + offsetY);
+    glVertex2f(-0.63f + 0.005f + offsetX, -0.66f + 0.03f + offsetY);
     glEnd();
 }
+
+
+
+void drawPolygonWithTrees()
+{
+    glPushMatrix();  // Save the current matrix state
+    glTranslatef(translationX, 0.0f, 0.0f);
+    // Draw the outer polygon with the dimensions of -1.0f to 1.5f in length and -1.0f to -0.7f in height
+    glBegin(GL_POLYGON);
+    glColor3ub(38, 18, 0);  // Color for the polygon (grey, or choose any color)
+    glVertex2f(-1.0f, -1.0f);  // Bottom-left corner
+    glVertex2f(1.5f, -1.0f);   // Bottom-right corner
+    glVertex2f(1.5f, -0.5f);   // Top-right corner
+    glVertex2f(-1.0f, -0.5f);  // Top-left corner
+    glEnd();
+
+    // Call drawTree at various positions inside the polygon
+    drawTree(0.0f, -0.05f);
+    drawTree(0.25f, -0.15f);
+    drawTree(0.5f, -0.2f);
+    drawTree(0.65f, 0.0f);
+    drawTree(0.35f, 0.1f);
+    drawTree(0.75f, -0.2f);
+    drawTree(-0.2f, -0.2f);
+    drawTree(-0.25f, 0.0f);
+    drawTree(0.85f, 0.1f);
+    drawTree(1.0f, -0.1f);
+    drawTree(1.2f, -0.2f);
+    drawTree(1.3f, 0.0f);
+    drawTree(1.48f, 0.0f);
+    drawTree(1.6f, -0.2f);
+    drawTree(1.75f, -0.1f);
+    drawTree(1.85f, 0.0f);
+    drawTree(1.95f, -0.2f);
+    glPopMatrix();  // Restore the previous matrix state
+
+    // Update the translation value for continuous movement
+    translationX -= 0.015f;  // Adjust the speed of the movement here
+    if (translationX < -3.0f) {  // Reset translation when it moves out of screen
+        translationX = 1.5f;
+    }
+}
+
 
 
 
@@ -812,16 +584,19 @@ void level1Display()
 
 
     //collectibles
-    item(0.75, 0.75);
-    item(0.6, 0.42);
-    item(0.8, 0.16);
-    item(0.5, 0.05);
-    item(0.9, -0.3);
+    itemL3(itemPosX[0], itemPosY[0]);
+    itemL3(itemPosX[1], itemPosY[1]);
+    itemL3(itemPosX[2], itemPosY[2]);
+    itemL3(itemPosX[3], itemPosY[3]);
+    itemL3(itemPosX[4], itemPosY[4]);
+
+
+
+    drawPolygonWithTrees();
+
 
 
     aircraft();
-    circle();
-    hills_trees();
 
     // Show message for Level 1
     glColor3ub(244, 244, 244);
@@ -1682,6 +1457,9 @@ void level3Display()
     wave(0.95f-.2f + waveOffsetX, -1.06f + waveOffsetY, 0.21f, 100);
     wave(1.05f-.2f + waveOffsetX, -1.06f + waveOffsetY, 0.18f, 100);
 
+
+
+
     // Draw collectibles (move from right to left with fixed Y positions)
     itemL3(itemPosX[0], itemPosY[0]);
     itemL3(itemPosX[1], itemPosY[1]);
@@ -1780,6 +1558,7 @@ void openLevel1()
     glClearColor(0.2f, 0.2f, 0.2f, 1.0f); // Set background color for Level 1
     glutDisplayFunc(level1Display); // Register display callback for Level 1
     glutTimerFunc(16, updateSky, 0);         // Start animation for Level 1
+    glutTimerFunc(16, updateLevel3, 0);
     glutPostRedisplay(); // Redraw to display Level 1 content
 }
 
