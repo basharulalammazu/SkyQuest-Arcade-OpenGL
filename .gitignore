@@ -1,0 +1,22 @@
+# Ignore build artifacts and executables
+*.depend
+*.exe
+*.o
+*.out
+*.a
+*.so
+*.dll
+*.dylib
+
+# Ignore debug and release build directories
+**/bin/
+**/obj/
+**/Debug/
+**/Release/
+
+# Ignore user-specific files and logs
+*.log
+*.tmp
+*.bak
+*.swp
+*.swo
