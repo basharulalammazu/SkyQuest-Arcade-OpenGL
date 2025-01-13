@@ -922,3 +922,11 @@
 1720557417 c:\program files\codeblocks\mingw\x86_64-w64-mingw32\include\pthread_time.h
 	<sys/timeb.h>
 
+1736756770 source:d:\university\semester-7\final\computer graphics\project\skyquest-arcade-opengl\skyquest-arcade-opengl\skyquest-arcade\main.cpp
+	<GL/glut.h>
+	<iostream>
+	<math.h>
+	<cmath>
+	<stdlib.h>
+	<time.h>
+

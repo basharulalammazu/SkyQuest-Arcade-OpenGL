@@ -1,6 +1,6 @@
 #include<GL/glut.h>
 #include<iostream>
-#include<math.h>>
+#include<math.h>
 #include<cmath>
 #include<stdlib.h>
 #include<time.h>
@@ -30,6 +30,7 @@ void itemL3(GLfloat x, GLfloat y);
 void obstaclesL3(GLfloat x, GLfloat y);
 void updateWave(int value);
 void initializeRandomPositions();
+void drawCrescentMoon();
 
 
 // Variable
@@ -260,7 +261,8 @@ void hills_trees()
 
 
 
-void drawTree(float offsetX, float offsetY) {
+void drawTree(float offsetX, float offsetY)
+{
     // Tree Trunk (positioned with respect to the center)
     glBegin(GL_POLYGON);
     glColor3ub(14, 4, 4);
@@ -324,7 +326,8 @@ void drawPolygonWithTrees()
 
     // Update the translation value for continuous movement
     translationX -= 0.015f;  // Adjust the speed of the movement here
-    if (translationX < -3.0f) {  // Reset translation when it moves out of screen
+    if (translationX < -3.0f)    // Reset translation when it moves out of screen
+    {
         translationX = 1.5f;
     }
 }
@@ -745,6 +748,43 @@ void level1Display()
 
 
 
+void drawCrescentMoon()
+{
+
+    int i;
+    GLfloat radius = 0.1f;  // Outer moon radius
+    GLfloat innerRadius = 0.08f;  // Inner cutout radius
+    int triangleAmount = 360;  // Smoothness of the circle
+    GLfloat twicePi = 2.0f * PI;
+
+    // Outer white circle (main moon)
+    glColor3f(1.0f, 1.0f, 1.0f);  // White color
+    glBegin(GL_TRIANGLE_FAN);
+    glVertex2f(-0.75f, 0.75f);  // Center of the moon
+    for (i = 0; i <= triangleAmount; i++)
+    {
+        glVertex2f(
+            -0.75f + (radius * cos(i * twicePi / triangleAmount)),
+            0.75f + (radius * sin(i * twicePi / triangleAmount))
+        );
+    }
+    glEnd();
+
+    // Inner background-colored circle to create the crescent effect
+    glColor3f(0.0f, 0.0f, 0.2f);  // Same as background color for blending
+    glBegin(GL_TRIANGLE_FAN);
+    glVertex2f(-0.72f, 0.78f);  // Slight offset to create the curve
+    for (i = 0; i <= triangleAmount; i++)
+    {
+        glVertex2f(
+            -0.72f + (innerRadius * cos(i * twicePi / triangleAmount)),
+            0.78f + (innerRadius * sin(i * twicePi / triangleAmount))
+        );
+    }
+    glEnd();
+
+    }
+
 
 void darkclouds(float cx, float cy, float r, int num_segments)
 {
@@ -784,75 +824,87 @@ void obstacles(GLfloat x, GLfloat y)
     glEnd();
 }
 
+void bg2()
+{
+    glColor3f(0.0f, 0.0f, 0.2f);
+    glBegin(GL_POLYGON);
+    glVertex2f (1.0f, 1.0f);
+    glVertex2f (-1.0f, 1.0f);
+    glVertex2f (-1.0f, -1.0f);
+    glVertex2f (1.0f, -1.0f);
+    glEnd();
+}
+
 
 void level2Display()
 {
     glClear(GL_COLOR_BUFFER_BIT);
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    circle();
-
-
-    //Background of level 2
-    glBegin(GL_POLYGON);
-    glColor3f(0.0f, 0.0f, 0.2f); // Dark blue
-    glVertex2f (1.0f, 1.0f);
-    glVertex2f (-1.0f, 1.0f);
-    glColor3f(0.1f, 0.1f, 0.3f); // light blue
-    glVertex2f (-1.0f, -1.0f);
     glVertex2f (1.0f, -1.0f);
     glEnd();
 
-    glColor3ub(230, 245, 255);
-    darkclouds(-0.8f, 0.6f, 0.02f, 20); //snowflake
-    darkclouds(-0.4f, 0.7f, 0.02f, 20);
-    darkclouds(0.3f, 0.5f, 0.02f, 20);
-    darkclouds(0.6f, 0.8f, 0.02f, 20);
-    darkclouds(-0.1f, 0.9f, 0.02f, 20);
-    glEnd();     // moon
+    bg2();
 
-    circle();
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.3f, 0.3f, 0.5f);
+    glVertex2f(-0.8f, -1.0f);
+    glVertex2f(-0.1f, 0.0f);
+    glVertex2f(0.7f, -1.0f);
+    glEnd();
 
-    glColor3ub(255, 236, 179); // yellow
-    darkclouds(0.7f, 0.7f, 0.15f, 100);
-    glColor4f(1.0f, 0.925f, 0.702f, 0.2f); // light yellow
-    darkclouds(0.7f, 0.7f, 0.18f, 100);
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.5f, 0.5f, 0.7f);
+    glVertex2f(-1.0f, -1.0f);
+    glVertex2f(-0.4f, -0.1f);
+    glVertex2f(0.3f, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.6f, 0.6f, 0.8f);
+    glVertex2f(-1.15f, -1.0f);
+    glVertex2f(-0.7f, 0.05f);
+    glVertex2f(0.0f, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.2f, 0.2f, 0.4f);
+    glVertex2f(-0.5f, -1.0f);
+    glVertex2f(0.3f, -0.15f);
+    glVertex2f(0.9f, -1.0f);
+    glEnd();
+
+      glBegin(GL_TRIANGLES);
+    glColor3f(0.15f, 0.15f, 0.3f);
+    glVertex2f(0.3f, -1.0f);
+    glVertex2f(0.8f, -0.3f);
+    glVertex2f(1.5f, -1.0f);
+    glEnd();
 
 
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.1f, 0.1f, 0.2f);
+    glVertex2f(0.02f, -1.0f);
+    glVertex2f(0.4f, -0.6f);
+    glVertex2f(0.8f, -1.0f);
+    glEnd();
 
 
-    //  clouds
-    glColor3ub(80, 80, 80); // Gray color
-    darkclouds(-0.9f, -0.15f, 0.08f, 100);
-    darkclouds(-0.8f, -0.1f, 0.12f, 100);
-    darkclouds(-0.7f, -0.15f, 0.08f, 100);
+    drawCrescentMoon();
 
-    darkclouds(0.1f, 0.3f, 0.1f, 100);
-    darkclouds(0.2f, 0.35f, 0.12f, 100);
-    darkclouds(0.3f, 0.3f, 0.1f, 100);
+    // Draw collectibles (move from right to left with fixed Y positions)
+    itemL3(itemPosX[0], itemPosY[0]);
+    itemL3(itemPosX[1], itemPosY[1]);
+    itemL3(itemPosX[2], itemPosY[2]);
+    itemL3(itemPosX[3], itemPosY[3]);
+    itemL3(itemPosX[4], itemPosY[4]);
 
-    darkclouds(-0.3f, 0.8f, 0.1f, 100);
-    darkclouds(-0.2f, 0.85f, 0.12f, 100);
-    darkclouds(-0.1f, 0.8f, 0.1f, 100);
+    // Draw obstacles (move from right to left with fixed Y positions)
+    obstaclesL3(obstaclePosX[0], obstaclePosY[0]);
+    obstaclesL3(obstaclePosX[1], obstaclePosY[1]);
+    obstaclesL3(obstaclePosX[2], obstaclePosY[2]);
+    obstaclesL3(obstaclePosX[3], obstaclePosY[3]);
+    obstaclesL3(obstaclePosX[4], obstaclePosY[4]);
+    obstaclesL3(obstaclePosX[5], obstaclePosY[5]);
 
-    darkclouds(0.9f, -0.25f, 0.08f, 100);
-    darkclouds(0.8f, -0.2f, 0.12f, 100);
-    darkclouds(0.7f, -0.25f, 0.08f, 100);
-
-
-    //collectibles
-    item(0.75, 0.75);
-    item(0.6, 0.42);
-    item(0.8, 0.16);
-    item(0.5, 0.05);
-    item(0.9, -0.3);
-
-    //obstacles
-    obstacles(0.68, -0.2);
-    obstacles(0.9, 0.62);
-    obstacles(0.4, 0.62);
-    obstacles(0.3, 0.15);
-    obstacles(0.32, -0.25);
-    obstacles(0.98, 0.2);
 
     aircraft();
 
@@ -864,21 +916,8 @@ void level2Display()
     {
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
     }
-
     glFlush();
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1134,7 +1173,8 @@ void updateWave(int value)
 {
     waveOffsetX -= 0.005f;  // Move the waves to the right over time
     waveOffsetY = 0.1f * sin(waveOffsetX * 3.14f);
-    if (waveOffsetX < -2.0f) {
+    if (waveOffsetX < -2.0f)
+    {
         waveOffsetX =  1.05f;  // Reset position when it moves off-screen
     }
 
@@ -1145,28 +1185,34 @@ void updateWave(int value)
 
 void updateLevel3(int value)
 {
-   // Update item positions (move from right to left)
-    for (int i = 0; i < 5; i++) {
+    // Update item positions (move from right to left)
+    for (int i = 0; i < 5; i++)
+    {
         itemPosX[i] -= speed;  // Move items leftward
-        if (itemPosX[i] < -1.2f) {
+        if (itemPosX[i] < -1.2f)
+        {
             itemPosX[i] = 1.2f; // Reset position to the right
             // initializeRandomPositions();
         }
     }
 
     // Update obstacle positions (move from right to left)
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < 6; i++)
+    {
         obstaclePosX[i] -= speed * 1.2f;  // Move obstacles faster than items
-        if (obstaclePosX[i] < -1.2f) {
+        if (obstaclePosX[i] < -1.2f)
+        {
             obstaclePosX[i] = 1.2f;  // Reset position to the right
             // initializeRandomPositions();
         }
     }
 
     // Update bomb positions
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 4; i++)
+    {
         bombPosY[i] -= speed * 0.6f; // Faster than obstacles
-        if (bombPosY[i] < -1.2f) {
+        if (bombPosY[i] < -1.2f)
+        {
             bombPosY[i] = 1.2f;
             // initializeRandomPositions();
         }
@@ -1219,6 +1265,18 @@ void level3Display()
 
     //  wave4
     glColor3ub(6,66,115); // Gray color
+    wave(-3.95f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.18f, 100);
+    wave(-3.85f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.21f, 100);
+    wave(-3.75f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.18f, 100);
+    wave(-3.65f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.18f, 100);
+    wave(-3.55f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.21f, 100);
+    wave(-3.45f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.18f, 100);
+    wave(-3.35f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.18f, 100);
+    wave(-3.25f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.21f, 100);
+    wave(-3.15f-.2f + waveOffsetX,-0.72f + waveOffsetY, 0.18f, 100);
+    wave(-3.05f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.18f, 100);
+
+
     wave(-2.95f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.18f, 100);
     wave(-2.85f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.21f, 100);
     wave(-2.75f-.2f + waveOffsetX, -0.72f + waveOffsetY, 0.18f, 100);
@@ -1353,7 +1411,7 @@ void level3Display()
     wave(0.15f+.2f + waveOffsetX, -0.90f + waveOffsetY, 0.18f, 100);
     wave(0.25f+.2f + waveOffsetX, -0.90f + waveOffsetY, 0.18f, 100);
     wave(0.35f+.2f + waveOffsetX, -0.90f + waveOffsetY, 0.21f, 100);
-    wave(0.45f+.2f + waveOffsetX, -0.90f + waveOffsetY , 0.18f, 100);
+    wave(0.45f+.2f + waveOffsetX, -0.90f + waveOffsetY, 0.18f, 100);
     wave(0.45f+.2f + waveOffsetX, -0.90f + waveOffsetY, 0.18f, 100);
     wave(0.55f+.2f + waveOffsetX, -0.90f  + waveOffsetY, 0.18f, 100);
     wave(0.65f+.2f + waveOffsetX, -0.90f + waveOffsetY, 0.21f, 100);
@@ -1365,7 +1423,7 @@ void level3Display()
 
     //  wave
     glColor3ub(29,162,216); // occen green color
-     wave(-2.95f + waveOffsetX, -0.98f + waveOffsetY, 0.18f, 100);
+    wave(-2.95f + waveOffsetX, -0.98f + waveOffsetY, 0.18f, 100);
     wave(-2.85f + waveOffsetX, -0.98f + waveOffsetY, 0.21f, 100);
     wave(-2.75f + waveOffsetX, -0.98f + waveOffsetY, 0.18f, 100);
     wave(-2.65f + waveOffsetX, -0.98f + waveOffsetY, 0.18f, 100);
@@ -1376,7 +1434,7 @@ void level3Display()
     wave(-2.15f + waveOffsetX,-0.98f + waveOffsetY, 0.18f, 100);
     wave(-2.05f + waveOffsetX, -0.98f + waveOffsetY, 0.18f, 100);
 
-     wave(-1.95f + waveOffsetX, -0.98f + waveOffsetY, 0.18f, 100);
+    wave(-1.95f + waveOffsetX, -0.98f + waveOffsetY, 0.18f, 100);
     wave(-1.85f + waveOffsetX, -0.98f + waveOffsetY, 0.21f, 100);
     wave(-1.75f + waveOffsetX, -0.98f + waveOffsetY, 0.18f, 100);
     wave(-1.65f + waveOffsetX, -0.98f + waveOffsetY, 0.18f, 100);
@@ -1568,6 +1626,7 @@ void openLevel2()
     glutSetWindow(mainWindow); // Keep using the same window
     glClearColor(0.2f, 0.2f, 0.2f, 1.0f); // Set background color for Level 2
     glutDisplayFunc(level2Display); // Register display callback for Level 2
+    glutTimerFunc(16, updateLevel3, 0);
     glutPostRedisplay(); // Redraw to display Level 2 content
 }
 
@@ -1654,3 +1713,4 @@ int main(int argc, char **argv)
     glutMainLoop();
     return 0;
 }
+
