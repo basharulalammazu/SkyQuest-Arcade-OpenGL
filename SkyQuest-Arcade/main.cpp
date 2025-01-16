@@ -327,9 +327,7 @@ void drawPolygonWithTrees()
     // Update the translation value for continuous movement
     translationX -= 0.015f;  // Adjust the speed of the movement here
     if (translationX < -3.0f)    // Reset translation when it moves out of screen
-    {
         translationX = 1.5f;
-    }
 }
 
 
@@ -606,9 +604,7 @@ void level1Display()
     glRasterPos2f(-0.95f, 0.9f);
     const char *msg = "Score: ";
     for (const char *c = msg; *c != '\0'; ++c)
-    {
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
-    }
 
     glFlush();
 }
@@ -1173,8 +1169,7 @@ void updateWave(int value)
 {
     waveOffsetX -= 0.005f;  // Move the waves to the right over time
     waveOffsetY = 0.1f * sin(waveOffsetX * 3.14f);
-    if (waveOffsetX < -2.0f)
-    {
+    if (waveOffsetX < 0.0f) {
         waveOffsetX =  1.05f;  // Reset position when it moves off-screen
     }
 
@@ -1634,6 +1629,7 @@ void openLevel2()
 void openLevel3()
 {
     glutSetWindow(mainWindow); // Keep using the same window
+    glLoadIdentity();
     glClearColor(0.2f, 0.2f, 0.2f, 1.0f); // Set background color for Level 3
     glutDisplayFunc(level3Display); // Register display callback for Level 3
     glutTimerFunc(16, updateSky, 0);
