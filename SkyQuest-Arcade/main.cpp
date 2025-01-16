@@ -837,7 +837,7 @@ void updateHills(int value)
     translationOffset -= 0.01f; // Move hills to the left over time
 
     // Reset position when the hills move off-screen
-    if (translationOffset < -2.0f)
+    if (translationOffset < -0.50f)
         translationOffset = 0.0f;
 
 
@@ -1641,6 +1641,7 @@ void openLevel2()
     glutSetWindow(mainWindow); // Keep using the same window
     glClearColor(0.2f, 0.2f, 0.2f, 1.0f); // Set background color for Level 2
     glutDisplayFunc(level2Display); // Register display callback for Level 2
+    glutTimerFunc(16, updateLevel3, 0); // obstacle moove
     glutTimerFunc(16, updateHills, 0); // Start the translation animation
     glutPostRedisplay(); // Redraw to display Level 2 content
 }
