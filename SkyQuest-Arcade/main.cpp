@@ -61,10 +61,12 @@ GLfloat obstaclePosY[] = {-0.2f, 0.62f, 0.62f, 0.15f, -0.25f, 0.2f};
 GLfloat bombPosY[] = {0.8f, 0.6f, 0.3f, 0.5f};
 GLfloat speed = 0.005f; // Speed of animation
 float translationX = 1.8f;
-
 float aircraftX = 0.0f;  // Initial X position of the aircraft
 float aircraftY = 0.0f; // Initial Y position of the aircraft
+float aircraftBorderX = 0.0f;
+float aircraftBorderY = 0.0f; // Initial position of border
 float aircraftSpeed =0.01f;
+int currentDirection = 0;                  // Direction (0 = no movement, 1 = up, 2 = down, 3 = left, 4 = right)
 float translationOffset = 0.0f; // Offset for horizontal translation
 
 
@@ -157,16 +159,21 @@ void bg()
 
 
 
-void aircraft_Border(){
+void aircraft_Border()
+{
+    glPushMatrix();
+    glTranslatef(aircraftBorderX, aircraftBorderY, 0.0f);
     glColor3ub(244, 244, 244);
 
     glBegin(GL_LINE_STRIP);
     glVertex2f (-0.09f, 0.55f);
-    glVertex2f (0.06f, 0.55f);
-    glVertex2f (0.06f, 0.315f);
+    glVertex2f (0.07f, 0.55f);
+    glVertex2f (0.07f, 0.315f);
     glVertex2f (-0.09f, 0.315f);
     glVertex2f (-0.09f, 0.55f);
     glEnd();
+
+    glPopMatrix();
 }
 
 
@@ -229,6 +236,77 @@ void aircraft()
     glEnd();
 
     glPopMatrix();
+}
+
+
+
+
+void updateAircraft(int value)
+{
+    switch (currentDirection)
+    {
+        case 1: // Up
+            if (aircraftY + aircraftSpeed <= 0.3f)  // Check upper boundary
+                aircraftY += aircraftSpeed;
+            break;
+
+        case 2: // Down
+            if (aircraftY - aircraftSpeed >= -0.6f)  // Check lower boundary
+                aircraftY -= aircraftSpeed;
+            break;
+
+        case 3: // Left
+            if (aircraftX - aircraftSpeed >= -0.25f)  // Check left boundary
+                aircraftX -= aircraftSpeed;
+            break;
+
+        case 4: // Right
+            if (aircraftX + aircraftSpeed <= 0.25f)  // Check right boundary
+                aircraftX += aircraftSpeed;
+            break;
+
+        default: // No movement
+            break;
+    }
+
+    glutPostRedisplay();   // Request a redraw
+    glutTimerFunc(16, updateAircraft, 0);  // Update every 16ms (~60 FPS)
+}
+
+
+
+
+// Update function for continuous movement of the border
+void updateAircraftBorder(int value)
+{
+    switch (currentDirection)
+    {
+        case 1: // Up
+            if (aircraftBorderY + aircraftSpeed <= 0.3f) // Check upper boundary
+                aircraftBorderY += aircraftSpeed;
+            break;
+
+        case 2: // Down
+            if (aircraftBorderY - aircraftSpeed >= -0.6f) // Check lower boundary
+                aircraftBorderY -= aircraftSpeed;
+            break;
+
+        case 3: // Left
+            if (aircraftBorderX - aircraftSpeed >= -0.25f) // Check left boundary
+                aircraftBorderX -= aircraftSpeed;
+            break;
+
+        case 4: // Right
+            if (aircraftBorderX + aircraftSpeed <= 0.25f) // Check right boundary
+                aircraftBorderX += aircraftSpeed;
+            break;
+
+        default: // No movement
+            break;
+    }
+
+    glutPostRedisplay();   // Request a redraw
+    glutTimerFunc(16, updateAircraftBorder, 0); // Update every 16ms (~60 FPS)
 }
 
 
@@ -1729,6 +1807,8 @@ void openLevel1()
     glutDisplayFunc(level1Display); // Register display callback for Level 1
     glutTimerFunc(16, updateSky, 0);         // Start animation for Level 1
     glutTimerFunc(16, updateLevel3, 0);
+    glutTimerFunc(16, updateAircraft, 0);
+    glutTimerFunc(16, updateAircraftBorder, 0);
     glutPostRedisplay(); // Redraw to display Level 1 content
 }
 
@@ -1801,6 +1881,44 @@ void keyboard(unsigned char key, int x, int y)
     }
     glutPostRedisplay();
 }
+
+
+
+
+
+
+
+// Function to handle special key press (arrow keys)
+void handleSpecialKeypress(int key, int x, int y)
+{
+    switch (key)
+    {
+        case GLUT_KEY_UP:
+            currentDirection = 1;
+            break;
+
+        case GLUT_KEY_DOWN:
+            currentDirection = 2;
+            break;
+
+        case GLUT_KEY_LEFT:
+            currentDirection = 3;
+            break;
+
+        case GLUT_KEY_RIGHT:
+            currentDirection = 4;
+            break;
+    }
+}
+
+// Function to handle special key release
+void handleSpecialKeyRelease(int key, int x, int y)
+{
+    // Stop movement when key is released
+    currentDirection = 0;
+}
+
+
 
 
 
@@ -1901,6 +2019,8 @@ int main(int argc, char **argv)
 
     glutDisplayFunc(display);
     glutKeyboardFunc(keyboard); // Register keyboard callback for main window
+    glutSpecialFunc(handleSpecialKeypress);  // Register key press handler
+    glutSpecialUpFunc(handleSpecialKeyRelease);  // Register key release handler
 
     glutMainLoop();
     return 0;
