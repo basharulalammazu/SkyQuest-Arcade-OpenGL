@@ -155,6 +155,36 @@ void bg()
     glEnd();
 }
 
+void life()
+
+{
+
+    //life generate:
+    glBegin(GL_POLYGON);
+    glColor3ub(0, 255, 0);
+    glVertex2f (0.98, 0.98);
+    glVertex2f (0.9, 0.98);
+    glVertex2f (0.9, 0.90);
+    glVertex2f (0.98, 0.90);
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    glColor3ub(255, 255, 0);
+    glVertex2f (0.9, 0.98);
+    glVertex2f (0.9, 0.90);
+    glVertex2f (0.82, 0.90);
+    glVertex2f (0.82, 0.98);
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    glColor3ub(255,0, 0);
+    glVertex2f (0.82, 0.98);
+    glVertex2f (0.82, 0.90);
+    glVertex2f (0.74, 0.90);
+    glVertex2f (0.74, 0.98);
+    glEnd();
+
+}
 
 
 
@@ -773,6 +803,7 @@ void level1Display()
 
     aircraft_Border();
     aircraft();
+    life();
 
     // Show message for Level 1
     glColor3ub(244, 244, 244);
@@ -1099,6 +1130,7 @@ void level2Display()
 
 
     aircraft();
+    life();
 
     // Draw message for Level 2
     glColor3ub(255, 255, 255);
@@ -1730,6 +1762,7 @@ void level3Display()
     bomb(0.2f, bombPosY[3]);
 
     aircraft();
+    life();
 
     // Show message for Level 3
     glColor3ub(244, 244, 244);
