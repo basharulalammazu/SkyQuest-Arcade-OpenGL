@@ -155,11 +155,16 @@ void bg()
     glEnd();
 }
 
-void life()
+
+ //life generate
+
+
+
+void life()//full life
 
 {
 
-    //life generate:
+
     glBegin(GL_POLYGON);
     glColor3ub(0, 255, 0);
     glVertex2f (0.98, 0.98);
@@ -185,6 +190,73 @@ void life()
     glEnd();
 
 }
+
+     void life1()// green vanish
+{
+    glBegin(GL_POLYGON);
+    glColor3ub(255, 255, 255);
+    glVertex2f (0.98, 0.98);
+    glVertex2f (0.9, 0.98);
+    glVertex2f (0.9, 0.90);
+    glVertex2f (0.98, 0.90);
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    glColor3ub(255, 255, 0);
+    glVertex2f (0.9, 0.98);
+    glVertex2f (0.9, 0.90);
+    glVertex2f (0.82, 0.90);
+    glVertex2f (0.82, 0.98);
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    glColor3ub(255,255,0);
+    glVertex2f (0.9, 0.98);
+    glVertex2f (0.9, 0.90);
+    glVertex2f (0.86, 0.90);
+    glVertex2f (0.86, 0.98);
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    glColor3ub(255,0, 0);
+    glVertex2f (0.82, 0.98);
+    glVertex2f (0.82, 0.90);
+    glVertex2f (0.74, 0.90);
+    glVertex2f (0.74, 0.98);
+    glEnd();
+
+    }
+
+
+    life2()// yeollow vanish
+{
+         glBegin(GL_POLYGON);
+    glColor3ub(255, 255, 255);
+    glVertex2f (0.98, 0.98);
+    glVertex2f (0.9, 0.98);
+    glVertex2f (0.9, 0.90);
+    glVertex2f (0.98, 0.90);
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    glColor3ub(255, 255, 255);
+    glVertex2f (0.9, 0.98);
+    glVertex2f (0.9, 0.90);
+    glVertex2f (0.82, 0.90);
+    glVertex2f (0.82, 0.98);
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    glColor3ub(255,0, 0);
+    glVertex2f (0.82, 0.98);
+    glVertex2f (0.82, 0.90);
+    glVertex2f (0.74, 0.90);
+    glVertex2f (0.74, 0.98);
+    glEnd();
+
+
+
+    }
 
 
 
