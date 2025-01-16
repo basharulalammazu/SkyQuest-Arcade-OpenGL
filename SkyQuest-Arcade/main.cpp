@@ -48,6 +48,9 @@ GLfloat obstaclePosY[] = {-0.2f, 0.62f, 0.62f, 0.15f, -0.25f, 0.2f};
 GLfloat bombPosY[] = {0.8f, 0.6f, 0.3f, 0.5f};
 GLfloat speed = 0.005f; // Speed of animation
 float translationX = 1.8f;
+float aircraftX = 0.0f;  // Initial X position of the aircraft
+float aircraftY = 0.43f; // Initial Y position of the aircraft
+float aircraftSpeed =0.01f;
 
 
 GLfloat generateRandomFloat()
@@ -139,12 +142,30 @@ void bg()
 
 
 
+/*void aircraft_Border(){
+    glColor3ub(244, 244, 244);
+
+    glBegin(GL_LINE);
+    glVertex2f (-0.09f, 0.43f);
+    glVertex2f (-0.058f, 0.445f);
+    glVertex2f (0.045f, 0.445f);
+    glVertex2f (0.045f, 0.415f);
+    glVertex2f (-0.058f, 0.415f);
+    glVertex2f (-0.09f, 0.43f);
+    glEnd();
+}*/
+
+
+
+
 
 
 void aircraft()
 {
-    glColor3ub(140, 140, 140);
+    glPushMatrix();  // Save the current transformation state
+    glTranslatef(aircraftX, aircraftY, 0.0f);  // Apply translation for movement
 
+    glColor3ub(140, 140, 140);
     glBegin(GL_POLYGON);
     glVertex2f (-0.09f, 0.43f);
     glVertex2f (-0.058f, 0.445f);
@@ -192,6 +213,8 @@ void aircraft()
                     y + (radius * sin(i * twicePi / triangleAmount)) );
     }
     glEnd();
+
+    glPopMatrix();
 }
 
 
@@ -291,6 +314,50 @@ void drawTree(float offsetX, float offsetY)
 
 
 
+
+
+void drawPolygonWithTrees1()
+{
+    glPushMatrix();  // Save the current matrix state
+    glTranslatef(translationX, 0.0f, 0.0f);
+    // Draw the outer polygon with the dimensions of -1.0f to 1.5f in length and -1.0f to -0.7f in height
+    glBegin(GL_POLYGON);
+    glColor3ub(38, 18, 0);  // Color for the polygon (grey, or choose any color)
+    glVertex2f(1.5f, -1.0f);  // Bottom-left corner
+    glVertex2f(4.0f, -1.0f);   // Bottom-right corner
+    glVertex2f(4.0f, -0.5f);   // Top-right corner
+    glVertex2f(1.5f, -0.5f);  // Top-left corner
+    glEnd();
+
+    // Call drawTree at various positions inside the polygon
+    drawTree(0.0f+2.5, -0.05f);
+    drawTree(0.25f+2.5, -0.15f);
+    drawTree(0.5f+2.5, -0.2f);
+    drawTree(0.65f+2.5, 0.0f);
+    drawTree(0.35f+2.5, 0.1f);
+    drawTree(0.75f+2.5, -0.2f);
+    drawTree(-0.2f+2.5, -0.2f);
+    drawTree(-0.25f+2.5, 0.0f);
+    drawTree(0.85f+2.5, 0.1f);
+    drawTree(1.0f+2.5, -0.1f);
+    drawTree(1.2f+2.5, -0.2f);
+    drawTree(1.3f+2.5, 0.0f);
+    drawTree(1.48f+2.5, 0.0f);
+    drawTree(1.6f+2.5, -0.2f);
+    drawTree(1.75f+2.5, -0.1f);
+    drawTree(1.85f+2.5, 0.0f);
+    drawTree(1.95f+2.5, -0.2f);
+    glPopMatrix();  // Restore the previous matrix state
+
+    // Update the translation value for continuous movement
+    translationX -= 0.008f;  // Adjust the speed of the movement here
+    if (translationX < -3.0f)    // Reset translation when it moves out of screen
+        translationX = -1.0f;
+}
+
+
+
+
 void drawPolygonWithTrees()
 {
     glPushMatrix();  // Save the current matrix state
@@ -298,13 +365,29 @@ void drawPolygonWithTrees()
     // Draw the outer polygon with the dimensions of -1.0f to 1.5f in length and -1.0f to -0.7f in height
     glBegin(GL_POLYGON);
     glColor3ub(38, 18, 0);  // Color for the polygon (grey, or choose any color)
-    glVertex2f(-1.0f, -1.0f);  // Bottom-left corner
+    glVertex2f(-3.0f, -1.0f);  // Bottom-left corner
     glVertex2f(1.5f, -1.0f);   // Bottom-right corner
     glVertex2f(1.5f, -0.5f);   // Top-right corner
-    glVertex2f(-1.0f, -0.5f);  // Top-left corner
+    glVertex2f(-3.0f, -0.5f);  // Top-left corner
     glEnd();
 
     // Call drawTree at various positions inside the polygon
+    drawTree(0.0f-2.0, -0.05f);
+    drawTree(0.25f-2.0, -0.15f);
+    drawTree(0.5f-2.0, -0.2f);
+    drawTree(0.65f-2.0, 0.0f);
+    drawTree(0.35f-2.0, 0.1f);
+    drawTree(0.75f-2.0, -0.2f);
+    drawTree(-0.2f-2.0, -0.2f);
+    drawTree(-0.25f-2.0, 0.0f);
+    drawTree(0.85f-2.0, 0.1f);
+    drawTree(1.0f-2.0, -0.1f);
+    drawTree(1.2f-2.0, -0.2f);
+    drawTree(1.3f-2.0, 0.0f);
+    drawTree(1.48f-2.0, 0.0f);
+    drawTree(1.6f-2.0, -0.2f);
+    drawTree(1.85f-2.0, 0.0f);
+    drawTree(1.95f-2.0, -0.2f);
     drawTree(0.0f, -0.05f);
     drawTree(0.25f, -0.15f);
     drawTree(0.5f, -0.2f);
@@ -325,9 +408,9 @@ void drawPolygonWithTrees()
     glPopMatrix();  // Restore the previous matrix state
 
     // Update the translation value for continuous movement
-    translationX -= 0.015f;  // Adjust the speed of the movement here
+    translationX -= 0.008f;  // Adjust the speed of the movement here
     if (translationX < -3.0f)    // Reset translation when it moves out of screen
-        translationX = 1.5f;
+        translationX = -1.0f;
 }
 
 
@@ -594,8 +677,7 @@ void level1Display()
 
 
     drawPolygonWithTrees();
-
-
+    drawPolygonWithTrees1();
 
     aircraft();
 
@@ -1664,11 +1746,13 @@ void keyboard(unsigned char key, int x, int y)
             if (currentSelection > 0)
                 currentSelection--;
             break;
+
         case 's': // Move down
         case 'S':
             if (currentSelection < 2)
                 currentSelection++;
             break;
+
         case 13: // Enter key
             if (currentSelection == 0)
                 openLevel1();
