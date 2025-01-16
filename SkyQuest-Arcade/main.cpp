@@ -1037,24 +1037,205 @@ void bg2()
     glEnd();
 }
 
-void updateHills(int value)
+
+
+void hills1()
 {
-    translationOffset -= 0.01f; // Move hills to the left over time
+    glPushMatrix();  // Save the current matrix state
+    glTranslatef(translationX, 0.0f, 0.0f);
 
-    // Reset position when the hills move off-screen
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.3f, 0.3f, 0.5f);
+    glVertex2f(-0.8f+1.2, -1.0f);
+    glVertex2f(-0.1f+1.2, 0.0f);
+    glVertex2f(0.7f+1.2, -1.0f);
+    glEnd();
 
-    if (translationOffset < -0.50f)
-        translationOffset = 0.0f;
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.5f, 0.5f, 0.7f);
+    glVertex2f(-1.0f+1.2, -1.0f);
+    glVertex2f(-0.4f+1.2, -0.1f);
+    glVertex2f(0.3f+1.2, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.6f, 0.6f, 0.8f);
+    glVertex2f(-1.15f+1.2, -1.0f);
+    glVertex2f(-0.7f+1.2, 0.05f);
+    glVertex2f(0.0f+1.2, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.2f, 0.2f, 0.4f);
+    glVertex2f(-0.5f+1.2, -1.0f);
+    glVertex2f(0.3f+1.2, -0.15f);
+    glVertex2f(0.9f+1.2, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.15f, 0.15f, 0.3f);
+    glVertex2f(0.3f+1.2, -1.0f);
+    glVertex2f(0.8f+1.2, -0.3f);
+    glVertex2f(1.5f+1.2, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.1f, 0.1f, 0.2f);
+    glVertex2f(0.02f+1.2, -1.0f);
+    glVertex2f(0.4f+1.2, -0.6f);
+    glVertex2f(0.8f+1.2, -1.0f);
+    glEnd();
+
+    /////////////////////////////////
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.3f, 0.3f, 0.5f);
+    glVertex2f(-0.8f+2.5, -1.0f);
+    glVertex2f(-0.1f+2.5, 0.0f);
+    glVertex2f(0.7f+2.5, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.5f, 0.5f, 0.7f);
+    glVertex2f(-1.0f+2.5, -1.0f);
+    glVertex2f(-0.4f+2.5, -0.1f);
+    glVertex2f(0.3f+2.5, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.6f, 0.6f, 0.8f);
+    glVertex2f(-1.15f+2.5, -1.0f);
+    glVertex2f(-0.7f+2.5, 0.05f);
+    glVertex2f(0.0f+2.5, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.2f, 0.2f, 0.4f);
+    glVertex2f(-0.5f+2.5, -1.0f);
+    glVertex2f(0.3f+2.5, -0.15f);
+    glVertex2f(0.9f+2.5, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.15f, 0.15f, 0.3f);
+    glVertex2f(0.3f+2.5, -1.0f);
+    glVertex2f(0.8f+2.5, -0.3f);
+    glVertex2f(1.5f+2.5, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.1f, 0.1f, 0.2f);
+    glVertex2f(0.02f+2.5, -1.0f);
+    glVertex2f(0.4f+2.5, -0.6f);
+    glVertex2f(0.8f+2.5, -1.0f);
+    glEnd();
+
+    glPopMatrix(); // Restore the transformation matrix
 
 
-    glutPostRedisplay();   // Request a redraw
-    glutTimerFunc(16, updateHills, 0);  // Update every 16ms
+    // Update the translation value for continuous movement
+    translationX -= 0.008f;  // Adjust the speed of the movement here
+    if (translationX < -2.5f)    // Reset translation when it moves out of screen
+        translationX = 3.0f;
 }
+
+
+
 
 void hills()
 {
-    glPushMatrix(); // Save the current transformation matrix
-    glTranslatef(translationOffset, 0.0f, 0.0f); // Apply horizontal translation
+    glPushMatrix();  // Save the current matrix state
+    glTranslatef(translationX, 0.0f, 0.0f);
+
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.3f, 0.3f, 0.5f);
+    glVertex2f(-0.8f-4.0, -1.0f);
+    glVertex2f(-0.1f-4.0, 0.0f);
+    glVertex2f(0.7f-4.0, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.5f, 0.5f, 0.7f);
+    glVertex2f(-1.0f-4.0, -1.0f);
+    glVertex2f(-0.4f-4.0, -0.1f);
+    glVertex2f(0.3f-4.0, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.6f, 0.6f, 0.8f);
+    glVertex2f(-1.15f-4.0, -1.0f);
+    glVertex2f(-0.7f-4.0, 0.05f);
+    glVertex2f(0.0f-4.0, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.2f, 0.2f, 0.4f);
+    glVertex2f(-0.5f-4.0, -1.0f);
+    glVertex2f(0.3f-4.0, -0.15f);
+    glVertex2f(0.9f-4.0, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.15f, 0.15f, 0.3f);
+    glVertex2f(0.3f-4.0, -1.0f);
+    glVertex2f(0.8f-4.0, -0.3f);
+    glVertex2f(1.5f-4.0, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.1f, 0.1f, 0.2f);
+    glVertex2f(0.02f-4.0, -1.0f);
+    glVertex2f(0.4f-4.0, -0.6f);
+    glVertex2f(0.8f-4.0, -1.0f);
+    glEnd();
+
+
+    ///////////////////////////////
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.3f, 0.3f, 0.5f);
+    glVertex2f(-0.8f-2.0, -1.0f);
+    glVertex2f(-0.1f-2.0, 0.0f);
+    glVertex2f(0.7f-2.0, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.5f, 0.5f, 0.7f);
+    glVertex2f(-1.0f-2.0, -1.0f);
+    glVertex2f(-0.4f-2.0, -0.1f);
+    glVertex2f(0.3f-2.0, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.6f, 0.6f, 0.8f);
+    glVertex2f(-1.15f-2.0, -1.0f);
+    glVertex2f(-0.7f-2.0, 0.05f);
+    glVertex2f(0.0f-2.0, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.2f, 0.2f, 0.4f);
+    glVertex2f(-0.5f-2.0, -1.0f);
+    glVertex2f(0.3f-2.0, -0.15f);
+    glVertex2f(0.9f-2.0, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.15f, 0.15f, 0.3f);
+    glVertex2f(0.3f-2.0, -1.0f);
+    glVertex2f(0.8f-2.0, -0.3f);
+    glVertex2f(1.5f-2.0, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.1f, 0.1f, 0.2f);
+    glVertex2f(0.02f-2.0, -1.0f);
+    glVertex2f(0.4f-2.0, -0.6f);
+    glVertex2f(0.8f-2.0, -1.0f);
+    glEnd();
+
+/////////////////////////////////////////////
 
     glBegin(GL_TRIANGLES);
     glColor3f(0.3f, 0.3f, 0.5f);
@@ -1099,6 +1280,12 @@ void hills()
     glEnd();
 
     glPopMatrix(); // Restore the transformation matrix
+
+
+    // Update the translation value for continuous movement
+    translationX -= 0.008f;  // Adjust the speed of the movement here
+    if (translationX < -3.5f)    // Reset translation when it moves out of screen
+        translationX = 0.0f;
 }
 
 
@@ -1110,6 +1297,7 @@ void level2Display()
 
     bg2();
 
+    hills1();
     hills();
     drawCrescentMoon();
 
@@ -1128,7 +1316,7 @@ void level2Display()
     obstaclesL3(obstaclePosX[4], obstaclePosY[4]);
     obstaclesL3(obstaclePosX[5], obstaclePosY[5]);
 
-
+    aircraft_Border();
     aircraft();
     life();
 
@@ -1761,6 +1949,7 @@ void level3Display()
     bomb(-0.6f, bombPosY[2]);
     bomb(0.2f, bombPosY[3]);
 
+    aircraft_Border();
     aircraft();
     life();
 
@@ -1852,7 +2041,8 @@ void openLevel2()
     glClearColor(0.2f, 0.2f, 0.2f, 1.0f); // Set background color for Level 2
     glutDisplayFunc(level2Display); // Register display callback for Level 2
     glutTimerFunc(16, updateLevel3, 0); // obstacle moove
-    glutTimerFunc(16, updateHills, 0); // Start the translation animation
+    glutTimerFunc(16, updateAircraft, 0);
+    glutTimerFunc(16, updateAircraftBorder, 0);
     glutPostRedisplay(); // Redraw to display Level 2 content
 }
 
@@ -1866,6 +2056,8 @@ void openLevel3()
     glutTimerFunc(16, updateSky, 0);
     glutTimerFunc(16, updateWave, 0);  // Start animation by calling update every 16ms
     glutTimerFunc(16, updateLevel3, 0); // Start animation by calling update every 16ms
+    glutTimerFunc(16, updateAircraft, 0);
+    glutTimerFunc(16, updateAircraftBorder, 0);
     glutPostRedisplay(); // Redraw to display Level 3 content
 }
 
