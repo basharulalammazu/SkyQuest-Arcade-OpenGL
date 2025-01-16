@@ -61,10 +61,12 @@ GLfloat obstaclePosY[] = {-0.2f, 0.62f, 0.62f, 0.15f, -0.25f, 0.2f};
 GLfloat bombPosY[] = {0.8f, 0.6f, 0.3f, 0.5f};
 GLfloat speed = 0.005f; // Speed of animation
 float translationX = 1.8f;
-
 float aircraftX = 0.0f;  // Initial X position of the aircraft
 float aircraftY = 0.0f; // Initial Y position of the aircraft
+float aircraftBorderX = 0.0f;
+float aircraftBorderY = 0.0f; // Initial position of border
 float aircraftSpeed =0.01f;
+int currentDirection = 0;                  // Direction (0 = no movement, 1 = up, 2 = down, 3 = left, 4 = right)
 float translationOffset = 0.0f; // Offset for horizontal translation
 
 
@@ -259,16 +261,21 @@ void life()//full life
 
 
 
-void aircraft_Border(){
+void aircraft_Border()
+{
+    glPushMatrix();
+    glTranslatef(aircraftBorderX, aircraftBorderY, 0.0f);
     glColor3ub(244, 244, 244);
 
     glBegin(GL_LINE_STRIP);
     glVertex2f (-0.09f, 0.55f);
-    glVertex2f (0.06f, 0.55f);
-    glVertex2f (0.06f, 0.315f);
+    glVertex2f (0.07f, 0.55f);
+    glVertex2f (0.07f, 0.315f);
     glVertex2f (-0.09f, 0.315f);
     glVertex2f (-0.09f, 0.55f);
     glEnd();
+
+    glPopMatrix();
 }
 
 
@@ -331,6 +338,77 @@ void aircraft()
     glEnd();
 
     glPopMatrix();
+}
+
+
+
+
+void updateAircraft(int value)
+{
+    switch (currentDirection)
+    {
+        case 1: // Up
+            if (aircraftY + aircraftSpeed <= 0.3f)  // Check upper boundary
+                aircraftY += aircraftSpeed;
+            break;
+
+        case 2: // Down
+            if (aircraftY - aircraftSpeed >= -0.6f)  // Check lower boundary
+                aircraftY -= aircraftSpeed;
+            break;
+
+        case 3: // Left
+            if (aircraftX - aircraftSpeed >= -0.25f)  // Check left boundary
+                aircraftX -= aircraftSpeed;
+            break;
+
+        case 4: // Right
+            if (aircraftX + aircraftSpeed <= 0.25f)  // Check right boundary
+                aircraftX += aircraftSpeed;
+            break;
+
+        default: // No movement
+            break;
+    }
+
+    glutPostRedisplay();   // Request a redraw
+    glutTimerFunc(16, updateAircraft, 0);  // Update every 16ms (~60 FPS)
+}
+
+
+
+
+// Update function for continuous movement of the border
+void updateAircraftBorder(int value)
+{
+    switch (currentDirection)
+    {
+        case 1: // Up
+            if (aircraftBorderY + aircraftSpeed <= 0.3f) // Check upper boundary
+                aircraftBorderY += aircraftSpeed;
+            break;
+
+        case 2: // Down
+            if (aircraftBorderY - aircraftSpeed >= -0.6f) // Check lower boundary
+                aircraftBorderY -= aircraftSpeed;
+            break;
+
+        case 3: // Left
+            if (aircraftBorderX - aircraftSpeed >= -0.25f) // Check left boundary
+                aircraftBorderX -= aircraftSpeed;
+            break;
+
+        case 4: // Right
+            if (aircraftBorderX + aircraftSpeed <= 0.25f) // Check right boundary
+                aircraftBorderX += aircraftSpeed;
+            break;
+
+        default: // No movement
+            break;
+    }
+
+    glutPostRedisplay();   // Request a redraw
+    glutTimerFunc(16, updateAircraftBorder, 0); // Update every 16ms (~60 FPS)
 }
 
 
@@ -1031,24 +1109,205 @@ void bg2()
     glEnd();
 }
 
-void updateHills(int value)
+
+
+void hills1()
 {
-    translationOffset -= 0.01f; // Move hills to the left over time
+    glPushMatrix();  // Save the current matrix state
+    glTranslatef(translationX, 0.0f, 0.0f);
 
-    // Reset position when the hills move off-screen
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.3f, 0.3f, 0.5f);
+    glVertex2f(-0.8f+1.2, -1.0f);
+    glVertex2f(-0.1f+1.2, 0.0f);
+    glVertex2f(0.7f+1.2, -1.0f);
+    glEnd();
 
-    if (translationOffset < -0.50f)
-        translationOffset = 0.0f;
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.5f, 0.5f, 0.7f);
+    glVertex2f(-1.0f+1.2, -1.0f);
+    glVertex2f(-0.4f+1.2, -0.1f);
+    glVertex2f(0.3f+1.2, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.6f, 0.6f, 0.8f);
+    glVertex2f(-1.15f+1.2, -1.0f);
+    glVertex2f(-0.7f+1.2, 0.05f);
+    glVertex2f(0.0f+1.2, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.2f, 0.2f, 0.4f);
+    glVertex2f(-0.5f+1.2, -1.0f);
+    glVertex2f(0.3f+1.2, -0.15f);
+    glVertex2f(0.9f+1.2, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.15f, 0.15f, 0.3f);
+    glVertex2f(0.3f+1.2, -1.0f);
+    glVertex2f(0.8f+1.2, -0.3f);
+    glVertex2f(1.5f+1.2, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.1f, 0.1f, 0.2f);
+    glVertex2f(0.02f+1.2, -1.0f);
+    glVertex2f(0.4f+1.2, -0.6f);
+    glVertex2f(0.8f+1.2, -1.0f);
+    glEnd();
+
+    /////////////////////////////////
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.3f, 0.3f, 0.5f);
+    glVertex2f(-0.8f+2.5, -1.0f);
+    glVertex2f(-0.1f+2.5, 0.0f);
+    glVertex2f(0.7f+2.5, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.5f, 0.5f, 0.7f);
+    glVertex2f(-1.0f+2.5, -1.0f);
+    glVertex2f(-0.4f+2.5, -0.1f);
+    glVertex2f(0.3f+2.5, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.6f, 0.6f, 0.8f);
+    glVertex2f(-1.15f+2.5, -1.0f);
+    glVertex2f(-0.7f+2.5, 0.05f);
+    glVertex2f(0.0f+2.5, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.2f, 0.2f, 0.4f);
+    glVertex2f(-0.5f+2.5, -1.0f);
+    glVertex2f(0.3f+2.5, -0.15f);
+    glVertex2f(0.9f+2.5, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.15f, 0.15f, 0.3f);
+    glVertex2f(0.3f+2.5, -1.0f);
+    glVertex2f(0.8f+2.5, -0.3f);
+    glVertex2f(1.5f+2.5, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.1f, 0.1f, 0.2f);
+    glVertex2f(0.02f+2.5, -1.0f);
+    glVertex2f(0.4f+2.5, -0.6f);
+    glVertex2f(0.8f+2.5, -1.0f);
+    glEnd();
+
+    glPopMatrix(); // Restore the transformation matrix
 
 
-    glutPostRedisplay();   // Request a redraw
-    glutTimerFunc(16, updateHills, 0);  // Update every 16ms
+    // Update the translation value for continuous movement
+    translationX -= 0.008f;  // Adjust the speed of the movement here
+    if (translationX < -2.5f)    // Reset translation when it moves out of screen
+        translationX = 3.0f;
 }
+
+
+
 
 void hills()
 {
-    glPushMatrix(); // Save the current transformation matrix
-    glTranslatef(translationOffset, 0.0f, 0.0f); // Apply horizontal translation
+    glPushMatrix();  // Save the current matrix state
+    glTranslatef(translationX, 0.0f, 0.0f);
+
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.3f, 0.3f, 0.5f);
+    glVertex2f(-0.8f-4.0, -1.0f);
+    glVertex2f(-0.1f-4.0, 0.0f);
+    glVertex2f(0.7f-4.0, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.5f, 0.5f, 0.7f);
+    glVertex2f(-1.0f-4.0, -1.0f);
+    glVertex2f(-0.4f-4.0, -0.1f);
+    glVertex2f(0.3f-4.0, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.6f, 0.6f, 0.8f);
+    glVertex2f(-1.15f-4.0, -1.0f);
+    glVertex2f(-0.7f-4.0, 0.05f);
+    glVertex2f(0.0f-4.0, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.2f, 0.2f, 0.4f);
+    glVertex2f(-0.5f-4.0, -1.0f);
+    glVertex2f(0.3f-4.0, -0.15f);
+    glVertex2f(0.9f-4.0, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.15f, 0.15f, 0.3f);
+    glVertex2f(0.3f-4.0, -1.0f);
+    glVertex2f(0.8f-4.0, -0.3f);
+    glVertex2f(1.5f-4.0, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.1f, 0.1f, 0.2f);
+    glVertex2f(0.02f-4.0, -1.0f);
+    glVertex2f(0.4f-4.0, -0.6f);
+    glVertex2f(0.8f-4.0, -1.0f);
+    glEnd();
+
+
+    ///////////////////////////////
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.3f, 0.3f, 0.5f);
+    glVertex2f(-0.8f-2.0, -1.0f);
+    glVertex2f(-0.1f-2.0, 0.0f);
+    glVertex2f(0.7f-2.0, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.5f, 0.5f, 0.7f);
+    glVertex2f(-1.0f-2.0, -1.0f);
+    glVertex2f(-0.4f-2.0, -0.1f);
+    glVertex2f(0.3f-2.0, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.6f, 0.6f, 0.8f);
+    glVertex2f(-1.15f-2.0, -1.0f);
+    glVertex2f(-0.7f-2.0, 0.05f);
+    glVertex2f(0.0f-2.0, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.2f, 0.2f, 0.4f);
+    glVertex2f(-0.5f-2.0, -1.0f);
+    glVertex2f(0.3f-2.0, -0.15f);
+    glVertex2f(0.9f-2.0, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.15f, 0.15f, 0.3f);
+    glVertex2f(0.3f-2.0, -1.0f);
+    glVertex2f(0.8f-2.0, -0.3f);
+    glVertex2f(1.5f-2.0, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.1f, 0.1f, 0.2f);
+    glVertex2f(0.02f-2.0, -1.0f);
+    glVertex2f(0.4f-2.0, -0.6f);
+    glVertex2f(0.8f-2.0, -1.0f);
+    glEnd();
+
+/////////////////////////////////////////////
 
     glBegin(GL_TRIANGLES);
     glColor3f(0.3f, 0.3f, 0.5f);
@@ -1093,6 +1352,12 @@ void hills()
     glEnd();
 
     glPopMatrix(); // Restore the transformation matrix
+
+
+    // Update the translation value for continuous movement
+    translationX -= 0.008f;  // Adjust the speed of the movement here
+    if (translationX < -3.5f)    // Reset translation when it moves out of screen
+        translationX = 0.0f;
 }
 
 
@@ -1104,6 +1369,7 @@ void level2Display()
 
     bg2();
 
+    hills1();
     hills();
     drawCrescentMoon();
 
@@ -1122,7 +1388,7 @@ void level2Display()
     obstaclesL3(obstaclePosX[4], obstaclePosY[4]);
     obstaclesL3(obstaclePosX[5], obstaclePosY[5]);
 
-
+    aircraft_Border();
     aircraft();
     life();
 
@@ -1754,6 +2020,8 @@ void level3Display()
     bomb(-0.8f, bombPosY[1]);
     bomb(-0.6f, bombPosY[2]);
     bomb(0.2f, bombPosY[3]);
+
+    aircraft_Border();
     aircraft();
     life();
 
@@ -1833,6 +2101,8 @@ void openLevel1()
     glutDisplayFunc(level1Display); // Register display callback for Level 1
     glutTimerFunc(16, updateSky, 0);         // Start animation for Level 1
     glutTimerFunc(16, updateLevel3, 0);
+    glutTimerFunc(16, updateAircraft, 0);
+    glutTimerFunc(16, updateAircraftBorder, 0);
     glutPostRedisplay(); // Redraw to display Level 1 content
 }
 
@@ -1843,7 +2113,8 @@ void openLevel2()
     glClearColor(0.2f, 0.2f, 0.2f, 1.0f); // Set background color for Level 2
     glutDisplayFunc(level2Display); // Register display callback for Level 2
     glutTimerFunc(16, updateLevel3, 0); // obstacle moove
-    glutTimerFunc(16, updateHills, 0); // Start the translation animation
+    glutTimerFunc(16, updateAircraft, 0);
+    glutTimerFunc(16, updateAircraftBorder, 0);
     glutPostRedisplay(); // Redraw to display Level 2 content
 }
 
@@ -1857,6 +2128,8 @@ void openLevel3()
     glutTimerFunc(16, updateSky, 0);
     glutTimerFunc(16, updateWave, 0);  // Start animation by calling update every 16ms
     glutTimerFunc(16, updateLevel3, 0); // Start animation by calling update every 16ms
+    glutTimerFunc(16, updateAircraft, 0);
+    glutTimerFunc(16, updateAircraftBorder, 0);
     glutPostRedisplay(); // Redraw to display Level 3 content
 }
 
@@ -1905,6 +2178,44 @@ void keyboard(unsigned char key, int x, int y)
     }
     glutPostRedisplay();
 }
+
+
+
+
+
+
+
+// Function to handle special key press (arrow keys)
+void handleSpecialKeypress(int key, int x, int y)
+{
+    switch (key)
+    {
+        case GLUT_KEY_UP:
+            currentDirection = 1;
+            break;
+
+        case GLUT_KEY_DOWN:
+            currentDirection = 2;
+            break;
+
+        case GLUT_KEY_LEFT:
+            currentDirection = 3;
+            break;
+
+        case GLUT_KEY_RIGHT:
+            currentDirection = 4;
+            break;
+    }
+}
+
+// Function to handle special key release
+void handleSpecialKeyRelease(int key, int x, int y)
+{
+    // Stop movement when key is released
+    currentDirection = 0;
+}
+
+
 
 
 
@@ -2005,6 +2316,8 @@ int main(int argc, char **argv)
 
     glutDisplayFunc(display);
     glutKeyboardFunc(keyboard); // Register keyboard callback for main window
+    glutSpecialFunc(handleSpecialKeypress);  // Register key press handler
+    glutSpecialUpFunc(handleSpecialKeyRelease);  // Register key release handler
 
     glutMainLoop();
     return 0;
