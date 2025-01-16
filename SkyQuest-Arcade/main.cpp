@@ -4,7 +4,20 @@
 #include<cmath>
 #include<stdlib.h>
 #include<time.h>
+#include <stdio.h>
+#include <string.h>
+#include<GL/glut.h>
+#include<iostream>
+#include<math.h>
+#include<cmath>
+#include<stdlib.h>
+#include<time.h>
+#include <stdio.h>
+#include <string.h>
+
 # define PI 3.14159265358979323846
+#define HIGHEST_SCORE_FILE "highest_scores.txt"
+#define NUM_LEVELS 3
 
 
 // Function
@@ -48,6 +61,7 @@ GLfloat obstaclePosY[] = {-0.2f, 0.62f, 0.62f, 0.15f, -0.25f, 0.2f};
 GLfloat bombPosY[] = {0.8f, 0.6f, 0.3f, 0.5f};
 GLfloat speed = 0.005f; // Speed of animation
 float translationX = 1.8f;
+float translationOffset = 0.0f; // Offset for horizontal translation
 
 
 GLfloat generateRandomFloat()
@@ -831,14 +845,23 @@ void bg2()
     glEnd();
 }
 
-
-void level2Display()
+void updateHills(int value)
 {
-    glClear(GL_COLOR_BUFFER_BIT);
-    glVertex2f (1.0f, -1.0f);
-    glEnd();
+    translationOffset -= 0.01f; // Move hills to the left over time
 
-    bg2();
+    // Reset position when the hills move off-screen
+    if (translationOffset < -2.0f)
+        translationOffset = 0.0f;
+
+
+    glutPostRedisplay();   // Request a redraw
+    glutTimerFunc(16, updateHills, 0);  // Update every 16ms
+}
+
+void hills()
+{
+    glPushMatrix(); // Save the current transformation matrix
+    glTranslatef(translationOffset, 0.0f, 0.0f); // Apply horizontal translation
 
     glBegin(GL_TRIANGLES);
     glColor3f(0.3f, 0.3f, 0.5f);
@@ -868,13 +891,12 @@ void level2Display()
     glVertex2f(0.9f, -1.0f);
     glEnd();
 
-      glBegin(GL_TRIANGLES);
+    glBegin(GL_TRIANGLES);
     glColor3f(0.15f, 0.15f, 0.3f);
     glVertex2f(0.3f, -1.0f);
     glVertex2f(0.8f, -0.3f);
     glVertex2f(1.5f, -1.0f);
     glEnd();
-
 
     glBegin(GL_TRIANGLES);
     glColor3f(0.1f, 0.1f, 0.2f);
@@ -883,7 +905,19 @@ void level2Display()
     glVertex2f(0.8f, -1.0f);
     glEnd();
 
+    glPopMatrix(); // Restore the transformation matrix
+}
 
+
+void level2Display()
+{
+    glClear(GL_COLOR_BUFFER_BIT);
+    glVertex2f (1.0f, -1.0f);
+    glEnd();
+
+    bg2();
+
+    hills();
     drawCrescentMoon();
 
     // Draw collectibles (move from right to left with fixed Y positions)
@@ -909,9 +943,8 @@ void level2Display()
     glRasterPos2f(-0.95f, 0.9f);
     const char *msg = "Level 2: Avoid obstacles (Press Esc to go back";
     for (const char *c = msg; *c != '\0'; ++c)
-    {
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
-    }
+
     glFlush();
 }
 
@@ -1621,7 +1654,7 @@ void openLevel2()
     glutSetWindow(mainWindow); // Keep using the same window
     glClearColor(0.2f, 0.2f, 0.2f, 1.0f); // Set background color for Level 2
     glutDisplayFunc(level2Display); // Register display callback for Level 2
-    glutTimerFunc(16, updateLevel3, 0);
+    glutTimerFunc(16, updateHills, 0); // Start the translation animation
     glutPostRedisplay(); // Redraw to display Level 2 content
 }
 
@@ -1692,6 +1725,82 @@ void display()
 }
 
 
+
+
+
+/*-------------------------- Functions for High Score Management---------------------------*/
+// Initialize Scores in the File (If the File Doesn't Exist)
+void initializeHighScores()
+{
+    FILE *file = fopen(HIGHEST_SCORE_FILE, "r");
+    if (file == NULL) // If file doesn't exist, create it
+    {
+        file = fopen(HIGHEST_SCORE_FILE, "w");
+        if (file != NULL)
+        {
+            for (int i = 0; i < NUM_LEVELS; i++)
+                fprintf(file, "Level %d: 0\n", i + 1); // Default score is 0 for each level
+
+            fclose(file);
+        }
+    }
+    else
+        fclose(file); // File exists, no need to initialize
+
+}
+
+// Read the Highest Scores
+void readHighScores(int scores[NUM_LEVELS])
+{
+    FILE *file = fopen(HIGHEST_SCORE_FILE, "r");
+    if (file != NULL)
+    {
+        for (int i = 0; i < NUM_LEVELS; i++)
+            fscanf(file, "Level %*d: %d\n", &scores[i]);
+        fclose(file);
+    }
+}
+
+// Update the Highest Score for a Specific Level
+void updateHighScore(int level, int newScore)
+{
+    int scores[NUM_LEVELS];
+    readHighScores(scores); // Load current scores
+
+    if (level < 1 || level > NUM_LEVELS)
+    {
+        printf("Invalid level: %d\n", level);
+        return;
+    }
+
+    if (newScore > scores[level - 1]) // Check if the new score is higher
+    {
+        scores[level - 1] = newScore; // Update the score for the level
+
+        // Save updated scores back to the file
+        FILE *file = fopen(HIGHEST_SCORE_FILE, "w");
+        if (file != NULL)
+        {
+            for (int i = 0; i < NUM_LEVELS; i++)
+                fprintf(file, "Level %d: %d\n", i + 1, scores[i]);
+
+            fclose(file);
+        }
+    }
+}
+
+
+// Display High Scores
+void displayHighScores()
+{
+    int scores[NUM_LEVELS];
+    readHighScores(scores); // Load scores from file
+
+    printf("Highest Scores:\n");
+    for (int i = 0; i < NUM_LEVELS; i++)
+        printf("Level %d: %d\n", i + 1, scores[i]);
+
+}
 
 
 int main(int argc, char **argv)
