@@ -850,7 +850,7 @@ void updateHills(int value)
     translationOffset -= 0.01f; // Move hills to the left over time
 
     // Reset position when the hills move off-screen
-    if (translationOffset < -2.0f)
+    if (translationOffset < -0.6f)
         translationOffset = 0.0f;
 
 
@@ -1818,4 +1818,3 @@ int main(int argc, char **argv)
     glutMainLoop();
     return 0;
 }
-
