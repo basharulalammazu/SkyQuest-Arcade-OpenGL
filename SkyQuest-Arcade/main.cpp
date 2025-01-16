@@ -4,7 +4,20 @@
 #include<cmath>
 #include<stdlib.h>
 #include<time.h>
+#include <stdio.h>
+#include <string.h>
+#include<GL/glut.h>
+#include<iostream>
+#include<math.h>
+#include<cmath>
+#include<stdlib.h>
+#include<time.h>
+#include <stdio.h>
+#include <string.h>
+
 # define PI 3.14159265358979323846
+#define HIGHEST_SCORE_FILE "highest_scores.txt"
+#define NUM_LEVELS 3
 
 
 // Function
@@ -837,6 +850,7 @@ void updateHills(int value)
     translationOffset -= 0.01f; // Move hills to the left over time
 
     // Reset position when the hills move off-screen
+
     if (translationOffset < -0.50f)
         translationOffset = 0.0f;
 
@@ -1713,6 +1727,82 @@ void display()
 }
 
 
+
+
+
+/*-------------------------- Functions for High Score Management---------------------------*/
+// Initialize Scores in the File (If the File Doesn't Exist)
+void initializeHighScores()
+{
+    FILE *file = fopen(HIGHEST_SCORE_FILE, "r");
+    if (file == NULL) // If file doesn't exist, create it
+    {
+        file = fopen(HIGHEST_SCORE_FILE, "w");
+        if (file != NULL)
+        {
+            for (int i = 0; i < NUM_LEVELS; i++)
+                fprintf(file, "Level %d: 0\n", i + 1); // Default score is 0 for each level
+
+            fclose(file);
+        }
+    }
+    else
+        fclose(file); // File exists, no need to initialize
+
+}
+
+// Read the Highest Scores
+void readHighScores(int scores[NUM_LEVELS])
+{
+    FILE *file = fopen(HIGHEST_SCORE_FILE, "r");
+    if (file != NULL)
+    {
+        for (int i = 0; i < NUM_LEVELS; i++)
+            fscanf(file, "Level %*d: %d\n", &scores[i]);
+        fclose(file);
+    }
+}
+
+// Update the Highest Score for a Specific Level
+void updateHighScore(int level, int newScore)
+{
+    int scores[NUM_LEVELS];
+    readHighScores(scores); // Load current scores
+
+    if (level < 1 || level > NUM_LEVELS)
+    {
+        printf("Invalid level: %d\n", level);
+        return;
+    }
+
+    if (newScore > scores[level - 1]) // Check if the new score is higher
+    {
+        scores[level - 1] = newScore; // Update the score for the level
+
+        // Save updated scores back to the file
+        FILE *file = fopen(HIGHEST_SCORE_FILE, "w");
+        if (file != NULL)
+        {
+            for (int i = 0; i < NUM_LEVELS; i++)
+                fprintf(file, "Level %d: %d\n", i + 1, scores[i]);
+
+            fclose(file);
+        }
+    }
+}
+
+
+// Display High Scores
+void displayHighScores()
+{
+    int scores[NUM_LEVELS];
+    readHighScores(scores); // Load scores from file
+
+    printf("Highest Scores:\n");
+    for (int i = 0; i < NUM_LEVELS; i++)
+        printf("Level %d: %d\n", i + 1, scores[i]);
+
+}
 
 
 int main(int argc, char **argv)
