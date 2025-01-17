@@ -40,8 +40,7 @@ void initializeRandomPositions();
 void drawCrescentMoon();
 void sound(const char* soundFile);
 void playContinuousSound(const char* soundFile);
-void cleanupLevelResources();
-
+void stopSound();
 
 
 // Variable
@@ -2387,6 +2386,7 @@ void openLevel3()
 
 void keyboard(unsigned char key, int x, int y)
 {
+    stopSound();
     if (key == 27)    // 27 is the ASCII code for Esc key
     {
         //isRunning = false;  // Stop the timer function
@@ -2699,4 +2699,9 @@ void sound(const char* soundFile)
 void playContinuousSound(const char* soundFile)
 {
     PlaySound(TEXT(soundFile), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
+}
+
+void stopSound()
+{
+    PlaySound(NULL, NULL, 0); // Stops any currently playing sound
 }
