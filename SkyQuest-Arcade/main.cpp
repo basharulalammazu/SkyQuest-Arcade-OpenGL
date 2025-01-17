@@ -45,18 +45,18 @@ void cleanupLevelResources();
 
 
 // Variable
-int currentSelection = 0; // 0 = Level 1, 1 = Level 2, 2 = Level 3
+int currentSelection = 0 , selected_level = 0; // 0 = Level 1, 1 = Level 2, 2 = Level 3
 const char *levels[] = {"Level 1", "Level 2", "Level 3"};
 int mainWindow; // Main menu window ID
 int levelWindow; // Level window ID
 float cloud1X = -0.9f, cloud2X = -0.35f, cloud3X = 0.35f, cloud4X = 0.75f, cloud5X = -0.8f, cloud6X = 1.15f;
 float waveOffsetX = 0.0f, waveOffsetY = 0.0f;  // Horizontal offset for waves
 GLfloat itemPosX[] = {0.6f, 0.8f, 1.2f, 0.0f, 0.3f, 0.0f, -0.2f};  // Initial X positions for items
-GLfloat obstaclePosX[] = {1.2f, 1.5f, 1.8f, 0.8f, 0.6f, 1.0f};  // Initial X positions for obstacles
 // Fixed Y positions as provided
 GLfloat itemPosY[] = {0.75f, 0.42f, 0.16f, 0.05f, -0.3f, 0.0f, -0.55f};
-GLfloat obstaclePosY[] = {-0.2f, 0.62f, 0.62f, 0.15f, -0.25f, 0.2f};
-GLfloat bombPosY[] = {0.8f, 0.6f, 0.3f, 0.5f};
+GLfloat obstaclePosX[] = {1.27f, 1.5f, 1.8f, 0.8f, 0.6f, 1.0f, 2.1f, 1.95f, 2.5f};  // Initial X positions for obstacles
+GLfloat obstaclePosY[] = {-0.2f, 0.62f, -0.4f, 0.8f, -0.45f, 0.1f, 0.9f, 0.27f, -0.3};
+GLfloat bombPosY[] = {1.6f, 1.1f, 0.95f, 1.3f, 1.5f, 1.6f, 1.2f, 1.7f, 1.0f};
 GLfloat speed = 0.005f; // Speed of animation
 float translationX = 1.8f;
 float aircraftX = 0.0f;  // Initial X position of the aircraft
@@ -66,8 +66,13 @@ float aircraftBorderY = 0.0f; // Initial position of border
 float aircraftSpeed =0.01f;
 int currentDirection = 0;                  // Direction (0 = no movement, 1 = up, 2 = down, 3 = left, 4 = right)
 float translationOffset = 0.0f; // Offset for horizontal translation
-int score = -10, life_have = 3;
-bool isLevel1Active = false, isLevel2Active = false, isLevel3Active = false; // Flag to check if the game is running
+
+int score = -10, life_have = 3; bool gameOver = false;
+
+
+
+
+bool running = false; // Flag to check if the game is running
 
 
 
@@ -95,7 +100,7 @@ void initializeRandomPositions()
 
 
     // Generate random values for bomb positions
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 7; i++)
         bombPosY[i] = generateRandomFloat();
 
 }
@@ -165,6 +170,73 @@ void checkCollisions(GLfloat aircraftX, GLfloat aircraftY)
         }
     }
 }
+
+
+
+
+
+
+
+
+void gameOverScreen()
+{
+     // Clear the screen with black
+    glClear(GL_COLOR_BUFFER_BIT);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Black background
+
+    // Set the color for the text
+    glColor3ub(255, 0, 0); // Red color for "Game Over"
+
+    // Position the text
+    glRasterPos2f(-0.15f, 0.0f); // Centered position
+
+    // Display the "Game Over" message
+    const char *msg = "GAME OVER";
+    for (const char *c = msg; *c != '\0'; ++c)
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
+
+    // Flush to ensure it renders immediately
+    glFlush();
+}
+
+
+
+
+
+void checkObstacleCollisions(GLfloat aircraftX, GLfloat aircraftY)
+{
+    if (gameOver) return; // Skip collision checks if already game over
+
+    // Define the actual dimensions of the aircraft border
+    float aircraftLeft = aircraftX - 0.09f;   // Left side of the aircraft border
+    float aircraftRight = aircraftX + 0.07f;  // Right side of the aircraft border
+    float aircraftTop = aircraftY + 0.55f;    // Top of the aircraft border
+    float aircraftBottom = aircraftY + 0.315f; // Bottom of the aircraft border
+
+    // Iterate through all obstacles to check for collisions
+    for (int i = 0; i < sizeof(obstaclePosX) / sizeof(obstaclePosX[0]); i++)
+    {
+        // Get the position of the obstacle
+        float obstacleX = obstaclePosX[i];
+        float obstacleY = obstaclePosY[i];
+        float obstacleRadius = 0.05f;
+
+        // Check if any corner of the aircraft border intersects with the obstacle's circle
+        bool collision = (aircraftLeft <= obstacleX + obstacleRadius &&
+                          aircraftRight >= obstacleX - obstacleRadius &&
+                          aircraftBottom <= obstacleY + obstacleRadius &&
+                          aircraftTop >= obstacleY - obstacleRadius);
+
+        if (collision)
+        {
+            printf("Collision with obstacle %d detected! Game Over.\n", i);
+            gameOverScreen(); // Call the function to show the Game Over screen
+            return;           // Exit after handling the collision
+        }
+    }
+}
+
+
 
 
 
@@ -255,8 +327,6 @@ void bg()
 void life()//full life
 
 {
-
-
     glBegin(GL_POLYGON);
     glColor3ub(0, 255, 0);
     glVertex2f (0.98, 0.98);
@@ -283,7 +353,7 @@ void life()//full life
 
 }
 
-     void life1()// green vanish
+void life1()// green vanish
 {
     glBegin(GL_POLYGON);
     glColor3ub(255, 255, 255);
@@ -322,7 +392,7 @@ void life()//full life
 
     life2()// yeollow vanish
 {
-         glBegin(GL_POLYGON);
+    glBegin(GL_POLYGON);
     glColor3ub(255, 255, 255);
     glVertex2f (0.98, 0.98);
     glVertex2f (0.9, 0.98);
@@ -348,7 +418,7 @@ void life()//full life
 
 
 
-    }
+}
 
 
 
@@ -414,7 +484,7 @@ void aircraft()
     GLfloat x=0.0465f;
     GLfloat y= 0.428f;
     GLfloat radius =0.0204f;
-    int triangleAmount = 300; //# of lines used to draw circle
+    int triangleAmount = 300; // lines used to draw circle
 
     //GLfloat radius = 0.8f; //radius
     GLfloat twicePi = 2.0f * PI;
@@ -505,7 +575,21 @@ void updateAircraftBorder(int value)
     }
 
     // Check for collisions after updating the position
-    checkCollisions(aircraftBorderX, aircraftBorderY);
+    if (selected_level == 1)
+    {
+        checkCollisions(aircraftBorderX, aircraftBorderY);
+    }
+    else if (selected_level == 2)
+    {
+        checkCollisions(aircraftBorderX, aircraftBorderY);
+        checkObstacleCollisions(aircraftBorderX, aircraftBorderY);
+    }
+    else if (selected_level == 3)
+    {
+        checkCollisions(aircraftBorderX, aircraftBorderY);
+        checkObstacleCollisions(aircraftBorderX, aircraftBorderY);
+        //checkBombCollisions(aircraftBorderX, aircraftBorderY);
+    }
 
     glutPostRedisplay();   // Request a redraw
     glutTimerFunc(16, updateAircraftBorder, 0); // Update every 16ms (~60 FPS)
@@ -1316,7 +1400,7 @@ void hills1()
 
 
     // Update the translation value for continuous movement
-    translationX -= 0.008f;  // Adjust the speed of the movement here
+    translationX -= 0.004f;  // Adjust the speed of the movement here
     if (translationX < -2.5f)    // Reset translation when it moves out of screen
         translationX = 3.0f;
 }
@@ -1465,7 +1549,7 @@ void hills()
 
 
     // Update the translation value for continuous movement
-    translationX -= 0.008f;  // Adjust the speed of the movement here
+    translationX -= 0.004f;  // Adjust the speed of the movement here
     if (translationX < -3.5f)    // Reset translation when it moves out of screen
         translationX = 0.0f;
 }
@@ -1497,6 +1581,9 @@ void level2Display()
     obstaclesL3(obstaclePosX[3], obstaclePosY[3]);
     obstaclesL3(obstaclePosX[4], obstaclePosY[4]);
     obstaclesL3(obstaclePosX[5], obstaclePosY[5]);
+    obstaclesL3(obstaclePosX[6], obstaclePosY[6]);
+    obstaclesL3(obstaclePosX[7], obstaclePosY[7]);
+    obstaclesL3(obstaclePosX[8], obstaclePosY[8]);
 
     aircraft_Border();
     aircraft();
@@ -1505,8 +1592,18 @@ void level2Display()
     // Draw message for Level 2
     glColor3ub(255, 255, 255);
     glRasterPos2f(-0.95f, 0.9f);
-    const char *msg = "Level 2: Avoid obstacles (Press Esc to go back";
-    for (const char *c = msg; *c != '\0'; ++c)
+    // Prepare the score message
+    char scoreMessage[50];
+    if (score == -10)
+    {
+        snprintf(scoreMessage, sizeof(scoreMessage), "Score: %d", 0);
+    }
+    else
+    {
+        snprintf(scoreMessage, sizeof(scoreMessage), "Score: %d", score);
+    }
+    // Render the score message
+    for (const char *c = scoreMessage; *c != '\0'; ++c)
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
 
     glFlush();
@@ -1778,7 +1875,7 @@ void updateWave(int value)
 void updateLevel3(int value)
 {
     // Update item positions (move from right to left)
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < sizeof (itemPosX)/ sizeof (itemPosX[0]); i++)
     {
         itemPosX[i] -= speed;  // Move items leftward
         if (itemPosX[i] < -1.2f)
@@ -1789,7 +1886,7 @@ void updateLevel3(int value)
     }
 
     // Update obstacle positions (move from right to left)
-    for (int i = 0; i < 6; i++)
+    for (int i = 0; i < sizeof (obstaclePosX)/ sizeof (obstaclePosX[0]); i++)
     {
         obstaclePosX[i] -= speed * 1.2f;  // Move obstacles faster than items
         if (obstaclePosX[i] < -1.2f)
@@ -1800,7 +1897,7 @@ void updateLevel3(int value)
     }
 
     // Update bomb positions
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < sizeof (bombPosY)/ sizeof (bombPosY[0]); i++)
     {
         bombPosY[i] -= speed * 0.6f; // Faster than obstacles
         if (bombPosY[i] < -1.2f)
@@ -2124,12 +2221,20 @@ void level3Display()
     obstaclesL3(obstaclePosX[3], obstaclePosY[3]);
     obstaclesL3(obstaclePosX[4], obstaclePosY[4]);
     obstaclesL3(obstaclePosX[5], obstaclePosY[5]);
+    obstaclesL3(obstaclePosX[6], obstaclePosY[6]);
+    obstaclesL3(obstaclePosX[7], obstaclePosY[7]);
+    obstaclesL3(obstaclePosX[8], obstaclePosY[8]);
 
     // Draw bombs
-    bomb(-0.3f, bombPosY[0]);
+    bomb(-0.17f, bombPosY[0]);
     bomb(-0.8f, bombPosY[1]);
     bomb(-0.6f, bombPosY[2]);
     bomb(0.2f, bombPosY[3]);
+    bomb(0.5f, bombPosY[4]);
+    bomb(0.75f, bombPosY[5]);
+    bomb(0.9f, bombPosY[6]);
+    bomb(-0.4f, bombPosY[7]);
+    bomb(0.1f, bombPosY[8]);
 
     aircraft_Border();
     aircraft();
@@ -2138,8 +2243,18 @@ void level3Display()
     // Show message for Level 3
     glColor3ub(244, 244, 244);
     glRasterPos2f(-0.95f, 0.9f);
-    const char *msg = "Level 3: Bombs falling from the sky (Press Esc to go back)";
-    for (const char *c = msg; *c != '\0'; ++c)
+    // Prepare the score message
+    char scoreMessage[50];
+    if (score == -10)
+    {
+        snprintf(scoreMessage, sizeof(scoreMessage), "Score: %d", 0);
+    }
+    else
+    {
+        snprintf(scoreMessage, sizeof(scoreMessage), "Score: %d", score);
+    }
+    // Render the score message
+    for (const char *c = scoreMessage; *c != '\0'; ++c)
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
 
     glFlush();
@@ -2201,12 +2316,8 @@ void returnToMainMenu()
     glutSetWindow(mainWindow);
     glutDisplayFunc(drawButtons);
 
-    // Stop all animations or timers specific to levels
-    glutIdleFunc(nullptr);
-    glutTimerFunc(0, nullptr, 0);
 
     // Reset or clean up resources
-    cleanupLevelResources(); // Reset level-specific states or variables
 
     // Clear the screen to ensure no leftover level graphics are displayed
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -2217,30 +2328,23 @@ void returnToMainMenu()
 
 
 
-void cleanupLevelResources()
-{
-    // Reset any level-specific variables or states
-    isLevel1Active = false;
-    isLevel2Active = false;
-    isLevel3Active = false;
-
-    // If you have specific level objects or animations, disable them
-    currentSelection = 0; // Reset the menu selection to the first level
-}
 
 
 
 // Switch to Level 1 view
 void openLevel1()
 {
-    glutSetWindow(mainWindow); // Keep using the same window
-    glClearColor(0.2f, 0.2f, 0.2f, 1.0f); // Set background color for Level 1
-    glutDisplayFunc(level1Display); // Register display callback for Level 1
-    glutTimerFunc(16, updateSky, 0);         // Start animation for Level 1
-    glutTimerFunc(16, updateLevel3, 0);
-    glutTimerFunc(16, updateAircraft, 0);
-    glutTimerFunc(16, updateAircraftBorder, 0);
-    glutPostRedisplay(); // Redraw to display Level 1 content
+    if (selected_level == 1)
+    {
+        glutSetWindow(mainWindow); // Keep using the same window
+        glClearColor(0.2f, 0.2f, 0.2f, 1.0f); // Set background color for Level 1
+        glutDisplayFunc(level1Display); // Register display callback for Level 1
+        glutTimerFunc(16, updateSky, 0);         // Start animation for Level 1
+        glutTimerFunc(16, updateLevel3, 0);
+        glutTimerFunc(16, updateAircraft, 0);
+        glutTimerFunc(16, updateAircraftBorder, 0);
+        glutPostRedisplay(); // Redraw to display Level 1 content
+    }
 }
 
 // Switch to Level 2 view
@@ -2286,16 +2390,9 @@ void keyboard(unsigned char key, int x, int y)
     if (key == 27)    // 27 is the ASCII code for Esc key
     {
         //isRunning = false;  // Stop the timer function
-
-        // Stop all animations and rendering for levels
-        glutIdleFunc(nullptr);
-        // glutTimerFunc(0, nullptr, 0);
-
-        // Reset game-specific variables
-        score = 0; // Reset score or other gameplay variables
-
-        // Return to the main menu
-        returnToMainMenu();
+        selected_level = 0;
+        returnToMainMenu(); // Return to the level selector
+        score = -10;
     }
     else
     {
@@ -2322,16 +2419,19 @@ void keyboard(unsigned char key, int x, int y)
         case 13: // Enter key
              if (currentSelection == 0)
             {
+                selected_level = 1;
                 openLevel1();
                 playContinuousSound("backgorund_music.wav");  // Play sound when selecting level 1
             }
             else if (currentSelection == 1)
             {
+                selected_level = 2;
                 openLevel2();
                 playContinuousSound("backgorund_music.wav");  // Play sound when selecting level 1
             }
             else if (currentSelection == 2)
             {
+                selected_level = 3;
                 openLevel3();
                 playContinuousSound("backgorund_music.wav");  // Play sound when selecting level 1
             }

@@ -1,13 +1,5 @@
 # depslib dependency file v1.0
-1737131002 source:c:\.tanjim\varsity\6. fall 24-25\computer graphics\skyquest-arcade-opengl\skyquest-arcade\main.cpp
-	<GL/glut.h>
-	<iostream>
-	<math.h>
-	<cmath>
-	<stdlib.h>
-	<time.h>
-	<stdio.h>
-	<string.h>
+1737139670 source:c:\.tanjim\varsity\6. fall 24-25\computer graphics\skyquest-arcade-opengl\skyquest-arcade\main.cpp
 	<GL/glut.h>
 	<iostream>
 	<math.h>
