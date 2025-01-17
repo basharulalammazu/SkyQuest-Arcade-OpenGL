@@ -123,6 +123,70 @@ void circle()
 
 
 
+void checkCollisions(GLfloat aircraftX, GLfloat aircraftY)
+{
+    // Iterate through all items to check for collisions
+    for (int i = 0; i < sizeof(itemPosX) / sizeof(itemPosX[0]); i++)
+    {
+        // Check if the aircraft's position overlaps with the item's position
+        if (fabs(aircraftX - itemPosX[i]) < 0.05f && fabs(aircraftY - itemPosY[i]) < 0.05f)
+        {
+            score++;  // Increment the score
+            printf("Item collected! Current score: %d\n", score);
+            return;
+        }
+    }
+}
+
+
+
+/*
+void checkCollisions(float aircraftX, float aircraftY, int* score, int* life)
+{
+    // Check collision with items
+    for (int i = 0; i < sizeof(itemPosX) / sizeof(itemPosX[0]); i++)
+    {
+        if (fabs(aircraftX - itemPosX[i]) < 0.05f && fabs(aircraftY - itemPosY[i]) < 0.05f) // Threshold for collision
+        {
+            (*score)++; // Increment score
+            printf("Item collected! Score: %d\n", *score);
+
+            // Reset item position (move off-screen or reset logic)
+            itemPosX[i] = 1.2f; // Move back to the right
+            return; // Exit after collision
+        }
+    }
+
+    // Check collision with obstacles
+    for (int i = 0; i < sizeof(obstaclePosX) / sizeof(obstaclePosX[0]); i++)
+    {
+        if (fabs(aircraftX - obstaclePosX[i]) < 0.05f && fabs(aircraftY - obstaclePosY[i]) < 0.05f) // Threshold for collision
+        {
+            *life -= 1.0f; // Decrement life
+            printf("Hit obstacle! Life: %.2f\n", *life);
+
+            // Reset obstacle position (move off-screen or reset logic)
+            obstaclePosX[i] = 1.2f; // Move back to the right
+            return; // Exit after collision
+        }
+    }
+
+    // Check collision with bombs
+    for (int i = 0; i < sizeof(bombPosY) / sizeof(bombPosY[0]); i++)
+    {
+        if (fabs(aircraftY - bombPosY[i]) < 0.05f) // Check Y-axis collision
+        {
+            *life -= 1.0f; // Decrement life
+            printf("Hit bomb! Life: %.2f\n", *life);
+
+            // Reset bomb position (move off-screen or reset logic)
+            bombPosY[i] = 1.2f; // Move back to the top
+            return; // Exit after collision
+        }
+    }
+}
+*/
+
 void item(GLfloat x, GLfloat y)
 {
     int i;
@@ -345,6 +409,9 @@ void aircraft()
 
 void updateAircraft(int value)
 {
+     int score = 0;       // Keep score persistent
+     int life_have = 3;   // Initial life value (if life is used)
+
     switch (currentDirection)
     {
         case 1: // Up
@@ -371,10 +438,12 @@ void updateAircraft(int value)
             break;
     }
 
-    glutPostRedisplay();   // Request a redraw
+    // Check for collisions and update score/life
+    checkCollisions(aircraftX, aircraftY);
+
+    glutPostRedisplay();  // Request a redraw
     glutTimerFunc(16, updateAircraft, 0);  // Update every 16ms (~60 FPS)
 }
-
 
 
 
