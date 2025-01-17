@@ -40,6 +40,7 @@ void initializeRandomPositions();
 void drawCrescentMoon();
 void sound(const char* soundFile);
 void playContinuousSound(const char* soundFile);
+void cleanupLevelResources();
 
 
 
@@ -2311,10 +2312,22 @@ void drawButtons()
 // Switch to the main menu (level selector)
 void returnToMainMenu()
 {
-    glutSetWindow(mainWindow); // Switch back to the main window
-    glutDisplayFunc(drawButtons);  // Set the main menu display function
-    glutPostRedisplay();           // Redraw the main menu
+    // Set the display function to draw the main menu
+    glutSetWindow(mainWindow);
+    glutDisplayFunc(drawButtons);
+
+
+    // Reset or clean up resources
+
+    // Clear the screen to ensure no leftover level graphics are displayed
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // Redraw the main menu
+    glutPostRedisplay();
 }
+
+
+
 
 
 
