@@ -40,8 +40,12 @@ void initializeRandomPositions();
 void drawCrescentMoon();
 void sound(const char* soundFile);
 void playContinuousSound(const char* soundFile);
-void cleanupLevelResources();
-
+void stopSound();
+void showHighScore();
+void initializeHighScores();
+void readHighScores();
+void updateHighScore(int level, int newScore);
+void displayHighScores();
 
 
 // Variable
@@ -1062,6 +1066,8 @@ void level1Display()
     life();
 
     // Show message for Level 1
+    showHighScore();
+
     glColor3ub(244, 244, 244);
     glRasterPos2f(-0.95f, 0.9f);
     // Prepare the score message
@@ -2394,6 +2400,7 @@ void openLevel3()
 
 void keyboard(unsigned char key, int x, int y)
 {
+    stopSound();
     if (key == 27)    // 27 is the ASCII code for Esc key
     {
         //isRunning = false;  // Stop the timer function
@@ -2499,6 +2506,17 @@ void display()
 
 
 
+
+void showHighScore()
+{
+    initializeHighScores();
+    readHighScores();
+    updateHighScore(selected_level, score);
+    displayHighScores();
+}
+
+
+
 /*-------------------------- Functions for High Score Management---------------------------*/
 // Initialize Scores in the File (If the File Doesn't Exist)
 void initializeHighScores()
@@ -2521,13 +2539,12 @@ void initializeHighScores()
 }
 
 // Read the Highest Scores
-void readHighScores(int scores[NUM_LEVELS])
+void readHighScores()
 {
     FILE *file = fopen(HIGHEST_SCORE_FILE, "r");
     if (file != NULL)
     {
-        for (int i = 0; i < NUM_LEVELS; i++)
-            fscanf(file, "Level %*d: %d\n", &scores[i]);
+        fscanf(file, "Level %*d: %d\n", selected_level);
         fclose(file);
     }
 }
@@ -2536,7 +2553,7 @@ void readHighScores(int scores[NUM_LEVELS])
 void updateHighScore(int level, int newScore)
 {
     int scores[NUM_LEVELS];
-    readHighScores(scores); // Load current scores
+    readHighScores(); // Load current scores
 
     if (level < 1 || level > NUM_LEVELS)
     {
@@ -2565,7 +2582,7 @@ void updateHighScore(int level, int newScore)
 void displayHighScores()
 {
     int scores[NUM_LEVELS];
-    readHighScores(scores); // Load scores from file
+    readHighScores(); // Load scores from file
 
     printf("Highest Scores:\n");
     for (int i = 0; i < NUM_LEVELS; i++)
@@ -2706,4 +2723,9 @@ void sound(const char* soundFile)
 void playContinuousSound(const char* soundFile)
 {
     PlaySound(TEXT(soundFile), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
+}
+
+void stopSound()
+{
+    PlaySound(NULL, NULL, 0); // Stops any currently playing sound
 }
