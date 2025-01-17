@@ -9,9 +9,7 @@
 *.dylib
 
 # Ignore debug and release build directories
-**/bin/
 **/obj/
-**/Debug/
 **/Release/
 
 # Ignore user-specific files and logs
