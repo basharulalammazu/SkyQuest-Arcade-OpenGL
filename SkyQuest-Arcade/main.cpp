@@ -2191,14 +2191,20 @@ void drawButtons()
 
 
 
+void emptyDisplay()
+{
+    glutDisplayFunc(emptyDisplay); // Temporarily set to empty display
+    cleanupLevelResources();       // Clean up any resources specific to the level
+}
 
 
 // Switch to the main menu (level selector)
 void returnToMainMenu()
 {
-    glutSetWindow(mainWindow); // Switch back to the main window
-    glutDisplayFunc(drawButtons); // Set display function to the main menu
-    glutPostRedisplay(); // Redraw the level selector screen
+        glutDisplayFunc(emptyDisplay); // Temporarily stop rendering
+    cleanupLevelResources();       // Clean up any level-specific resources
+    glutDisplayFunc(drawButtons);  // Set the main menu display function
+    glutPostRedisplay();           // Redraw the main menu
 }
 
 // Switch to Level 1 view
@@ -2256,7 +2262,7 @@ void keyboard(unsigned char key, int x, int y)
 {
     if (key == 27)    // 27 is the ASCII code for Esc key
     {
-        isRunning = false;  // Stop the timer function
+        //isRunning = false;  // Stop the timer function
         returnToMainMenu(); // Return to the level selector
         score = -10;
     }
