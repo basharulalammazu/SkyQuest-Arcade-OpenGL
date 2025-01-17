@@ -39,7 +39,7 @@ void updateWave(int value);
 void initializeRandomPositions();
 void drawCrescentMoon();
 void sound(const char* soundFile);
-
+void playContinuousSound(const char* soundFile);
 
 
 
@@ -66,7 +66,11 @@ float aircraftSpeed =0.01f;
 int currentDirection = 0;                  // Direction (0 = no movement, 1 = up, 2 = down, 3 = left, 4 = right)
 float translationOffset = 0.0f; // Offset for horizontal translation
 int score = -10, life_have = 3;
-bool isRunning = false; // Flag to check if the game is running
+bool running = false; // Flag to check if the game is running
+
+
+
+
 
 
 GLfloat generateRandomFloat()
@@ -2189,14 +2193,14 @@ void drawButtons()
 
 
 
-
 // Switch to the main menu (level selector)
 void returnToMainMenu()
 {
     glutSetWindow(mainWindow); // Switch back to the main window
-    glutDisplayFunc(drawButtons); // Set display function to the main menu
-    glutPostRedisplay(); // Redraw the level selector screen
+    glutDisplayFunc(drawButtons);  // Set the main menu display function
+    glutPostRedisplay();           // Redraw the main menu
 }
+
 
 
 // Switch to Level 1 view
@@ -2284,17 +2288,17 @@ void keyboard(unsigned char key, int x, int y)
              if (currentSelection == 0)
             {
                 openLevel1();
-                sound("levelSelect.mp4");  // Play sound when selecting level 1
+                playContinuousSound("backgorund_music.wav");  // Play sound when selecting level 1
             }
             else if (currentSelection == 1)
             {
                 openLevel2();
-                sound("levelSelect.mp4");  // Play sound when selecting level 2
+                playContinuousSound("backgorund_music.wav");  // Play sound when selecting level 1
             }
             else if (currentSelection == 2)
             {
                 openLevel3();
-                sound("levelSelect.mp4");  // Play sound when selecting level 3
+                playContinuousSound("backgorund_music.wav");  // Play sound when selecting level 1
             }
             break;
         }
@@ -2554,4 +2558,10 @@ void sound(const char* soundFile)
 {
     if (!PlaySound(soundFile, NULL, SND_ASYNC | SND_FILENAME))
         printf("Error playing sound: %s\n", soundFile);
+}
+
+
+void playContinuousSound(const char* soundFile)
+{
+    PlaySound(TEXT(soundFile), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
 }
