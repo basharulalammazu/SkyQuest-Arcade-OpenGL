@@ -42,6 +42,7 @@ void sound(const char* soundFile);
 
 
 
+
 // Variable
 int currentSelection = 0; // 0 = Level 1, 1 = Level 2, 2 = Level 3
 const char *levels[] = {"Level 1", "Level 2", "Level 3"};
@@ -65,11 +66,7 @@ float aircraftSpeed =0.01f;
 int currentDirection = 0;                  // Direction (0 = no movement, 1 = up, 2 = down, 3 = left, 4 = right)
 float translationOffset = 0.0f; // Offset for horizontal translation
 int score = -10, life_have = 3;
-bool running = false; // Flag to check if the game is running
-
-
-
-
+bool isRunning = false; // Flag to check if the game is running
 
 
 GLfloat generateRandomFloat()
@@ -2191,21 +2188,16 @@ void drawButtons()
 
 
 
-void emptyDisplay()
-{
-    glutDisplayFunc(emptyDisplay); // Temporarily set to empty display
-    cleanupLevelResources();       // Clean up any resources specific to the level
-}
 
 
 // Switch to the main menu (level selector)
 void returnToMainMenu()
 {
-        glutDisplayFunc(emptyDisplay); // Temporarily stop rendering
-    cleanupLevelResources();       // Clean up any level-specific resources
-    glutDisplayFunc(drawButtons);  // Set the main menu display function
-    glutPostRedisplay();           // Redraw the main menu
+    glutSetWindow(mainWindow); // Switch back to the main window
+    glutDisplayFunc(drawButtons); // Set display function to the main menu
+    glutPostRedisplay(); // Redraw the level selector screen
 }
+
 
 // Switch to Level 1 view
 void openLevel1()
