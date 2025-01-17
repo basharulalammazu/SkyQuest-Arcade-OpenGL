@@ -2350,13 +2350,20 @@ void openLevel1()
 // Switch to Level 2 view
 void openLevel2()
 {
-    glutSetWindow(mainWindow); // Keep using the same window
-    glClearColor(0.2f, 0.2f, 0.2f, 1.0f); // Set background color for Level 2
-    glutDisplayFunc(level2Display); // Register display callback for Level 2
-    glutTimerFunc(16, updateLevel3, 0); // obstacle moove
-    glutTimerFunc(16, updateAircraft, 0);
-    glutTimerFunc(16, updateAircraftBorder, 0);
-    glutPostRedisplay(); // Redraw to display Level 2 content
+    if (selected_level == 2 && !gameOver)
+    {
+        glutSetWindow(mainWindow); // Keep using the same window
+        glClearColor(0.2f, 0.2f, 0.2f, 1.0f); // Set background color for Level 2
+        glutDisplayFunc(level2Display); // Register display callback for Level 2
+        glutTimerFunc(16, updateLevel3, 0); // obstacle moove
+        glutTimerFunc(16, updateAircraft, 0);
+        glutTimerFunc(16, updateAircraftBorder, 0);
+        glutPostRedisplay(); // Redraw to display Level 2 content
+    }
+    else if (selected_level == 2 && gameOver)
+    {
+        gameOverScreen();
+    }
 }
 
 // Switch to Level 3 view
