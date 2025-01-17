@@ -6,14 +6,7 @@
 #include<time.h>
 #include <stdio.h>
 #include <string.h>
-#include<GL/glut.h>
-#include<iostream>
-#include<math.h>
-#include<cmath>
-#include<stdlib.h>
-#include<time.h>
-#include <stdio.h>
-#include <string.h>
+
 
 # define PI 3.14159265358979323846
 #define HIGHEST_SCORE_FILE "highest_scores.txt"
@@ -46,6 +39,7 @@ void initializeRandomPositions();
 void drawCrescentMoon();
 
 
+
 // Variable
 int currentSelection = 0; // 0 = Level 1, 1 = Level 2, 2 = Level 3
 const char *levels[] = {"Level 1", "Level 2", "Level 3"};
@@ -68,6 +62,8 @@ float aircraftBorderY = 0.0f; // Initial position of border
 float aircraftSpeed =0.01f;
 int currentDirection = 0;                  // Direction (0 = no movement, 1 = up, 2 = down, 3 = left, 4 = right)
 float translationOffset = 0.0f; // Offset for horizontal translation
+int score = -10, life_have = 3;
+const frameRate = 16;
 
 
 GLfloat generateRandomFloat()
@@ -125,15 +121,39 @@ void circle()
 
 void checkCollisions(GLfloat aircraftX, GLfloat aircraftY)
 {
+    // Define the actual dimensions of the aircraft border
+    float aircraftLeft = aircraftX - 0.09f;  // Left side of the aircraft border
+    float aircraftRight = aircraftX + 0.07f; // Right side of the aircraft border
+    float aircraftTop = aircraftY + 0.55f;  // Top of the aircraft border
+    float aircraftBottom = aircraftY + 0.315f; // Bottom of the aircraft border
+
     // Iterate through all items to check for collisions
     for (int i = 0; i < sizeof(itemPosX) / sizeof(itemPosX[0]); i++)
     {
-        // Check if the aircraft's position overlaps with the item's position
-        if (fabs(aircraftX - itemPosX[i]) < 0.05f && fabs(aircraftY - itemPosY[i]) < 0.05f)
+        // Check if the item is still active
+        if (itemPosX[i] != -999.0f)
         {
-            score++;  // Increment the score
-            printf("Item collected! Current score: %d\n", score);
-            return;
+            // Get the position of the item
+            float itemX = itemPosX[i];
+            float itemY = itemPosY[i];
+            float itemRadius = 0.05f;
+
+            // Check if any corner of the aircraft border intersects with the item's circle
+            bool collision = (aircraftLeft <= itemX + itemRadius &&
+                              aircraftRight >= itemX - itemRadius &&
+                              aircraftBottom <= itemY + itemRadius &&
+                              aircraftTop >= itemY - itemRadius);
+
+            if (collision)
+            {
+                score += 10;               // Increment the score by 10
+                itemPosX[i] = -999.0f;     // Mark the item as collected
+                printf("Item collected! Current score: %d\n", score);
+                printf("\n");
+                printf("Aircraft: Left=%.2f, Right=%.2f, Top=%.2f, Bottom=%.2f\n", aircraftLeft, aircraftRight, aircraftTop, aircraftBottom);
+                printf("Item %d: X=%.2f, Y=%.2f, Active=%s\n", i, itemX, itemY, (itemPosX[i] != -999.0f ? "Yes" : "No"));
+                return;   // Exit after handling the collision for this item
+            }
         }
     }
 }
@@ -439,7 +459,7 @@ void updateAircraft(int value)
     }
 
     // Check for collisions and update score/life
-    checkCollisions(aircraftX, aircraftY);
+    //checkCollisions(aircraftX, aircraftY);
 
     glutPostRedisplay();  // Request a redraw
     glutTimerFunc(16, updateAircraft, 0);  // Update every 16ms (~60 FPS)
@@ -475,6 +495,9 @@ void updateAircraftBorder(int value)
         default: // No movement
             break;
     }
+
+    // Check for collisions after updating the position
+    checkCollisions(aircraftBorderX, aircraftBorderY);
 
     glutPostRedisplay();   // Request a redraw
     glutTimerFunc(16, updateAircraftBorder, 0); // Update every 16ms (~60 FPS)
@@ -949,8 +972,18 @@ void level1Display()
     // Show message for Level 1
     glColor3ub(244, 244, 244);
     glRasterPos2f(-0.95f, 0.9f);
-    const char *msg = "Score: ";
-    for (const char *c = msg; *c != '\0'; ++c)
+    // Prepare the score message
+    char scoreMessage[50];
+    if (score == -10)
+    {
+        snprintf(scoreMessage, sizeof(scoreMessage), "Score: %d", 0);
+    }
+    else
+    {
+        snprintf(scoreMessage, sizeof(scoreMessage), "Score: %d", score);
+    }
+    // Render the score message
+    for (const char *c = scoreMessage; *c != '\0'; ++c)
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
 
     glFlush();
