@@ -1,3 +1,4 @@
+#include <windows.h>
 #include<GL/glut.h>
 #include<iostream>
 #include<math.h>
@@ -6,14 +7,7 @@
 #include<time.h>
 #include <stdio.h>
 #include <string.h>
-#include<GL/glut.h>
-#include<iostream>
-#include<math.h>
-#include<cmath>
-#include<stdlib.h>
-#include<time.h>
-#include <stdio.h>
-#include <string.h>
+
 
 # define PI 3.14159265358979323846
 #define HIGHEST_SCORE_FILE "highest_scores.txt"
@@ -44,6 +38,7 @@ void obstaclesL3(GLfloat x, GLfloat y);
 void updateWave(int value);
 void initializeRandomPositions();
 void drawCrescentMoon();
+void sound(const char* soundFile);
 
 
 // Variable
@@ -68,7 +63,7 @@ float aircraftBorderY = 0.0f; // Initial position of border
 float aircraftSpeed =0.01f;
 int currentDirection = 0;                  // Direction (0 = no movement, 1 = up, 2 = down, 3 = left, 4 = right)
 float translationOffset = 0.0f; // Offset for horizontal translation
-
+int score = 0, life_have = 3;
 
 GLfloat generateRandomFloat()
 {
@@ -2226,22 +2221,37 @@ void keyboard(unsigned char key, int x, int y)
         case 'w': // Move up
         case 'W':
             if (currentSelection > 0)
+            {
                 currentSelection--;
+                sound("levelSelect.wav");  // Play sound when level selection moves up
+            }
             break;
 
         case 's': // Move down
         case 'S':
-            if (currentSelection < 2)
+             if (currentSelection < 2)
+            {
                 currentSelection++;
+                sound("levelSelect.wav");  // Play sound when level selection moves down
+            }
             break;
 
         case 13: // Enter key
-            if (currentSelection == 0)
+             if (currentSelection == 0)
+            {
                 openLevel1();
+                sound("levelSelect.mp4");  // Play sound when selecting level 1
+            }
             else if (currentSelection == 1)
+            {
                 openLevel2();
+                sound("levelSelect.mp4");  // Play sound when selecting level 2
+            }
             else if (currentSelection == 2)
+            {
                 openLevel3();
+                sound("levelSelect.mp4");  // Play sound when selecting level 3
+            }
             break;
         }
     }
@@ -2390,4 +2400,114 @@ int main(int argc, char **argv)
 
     glutMainLoop();
     return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void sound(const char* soundFile)
+{
+    if (!PlaySound(soundFile, NULL, SND_ASYNC | SND_FILENAME))
+        printf("Error playing sound: %s\n", soundFile);
 }
