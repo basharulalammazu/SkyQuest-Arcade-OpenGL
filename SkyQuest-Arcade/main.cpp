@@ -40,6 +40,7 @@ void initializeRandomPositions();
 void drawCrescentMoon();
 void sound(const char* soundFile);
 void playContinuousSound(const char* soundFile);
+void cleanupLevelResources();
 
 
 
@@ -66,7 +67,7 @@ float aircraftSpeed =0.01f;
 int currentDirection = 0;                  // Direction (0 = no movement, 1 = up, 2 = down, 3 = left, 4 = right)
 float translationOffset = 0.0f; // Offset for horizontal translation
 int score = -10, life_have = 3;
-bool running = false; // Flag to check if the game is running
+bool isLevel1Active = false, isLevel2Active = false, isLevel3Active = false; // Flag to check if the game is running
 
 
 
@@ -2196,9 +2197,35 @@ void drawButtons()
 // Switch to the main menu (level selector)
 void returnToMainMenu()
 {
-    glutSetWindow(mainWindow); // Switch back to the main window
-    glutDisplayFunc(drawButtons);  // Set the main menu display function
-    glutPostRedisplay();           // Redraw the main menu
+    // Set the display function to draw the main menu
+    glutSetWindow(mainWindow);
+    glutDisplayFunc(drawButtons);
+
+    // Stop all animations or timers specific to levels
+    glutIdleFunc(nullptr);
+    glutTimerFunc(0, nullptr, 0);
+
+    // Reset or clean up resources
+    cleanupLevelResources(); // Reset level-specific states or variables
+
+    // Clear the screen to ensure no leftover level graphics are displayed
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // Redraw the main menu
+    glutPostRedisplay();
+}
+
+
+
+void cleanupLevelResources()
+{
+    // Reset any level-specific variables or states
+    isLevel1Active = false;
+    isLevel2Active = false;
+    isLevel3Active = false;
+
+    // If you have specific level objects or animations, disable them
+    currentSelection = 0; // Reset the menu selection to the first level
 }
 
 
@@ -2259,8 +2286,16 @@ void keyboard(unsigned char key, int x, int y)
     if (key == 27)    // 27 is the ASCII code for Esc key
     {
         //isRunning = false;  // Stop the timer function
-        returnToMainMenu(); // Return to the level selector
-        score = -10;
+
+        // Stop all animations and rendering for levels
+        glutIdleFunc(nullptr);
+        // glutTimerFunc(0, nullptr, 0);
+
+        // Reset game-specific variables
+        score = 0; // Reset score or other gameplay variables
+
+        // Return to the main menu
+        returnToMainMenu();
     }
     else
     {
