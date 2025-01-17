@@ -43,7 +43,7 @@ void playContinuousSound(const char* soundFile);
 void stopSound();
 void showHighScore();
 void initializeHighScores();
-void readHighScores();
+int readHighScore(int level);
 void updateHighScore(int level, int newScore);
 void displayHighScores();
 
@@ -163,6 +163,7 @@ void checkCollisions(GLfloat aircraftX, GLfloat aircraftY)
 
             if (collision)
             {
+                sound("coin_collection.wav");
                 score += 10;               // Increment the score by 10
                 itemPosX[i] = -999.0f;     // Mark the item as collected
                 printf("Item collected! Current score: %d\n", score);
@@ -233,6 +234,7 @@ void checkObstacleCollisions(GLfloat aircraftX, GLfloat aircraftY)
 
         if (collision)
         {
+            sound("obstacle_hit.wav");
             printf("Collision with obstacle %d detected! Game Over.\n", i);
             gameOverScreen(); // Call the function to show the Game Over screen
             return;           // Exit after handling the collision
@@ -2510,7 +2512,7 @@ void display()
 void showHighScore()
 {
     initializeHighScores();
-    readHighScores();
+    readHighScore(selected_level);
     updateHighScore(selected_level, score);
     displayHighScores();
 }
@@ -2529,66 +2531,89 @@ void initializeHighScores()
         {
             for (int i = 0; i < NUM_LEVELS; i++)
                 fprintf(file, "Level %d: 0\n", i + 1); // Default score is 0 for each level
-
             fclose(file);
         }
     }
     else
         fclose(file); // File exists, no need to initialize
-
 }
 
-// Read the Highest Scores
-void readHighScores()
+// Read the Highest Score for a Specific Level
+int readHighScore(int level)
 {
     FILE *file = fopen(HIGHEST_SCORE_FILE, "r");
-    if (file != NULL)
-    {
-        fscanf(file, "Level %*d: %d\n", selected_level);
+    int score = 0;
+
+    if (file == NULL)
+        initializeHighScores();
+
+    for (int i = 0; i < NUM_LEVELS; i++)
+        {
+            int currentLevel, currentScore;
+            fscanf(file, "Level %d: %d\n", &currentLevel, &currentScore);
+            if (currentLevel == level)
+            {
+                score = currentScore;
+                break;
+            }
+        }
         fclose(file);
-    }
+    return score;
 }
 
 // Update the Highest Score for a Specific Level
 void updateHighScore(int level, int newScore)
 {
-    int scores[NUM_LEVELS];
-    readHighScores(); // Load current scores
+    int scores[NUM_LEVELS] = {0};
+    FILE *file = fopen(HIGHEST_SCORE_FILE, "r");
 
-    if (level < 1 || level > NUM_LEVELS)
+    // Read all current scores into the array
+    if (file != NULL)
     {
-        printf("Invalid level: %d\n", level);
-        return;
+        for (int i = 0; i < NUM_LEVELS; i++)
+        {
+            fscanf(file, "Level %*d: %d\n", &scores[i]);
+        }
+        fclose(file);
     }
 
-    if (newScore > scores[level - 1]) // Check if the new score is higher
+    // Update the score for the specific level if the new score is higher
+    if (level >= 1 && level <= NUM_LEVELS && newScore > scores[level - 1])
     {
-        scores[level - 1] = newScore; // Update the score for the level
+        scores[level - 1] = newScore;
 
-        // Save updated scores back to the file
-        FILE *file = fopen(HIGHEST_SCORE_FILE, "w");
+        // Write updated scores back to the file
+        file = fopen(HIGHEST_SCORE_FILE, "w");
         if (file != NULL)
         {
             for (int i = 0; i < NUM_LEVELS; i++)
                 fprintf(file, "Level %d: %d\n", i + 1, scores[i]);
-
             fclose(file);
         }
     }
 }
 
-
 // Display High Scores
 void displayHighScores()
 {
-    int scores[NUM_LEVELS];
-    readHighScores(); // Load scores from file
-
-    printf("Highest Scores:\n");
-    for (int i = 0; i < NUM_LEVELS; i++)
-        printf("Level %d: %d\n", i + 1, scores[i]);
-
+    FILE *file = fopen(HIGHEST_SCORE_FILE, "r");
+    if (file != NULL)
+    {
+        printf("Highest Scores:\n");
+        for (int i = 0; i < NUM_LEVELS; i++)
+        {
+            int level, score;
+            fscanf(file, "Level %d: %d\n", &level, &score);
+            printf("Level %d: %d\n", level, score);
+        }
+        fclose(file);
+    }
+    else
+    {
+        printf("No high scores available.\n");
+    }
 }
+
 
 
 int main(int argc, char **argv)
