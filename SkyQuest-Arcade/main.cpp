@@ -46,6 +46,8 @@ void initializeHighScores();
 int readHighScore(int level);
 void updateHighScore(int level, int newScore);
 void displayHighScores();
+void timer(int value);
+
 
 
 // Variable
@@ -73,6 +75,9 @@ float translationOffset = 0.0f; // Offset for horizontal translation
 int score = -10, life_have = 3; bool gameOver = false;
 bool running = false; // Flag to check if the game is running
 bool isLevel1Active = false, isLevel2Active = false, isLevel3Active = false;
+int gameRunning = 1; // Game state: 1 for running, 0 for done
+int timeLeft = 60; // Timer set for 60 seconds
+
 
 
 
@@ -177,7 +182,21 @@ void checkCollisions(GLfloat aircraftX, GLfloat aircraftY)
 
 
 
-
+// Timer Function
+void timer(int value)
+{
+    if (gameOver)
+    {
+        timeLeft--; // Decrease the time
+        if (timeLeft <= 0)
+        {
+            gameOver = false; // Stop the game when time runs out
+            updateHighScore(1, score); // Update the highest score
+        }
+        glutPostRedisplay(); // Redraw the screen
+        glutTimerFunc(1000, timer, 0); // Call timer function again after 1 second
+    }
+}
 
 void gameOverScreen()
 {
@@ -1005,6 +1024,18 @@ void updateSky(int value)
     glutTimerFunc(16, updateSky, 0);   // Call update again after 16ms (~60 FPS)
 }
 
+void displayTimer()
+{
+        char buffer[50];
+
+    // Display Timer
+    sprintf(buffer, "Time Left: %d sec", timeLeft);
+    glRasterPos2f(0.0f, 0.2f);
+    for (char *c = buffer; *c != '\0'; c++)
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
+}
+
+
 // Display function for Level 1
 void level1Display()
 {
@@ -1061,7 +1092,8 @@ void level1Display()
 
     aircraft_Border();
     aircraft();
-    life();
+
+    // life();
 
     // Show message for Level 1
     showHighScore();
@@ -1080,6 +1112,15 @@ void level1Display()
     }
     // Render the score message
     for (const char *c = scoreMessage; *c != '\0'; ++c)
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
+
+
+     char buffer[50];
+
+    // Display Timer
+    sprintf(buffer, "Time Left: %d sec", timeLeft);
+    glRasterPos2f(-0.5f, 0.9f);
+    for (char *c = buffer; *c != '\0'; c++)
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
 
     glFlush();
@@ -2343,8 +2384,11 @@ void openLevel1()
         glutSetWindow(mainWindow); // Keep using the same window
         glClearColor(0.2f, 0.2f, 0.2f, 1.0f); // Set background color for Level 1
         glutDisplayFunc(level1Display); // Register display callback for Level 1
+        displayTimer();
+        timer(timeLeft);
 
-        if (isLevel1Active == false)
+
+        if (!isLevel1Active)
         {
             glutTimerFunc(16, updateSky, 0);         // Start animation for Level 1
             glutTimerFunc(16, updateLevel3, 0);
@@ -2366,7 +2410,7 @@ void openLevel2()
         glutSetWindow(mainWindow); // Keep using the same window
         glClearColor(0.2f, 0.2f, 0.2f, 1.0f); // Set background color for Level 2
         glutDisplayFunc(level2Display); // Register display callback for Level 2
-         if (isLevel2Active == false)
+         if (!isLevel2Active)
         {
             glutTimerFunc(16, updateLevel3, 0); // obstacle moove
             glutTimerFunc(16, updateAircraft, 0);
@@ -2387,7 +2431,7 @@ void openLevel3()
     glLoadIdentity();
     glClearColor(0.2f, 0.2f, 0.2f, 1.0f); // Set background color for Level 3
     glutDisplayFunc(level3Display); // Register display callback for Level 3
-    if (isLevel3Active == false)
+    if (!isLevel3Active)
     {
         glutTimerFunc(16, updateSky, 0);
         glutTimerFunc(16, updateWave, 0);  // Start animation by calling update every 16ms
