@@ -198,6 +198,7 @@ void timer(int value)
         {
             gameOver = true;  // Trigger game over state
             glutDisplayFunc(gameOverScreen); // Set the display function to Game Over screen
+            sound("game_over.wav");
             glutPostRedisplay(); // Redraw the screen immediately
             return; // Stop further timer callbacks
         }
@@ -293,6 +294,7 @@ void checkObstacleCollisions(GLfloat aircraftX, GLfloat aircraftY)
                 gameOver = true; // Trigger game-over state
                 printf("Game Over! Remaining Life: 0\n");
                 glutDisplayFunc(gameOverScreen); // Switch to game-over screen
+                sound("game_over.wav");
                 glutPostRedisplay(); // Redraw the screen immediately
             }
 
@@ -342,6 +344,7 @@ void checkBombCollisions(GLfloat aircraftX, GLfloat aircraftY)
             printf("Collision with bomb %d detected! Game Over.\n", i);
             gameOver = true;          // Trigger game-over state
             glutDisplayFunc(gameOverScreen); // Switch to game-over screen
+            sound("game_over.wav");
             glutPostRedisplay();      // Redraw the screen immediately
             return;           // Exit after handling the collision
         }
