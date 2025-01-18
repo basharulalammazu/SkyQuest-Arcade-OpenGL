@@ -65,6 +65,7 @@ GLfloat itemPosX[] = {0.6f, 0.8f, 1.2f, 0.0f, 0.3f, 0.0f, -0.2f};  // Initial X 
 GLfloat itemPosY[] = {0.75f, 0.42f, 0.16f, 0.05f, -0.3f, 0.0f, -0.55f};
 GLfloat obstaclePosX[] = {1.27f, 1.5f, 1.8f, 0.8f, 0.6f, 1.0f, 2.1f, 1.95f, 2.5f};  // Initial X positions for obstacles
 GLfloat obstaclePosY[] = {-0.2f, 0.62f, -0.4f, 0.8f, -0.45f, 0.1f, 0.9f, 0.27f, -0.3};
+GLfloat bombPosX[] = {-0.17f, -0.8f, -0.6f, 0.2f, 0.5f, 0.75f, 0.9f, -0.4f, 0.1f};
 GLfloat bombPosY[] = {1.6f, 1.1f, 0.95f, 1.3f, 1.5f, 1.6f, 1.2f, 1.7f, 1.0f};
 GLfloat speed = 0.005f; // Speed of animation
 float translationX = 1.8f;
@@ -2314,16 +2315,17 @@ void level3Display()
     obstaclesL3(obstaclePosX[7], obstaclePosY[7]);
     obstaclesL3(obstaclePosX[8], obstaclePosY[8]);
 
+    // bombsPosX[] = {-0.17f, -0.8f, -0.6f, 0.2f, 0.5f}
     // Draw bombs
-    bomb(-0.17f, bombPosY[0]);
-    bomb(-0.8f, bombPosY[1]);
-    bomb(-0.6f, bombPosY[2]);
-    bomb(0.2f, bombPosY[3]);
-    bomb(0.5f, bombPosY[4]);
-    bomb(0.75f, bombPosY[5]);
-    bomb(0.9f, bombPosY[6]);
-    bomb(-0.4f, bombPosY[7]);
-    bomb(0.1f, bombPosY[8]);
+    bomb(bombPosX[0], bombPosY[0]);
+    bomb(bombPosX[1], bombPosY[1]);
+    bomb(bombPosX[2], bombPosY[2]);
+    bomb(bombPosX[3], bombPosY[3]);
+    bomb(bombPosX[4], bombPosY[4]);
+    bomb(bombPosX[5], bombPosY[5]);
+    bomb(bombPosX[6], bombPosY[6]);
+    bomb(bombPosX[7], bombPosY[7]);
+    bomb(bombPosX[8], bombPosY[8]);
 
     aircraft_Border();
     aircraft();
@@ -2518,10 +2520,25 @@ void openLevel3()
 
 
 
+void resetItemsObstaclesBombs()
+{
+    // Assign values to itemPosX
+    float itemPosX[] = {0.6f, 0.8f, 1.2f, 0.0f, 0.3f, 0.0f, -0.2f};
+    float itemPosY[] = {0.75f, 0.42f, 0.16f, 0.05f, -0.3f, 0.0f, -0.55f};
+
+    // Assign values to obstaclePosX
+    float obstaclePosX[] = {1.27f, 1.5f, 1.8f, 0.8f, 0.6f, 1.0f, 2.1f, 1.95f, 2.5f};
+    float obstaclePosY[] = {-0.2f, 0.62f, -0.4f, 0.8f, -0.45f, 0.1f, 0.9f, 0.27f, -0.3f};
+
+    // Assign values to bombPosX
+    float bombPosX[] = {-0.17f, -0.8f, -0.6f, 0.2f, 0.5f, 0.75f, 0.9f, -0.4f, 0.1f};
+    float bombPosY[] = {1.6f, 1.1f, 0.95f, 1.3f, 1.5f, 1.6f, 1.2f, 1.7f, 1.0f};
+}
 
 
 void keyboard(unsigned char key, int x, int y)
 {
+
     stopSound();
     if (key == 27 || gameOver)    // 27 is the ASCII code for Esc key
     {
@@ -2532,6 +2549,7 @@ void keyboard(unsigned char key, int x, int y)
         //isRunning = false;  // Stop the timer function
         selected_level = 0;
         returnToMainMenu();
+        resetItemsObstaclesBombs();
     }
     else
     {
