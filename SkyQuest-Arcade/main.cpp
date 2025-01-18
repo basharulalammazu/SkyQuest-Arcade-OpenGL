@@ -49,7 +49,11 @@ void displayHighScores();
 void timer(int value);
 void gameOverScreen();
 void resetAircraftPosition();
-void resetItems(); void resetObstacles(); void resetAircraftBorder();
+void resetItems();
+void resetObstacles();
+void resetAircraftBorder();
+void lifeProcessing();
+void life3(); void life2(); void life1();
 
 
 
@@ -265,13 +269,34 @@ void checkObstacleCollisions(GLfloat aircraftX, GLfloat aircraftY)
 
         if (collision)
         {
-            life_have --;
-            sound("obstacle_hit.wav");
-            printf("Collision with obstacle %d detected! Game Over.\n", i);
-            gameOver = true;          // Trigger game-over state
-            glutDisplayFunc(gameOverScreen); // Switch to game-over screen
-            glutPostRedisplay();      // Redraw the screen immediately
-            return;           // Exit after handling the collision
+            // Decrease life after collision, if life is greater than 0
+            if (life_have > 0)
+            {
+                life_have--;  // Decrease life by 1
+                printf("Collision with obstacle %d detected! Remaining Life: %d\n", i, life_have);
+
+                // Call the life processing to update the life indicator
+                lifeProcessing();
+
+                // Play sound for collision
+                sound("obstacle_hit.wav");
+
+                // Set the collided obstacle to an out-of-bounds value (-999)
+                obstaclePosX[i] = -999;
+                obstaclePosY[i] = -999;
+            }
+
+            // If life reaches 0, trigger game over
+            if (life_have <= 0)
+            {
+                life_have = 0; // Set life to 0 to indicate game over
+                gameOver = true; // Trigger game-over state
+                printf("Game Over! Remaining Life: 0\n");
+                glutDisplayFunc(gameOverScreen); // Switch to game-over screen
+                glutPostRedisplay(); // Redraw the screen immediately
+            }
+
+            return; // Exit after handling the collision
         }
     }
 }
@@ -364,7 +389,18 @@ void bg()
 
 
 
-void life()//full life
+//life generate
+void lifeProcessing()
+{
+    if (life_have == 3)
+        life3();
+    else if (life_have == 2)
+        life2();
+    else if (life_have == 1)
+        life1();
+}
+
+void life3()//full life
 
 {
     glBegin(GL_POLYGON);
@@ -393,7 +429,7 @@ void life()//full life
 
 }
 
-void life1()// green vanish
+void life2()//  Red and Green
 {
     glBegin(GL_POLYGON);
     glColor3ub(255, 255, 255);
@@ -430,7 +466,7 @@ void life1()// green vanish
     }
 
 
-void life2()// yeollow vanish
+void life1()// Only Red
 {
     glBegin(GL_POLYGON);
     glColor3ub(255, 255, 255);
@@ -1675,12 +1711,7 @@ void level2Display()
 
     aircraft_Border();
     aircraft();
-    if (life_have == 3)
-        life();
-    else if (life_have == 2)
-        life1();
-    else if (life_have == 1)
-        life2();
+    lifeProcessing();
     showHighScore();  // For hightest score update
 
     // Draw message for Level 2
@@ -2336,7 +2367,7 @@ void level3Display()
 
     aircraft_Border();
     aircraft();
-    life();
+    lifeProcessing();
     showHighScore();  // Score Update
 
 
