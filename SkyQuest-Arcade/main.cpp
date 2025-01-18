@@ -83,7 +83,6 @@ int timeLeft = 60; // Timer set for 60 seconds
 
 
 
-
 GLfloat generateRandomFloat()
 {
     return (GLfloat)rand() / RAND_MAX * 2.0f - 1.0f; // Normalize rand() to range -1 to 1
@@ -249,6 +248,7 @@ void checkObstacleCollisions(GLfloat aircraftX, GLfloat aircraftY)
 
         if (collision)
         {
+            life_have --;
             sound("obstacle_hit.wav");
             printf("Collision with obstacle %d detected! Game Over.\n", i);
             gameOverScreen(); // Call the function to show the Game Over screen
@@ -411,7 +411,7 @@ void life1()// green vanish
     }
 
 
-    life2()// yeollow vanish
+void life2()// yeollow vanish
 {
     glBegin(GL_POLYGON);
     glColor3ub(255, 255, 255);
@@ -1629,7 +1629,12 @@ void level2Display()
 
     aircraft_Border();
     aircraft();
-    life();
+    if (life_have == 3)
+        life();
+    else if (life_have == 2)
+        life1();
+    else if (life_have == 1)
+        life2();
     showHighScore();  // For hightest score update
 
     // Draw message for Level 2
@@ -2411,7 +2416,7 @@ void openLevel2()
         glutSetWindow(mainWindow); // Keep using the same window
         glClearColor(0.2f, 0.2f, 0.2f, 1.0f); // Set background color for Level 2
         glutDisplayFunc(level2Display); // Register display callback for Level 2
-         if (!isLevel2Active)
+        if (!isLevel2Active)
         {
             glutTimerFunc(16, updateLevel3, 0); // obstacle moove
             glutTimerFunc(16, updateAircraft, 0);
