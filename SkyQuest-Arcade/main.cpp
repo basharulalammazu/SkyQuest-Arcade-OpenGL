@@ -462,24 +462,31 @@ void life2()// yeollow vanish
 
 
 
-
 void aircraft_Border()
 {
+    // Enable blending for transparency
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     glPushMatrix();
     glTranslatef(aircraftBorderX, aircraftBorderY, 0.0f);
-    glColor3ub(244, 244, 244);
+
+    // Set color with transparency (e.g., alpha = 128 for 50% transparency)
+    glColor4ub(244, 244, 244, 256);
 
     glBegin(GL_LINE_STRIP);
-    glVertex2f (-0.09f, 0.55f);
-    glVertex2f (0.07f, 0.55f);
-    glVertex2f (0.07f, 0.315f);
-    glVertex2f (-0.09f, 0.315f);
-    glVertex2f (-0.09f, 0.55f);
+    glVertex2f(-0.09f, 0.55f);
+    glVertex2f(0.07f, 0.55f);
+    glVertex2f(0.07f, 0.315f);
+    glVertex2f(-0.09f, 0.315f);
+    glVertex2f(-0.09f, 0.55f);
     glEnd();
 
     glPopMatrix();
-}
 
+    // Disable blending to avoid affecting other parts of the program
+    glDisable(GL_BLEND);
+}
 
 
 
