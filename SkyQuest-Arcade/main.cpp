@@ -1246,6 +1246,12 @@ void level1Display()
     for (char *c = timerText; *c != '\0'; ++c)
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
 
+
+    int highScore = readHighScore(1);
+    char highestText[20];
+    sprintf(highestText, "Highest Score: %d", highScore);
+    for (char *c = highestText; *c != '\0'; ++c)
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
     glFlush();
 }
 
@@ -1779,6 +1785,12 @@ void level2Display()
     }
     // Render the score message
     for (const char *c = scoreMessage; *c != '\0'; ++c)
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
+
+    int highScore = readHighScore(2);
+    char highestText[20];
+    sprintf(highestText, "Highest Score: %d", highScore);
+    for (char *c = highestText; *c != '\0'; ++c)
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
 
     glFlush();
@@ -2426,16 +2438,15 @@ void level3Display()
     // Prepare the score message
     char scoreMessage[50];
     if (score == -10)
-    {
         snprintf(scoreMessage, sizeof(scoreMessage), "Score: %d", 0);
-    }
     else
-    {
         snprintf(scoreMessage, sizeof(scoreMessage), "Score: %d", score);
-    }
+
     // Render the score message
     for (const char *c = scoreMessage; *c != '\0'; ++c)
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
+
+
 
     glFlush();
 }
