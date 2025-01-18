@@ -198,6 +198,7 @@ void timer(int value)
         {
             gameOver = true;  // Trigger game over state
             glutDisplayFunc(gameOverScreen); // Set the display function to Game Over screen
+            sound("game_over.wav");
             glutPostRedisplay(); // Redraw the screen immediately
             return; // Stop further timer callbacks
         }
@@ -293,6 +294,7 @@ void checkObstacleCollisions(GLfloat aircraftX, GLfloat aircraftY)
                 gameOver = true; // Trigger game-over state
                 printf("Game Over! Remaining Life: 0\n");
                 glutDisplayFunc(gameOverScreen); // Switch to game-over screen
+                sound("game_over.wav");
                 glutPostRedisplay(); // Redraw the screen immediately
             }
 
@@ -342,6 +344,7 @@ void checkBombCollisions(GLfloat aircraftX, GLfloat aircraftY)
             printf("Collision with bomb %d detected! Game Over.\n", i);
             gameOver = true;          // Trigger game-over state
             glutDisplayFunc(gameOverScreen); // Switch to game-over screen
+            sound("game_over.wav");
             glutPostRedisplay();      // Redraw the screen immediately
             return;           // Exit after handling the collision
         }
@@ -1243,6 +1246,12 @@ void level1Display()
     for (char *c = timerText; *c != '\0'; ++c)
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
 
+
+    int highScore = readHighScore(1);
+    char highestText[20];
+    sprintf(highestText, "Highest Score: %d", highScore);
+    for (char *c = highestText; *c != '\0'; ++c)
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
     glFlush();
 }
 
@@ -1776,6 +1785,12 @@ void level2Display()
     }
     // Render the score message
     for (const char *c = scoreMessage; *c != '\0'; ++c)
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
+
+    int highScore = readHighScore(2);
+    char highestText[20];
+    sprintf(highestText, "Highest Score: %d", highScore);
+    for (char *c = highestText; *c != '\0'; ++c)
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
 
     glFlush();
@@ -2423,16 +2438,15 @@ void level3Display()
     // Prepare the score message
     char scoreMessage[50];
     if (score == -10)
-    {
         snprintf(scoreMessage, sizeof(scoreMessage), "Score: %d", 0);
-    }
     else
-    {
         snprintf(scoreMessage, sizeof(scoreMessage), "Score: %d", score);
-    }
+
     // Render the score message
     for (const char *c = scoreMessage; *c != '\0'; ++c)
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
+
+
 
     glFlush();
 }
