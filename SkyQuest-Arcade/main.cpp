@@ -47,6 +47,9 @@ int readHighScore(int level);
 void updateHighScore(int level, int newScore);
 void displayHighScores();
 void timer(int value);
+void gameOverScreen();
+void resetAircraftPosition();
+void resetItems(); void resetObstacles(); void resetAircraftBorder();
 
 
 
@@ -76,7 +79,7 @@ int score = -10, life_have = 3; bool gameOver = false;
 bool running = false; // Flag to check if the game is running
 bool isLevel1Active = false, isLevel2Active = false, isLevel3Active = false;
 int gameRunning = 1; // Game state: 1 for running, 0 for done
-int timeLeft = 60; // Timer set for 60 seconds
+int timeLeft = 10; // Timer set for 60 seconds
 
 
 
@@ -180,26 +183,30 @@ void checkCollisions(GLfloat aircraftX, GLfloat aircraftY)
 
 
 
-
 // Timer Function
 void timer(int value)
 {
-    if (gameOver)
+    if (!gameOver && timeLeft > 0)
     {
         timeLeft--; // Decrease the time
         if (timeLeft <= 0)
         {
-            gameOver = false; // Stop the game when time runs out
-            updateHighScore(1, score); // Update the highest score
+            gameOver = true;  // Trigger game over state
+            glutDisplayFunc(gameOverScreen); // Set the display function to Game Over screen
+            glutPostRedisplay(); // Redraw the screen immediately
+            return; // Stop further timer callbacks
         }
         glutPostRedisplay(); // Redraw the screen
         glutTimerFunc(1000, timer, 0); // Call timer function again after 1 second
     }
 }
 
+
+
+
 void gameOverScreen()
 {
-     // Clear the screen with black
+    // Clear the screen with black
     glClear(GL_COLOR_BUFFER_BIT);
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Black background
 
@@ -207,15 +214,24 @@ void gameOverScreen()
     glColor3ub(255, 0, 0); // Red color for "Game Over"
 
     // Position the text
-    glRasterPos2f(-0.15f, 0.0f); // Centered position
+    glRasterPos2f(-0.15f, 0.25f); // Centered position
 
     // Display the "Game Over" message
     const char *msg = "GAME OVER";
     for (const char *c = msg; *c != '\0'; ++c)
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
 
-    // Flush to ensure it renders immediately
-    glFlush();
+    glColor3ub(244, 0, 0);
+    glRasterPos2f(-0.1f, 0.0f);
+    // Prepare the score message
+    char scoreMessage[50];
+
+    snprintf(scoreMessage, sizeof(scoreMessage), "Score: %d", score);
+    // Render the score message
+    for (const char *c = scoreMessage; *c != '\0'; ++c)
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
+
+    glFlush(); // Ensure the screen renders immediately
 }
 
 
@@ -251,7 +267,9 @@ void checkObstacleCollisions(GLfloat aircraftX, GLfloat aircraftY)
             life_have --;
             sound("obstacle_hit.wav");
             printf("Collision with obstacle %d detected! Game Over.\n", i);
-            gameOverScreen(); // Call the function to show the Game Over screen
+            gameOver = true;          // Trigger game-over state
+            glutDisplayFunc(gameOverScreen); // Switch to game-over screen
+            glutPostRedisplay();      // Redraw the screen immediately
             return;           // Exit after handling the collision
         }
     }
@@ -528,6 +546,8 @@ void aircraft()
 
 void updateAircraft(int value)
 {
+     if (gameOver) return; // Stop updates if game over
+
      int score = 0;       // Keep score persistent
      int life_have = 3;   // Initial life value (if life is used)
 
@@ -569,6 +589,8 @@ void updateAircraft(int value)
 // Update function for continuous movement of the border
 void updateAircraftBorder(int value)
 {
+    if (gameOver) return; // Stop updates if game over
+
     switch (currentDirection)
     {
         case 1: // Up
@@ -621,6 +643,7 @@ void updateAircraftBorder(int value)
 
 void hills_trees()
 {
+     if (gameOver) return; // Stop updates if game over
     //Hills
 
     glBegin(GL_POLYGON);
@@ -685,6 +708,7 @@ void hills_trees()
 
 void drawTree(float offsetX, float offsetY)
 {
+     if (gameOver) return; // Stop updates if game over
     // Tree Trunk (positioned with respect to the center)
     glBegin(GL_POLYGON);
     glColor3ub(14, 4, 4);
@@ -717,6 +741,7 @@ void drawTree(float offsetX, float offsetY)
 
 void drawPolygonWithTrees1()
 {
+     if (gameOver) return; // Stop updates if game over
     glPushMatrix();  // Save the current matrix state
     glTranslatef(translationX, 0.0f, 0.0f);
     // Draw the outer polygon with the dimensions of -1.0f to 1.5f in length and -1.0f to -0.7f in height
@@ -759,6 +784,7 @@ void drawPolygonWithTrees1()
 
 void drawPolygonWithTrees()
 {
+     if (gameOver) return; // Stop updates if game over
     glPushMatrix();  // Save the current matrix state
     glTranslatef(translationX, 0.0f, 0.0f);
     // Draw the outer polygon with the dimensions of -1.0f to 1.5f in length and -1.0f to -0.7f in height
@@ -1004,6 +1030,7 @@ void daysky()
 
 void updateSky(int value)
 {
+    if (gameOver) return; // Stop updates if game over
     // Update cloud positions to move from right to left
     cloud1X -= 0.0004f;
     cloud2X -= 0.0004f;
@@ -1039,6 +1066,9 @@ void displayTimer()
 // Display function for Level 1
 void level1Display()
 {
+    if (gameOver)
+        return; // If game over, stop rendering Level 1
+
     glClear(GL_COLOR_BUFFER_BIT);
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to gray and opaque
 
@@ -1112,12 +1142,15 @@ void level1Display()
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
 
 
-     char buffer[50];
-
+    // Start timer on entering level 1
+    if (timeLeft == 60) // Start timer only once
+    {
+        glutTimerFunc(1000, timer, 0);
+    }
     // Display Timer
-    sprintf(buffer, "Time Left: %d sec", timeLeft);
-    glRasterPos2f(-0.5f, 0.9f);
-    for (char *c = buffer; *c != '\0'; c++)
+    char timerText[20];
+    sprintf(timerText, "Time Left: %d", timeLeft);
+    for (char *c = timerText; *c != '\0'; ++c)
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
 
     glFlush();
@@ -1336,6 +1369,7 @@ void obstacles(GLfloat x, GLfloat y)
 
 void bg2()
 {
+    if (gameOver) return; // Stop updates if game over
     glColor3f(0.0f, 0.0f, 0.2f);
     glBegin(GL_POLYGON);
     glVertex2f (1.0f, 1.0f);
@@ -1349,6 +1383,7 @@ void bg2()
 
 void hills1()
 {
+    if (gameOver) return; // Stop updates if game over
     glPushMatrix();  // Save the current matrix state
     glTranslatef(translationX, 0.0f, 0.0f);
 
@@ -1452,6 +1487,7 @@ void hills1()
 
 void hills()
 {
+    if (gameOver) return; // Stop updates if game over
     glPushMatrix();  // Save the current matrix state
     glTranslatef(translationX, 0.0f, 0.0f);
 
@@ -1599,6 +1635,8 @@ void hills()
 
 void level2Display()
 {
+    if (gameOver) return; // Stop updates if game over
+
     glClear(GL_COLOR_BUFFER_BIT);
     glVertex2f (1.0f, -1.0f);
     glEnd();
@@ -1966,6 +2004,8 @@ void updateLevel3(int value)
 // Display function for Level 3
 void level3Display()
 {
+    if (gameOver) return; // Stop updates if game over
+
     glClear(GL_COLOR_BUFFER_BIT);
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to gray and opaque
 
@@ -2363,15 +2403,25 @@ void drawButtons()
 // Switch to the main menu (level selector)
 void returnToMainMenu()
 {
-    // Set the display function to draw the main menu
-    glutSetWindow(mainWindow);
-    glutDisplayFunc(drawButtons);
+    // Reset global states
+    gameOver = false;      // Ensure the game-over flag is reset
+    timeLeft = 60;         // Reset timer for Level 1
+    score = 0;             // Reset score
+    selected_level = 0;    // Reset the selected level flag
 
 
-    // Reset or clean up resources
+    // Reset other level-specific variables
+    //aircraft();
+    //aircraft_Border();
+    //resetItems();            // Reset collectible items
+    //resetObstacles();        // Reset obstacle positions if needed
 
     // Clear the screen to ensure no leftover level graphics are displayed
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // Set the display function to draw the main menu
+    glutSetWindow(mainWindow);
+    glutDisplayFunc(drawButtons);
 
     // Redraw the main menu
     glutPostRedisplay();
@@ -2387,6 +2437,14 @@ void openLevel1()
 {
     if (selected_level == 1)
     {
+        // Reset game state for Level 1
+        gameOver = false;          // Reset the game-over state
+        timeLeft = 10;             // Reset timer
+        score = 0;                 // Reset score
+        resetItems();              // Reset collectible item positions
+        //resetAircraftPosition();   // Reset aircraft position
+        //resetAircraftBorder();
+
         glutSetWindow(mainWindow); // Keep using the same window
         glClearColor(0.2f, 0.2f, 0.2f, 1.0f); // Set background color for Level 1
         glutDisplayFunc(level1Display); // Register display callback for Level 1
@@ -2398,53 +2456,57 @@ void openLevel1()
         {
             glutTimerFunc(16, updateSky, 0);         // Start animation for Level 1
             glutTimerFunc(16, updateLevel3, 0);
-            glutTimerFunc(16, updateAircraft, 0);
-            glutTimerFunc(16, updateAircraftBorder, 0);
-
 
             glutPostRedisplay();
         }
-         // Redraw to display Level 1 content
+        glutTimerFunc(16, updateAircraft, 0);
+        glutTimerFunc(16, updateAircraftBorder, 0);
     }
 }
 
 // Switch to Level 2 view
 void openLevel2()
 {
-    if (selected_level == 2 && !gameOver)
+    if (selected_level == 2)
     {
+        gameOver = false;
+        score = 0;
         glutSetWindow(mainWindow); // Keep using the same window
         glClearColor(0.2f, 0.2f, 0.2f, 1.0f); // Set background color for Level 2
         glutDisplayFunc(level2Display); // Register display callback for Level 2
+
         if (!isLevel2Active)
         {
             glutTimerFunc(16, updateLevel3, 0); // obstacle moove
-            glutTimerFunc(16, updateAircraft, 0);
-            glutTimerFunc(16, updateAircraftBorder, 0);
+
             glutPostRedisplay(); // Redraw to display Level 2 content
         }
-    }
-    else if (selected_level == 2 && gameOver)
-    {
-        gameOverScreen();
+        glutTimerFunc(16, updateAircraft, 0);
+        glutTimerFunc(16, updateAircraftBorder, 0);
     }
 }
 
 // Switch to Level 3 view
 void openLevel3()
 {
-    glutSetWindow(mainWindow); // Keep using the same window
-    glLoadIdentity();
-    glClearColor(0.2f, 0.2f, 0.2f, 1.0f); // Set background color for Level 3
-    glutDisplayFunc(level3Display); // Register display callback for Level 3
-    if (!isLevel3Active)
+    if (selected_level == 3)
     {
-        glutTimerFunc(16, updateSky, 0);
-        glutTimerFunc(16, updateWave, 0);  // Start animation by calling update every 16ms
-        glutTimerFunc(16, updateLevel3, 0); // Start animation by calling update every 16ms
+        gameOver = false;
+        score = 0;
+        glutSetWindow(mainWindow); // Keep using the same window
+        glLoadIdentity();
+        glClearColor(0.2f, 0.2f, 0.2f, 1.0f); // Set background color for Level 3
+        glutDisplayFunc(level3Display); // Register display callback for Level 3
+        if (!isLevel3Active)
+        {
+            glutTimerFunc(16, updateSky, 0);
+            glutTimerFunc(16, updateWave, 0);  // Start animation by calling update every 16ms
+            glutTimerFunc(16, updateLevel3, 0); // Start animation by calling update every 16ms
+
+            glutPostRedisplay(); // Redraw to display Level 3 content
+        }
         glutTimerFunc(16, updateAircraft, 0);
         glutTimerFunc(16, updateAircraftBorder, 0);
-        glutPostRedisplay(); // Redraw to display Level 3 content
     }
 }
 
@@ -2461,12 +2523,15 @@ void openLevel3()
 void keyboard(unsigned char key, int x, int y)
 {
     stopSound();
-    if (key == 27)    // 27 is the ASCII code for Esc key
+    if (key == 27 || gameOver)    // 27 is the ASCII code for Esc key
     {
+            gameOver = false; // Reset game state
+            timeLeft = 60;    // Reset the timer
+            returnToMainMenu(); // Function to switch back to main menu
+            score = -10;
         //isRunning = false;  // Stop the timer function
         selected_level = 0;
-        returnToMainMenu(); // Return to the level selector
-        score = -10;
+        returnToMainMenu();
     }
     else
     {
@@ -2814,4 +2879,51 @@ void playContinuousSound(const char* soundFile)
 void stopSound()
 {
     PlaySound(NULL, NULL, 0); // Stops any currently playing sound
+}
+
+
+
+void resetItems()
+{
+    for (int i = 0; i < sizeof (itemPosX)/ sizeof (itemPosX[0]); i++)
+    {
+        itemPosX[i] -= speed;  // Move items leftward
+        if (itemPosX[i] < -1.2f)
+        {
+            itemPosX[i] = 1.2f; // Reset position to the right
+            // initializeRandomPositions();
+        }
+    }
+}
+
+
+void resetObstacles()
+{
+    // Update obstacle positions (move from right to left)
+    for (int i = 0; i < sizeof (obstaclePosX)/ sizeof (obstaclePosX[0]); i++)
+    {
+        obstaclePosX[i] -= speed * 1.2f;  // Move obstacles faster than items
+        if (obstaclePosX[i] < -1.2f)
+        {
+            obstaclePosX[i] = 1.2f;  // Reset position to the right
+            // initializeRandomPositions();
+        }
+    }
+}
+
+
+void resetAircraftPosition()
+{
+    aircraftX = 0.0f;  // Initial X position of the aircraft
+    aircraftY = 0.0f; // Initial Y position of the aircraft
+}
+
+
+void  resetAircraftBorder()
+{
+    // Define the actual dimensions of the aircraft border
+    float aircraftLeft = aircraftX - 0.09f;  // Left side of the aircraft border
+    float aircraftRight = aircraftX + 0.07f; // Right side of the aircraft border
+    float aircraftTop = aircraftY ;  // Top of the aircraft border
+    float aircraftBottom = aircraftY ; // Bottom of the aircraft border
 }
