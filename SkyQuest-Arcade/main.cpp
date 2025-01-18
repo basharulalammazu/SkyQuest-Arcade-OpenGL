@@ -305,6 +305,52 @@ void checkObstacleCollisions(GLfloat aircraftX, GLfloat aircraftY)
 
 
 
+
+
+void checkBombCollisions(GLfloat aircraftX, GLfloat aircraftY)
+{
+    if (gameOver) return; // Skip collision checks if already game over
+
+    // Define the actual dimensions of the aircraft border
+    float aircraftLeft = aircraftX - 0.09f;   // Left side of the aircraft border
+    float aircraftRight = aircraftX + 0.07f;  // Right side of the aircraft border
+    float aircraftTop = aircraftY + 0.55f;    // Top of the aircraft border
+    float aircraftBottom = aircraftY + 0.315f; // Bottom of the aircraft border
+
+    // Iterate through all bombs to check for collisions
+    for (int i = 0; i < sizeof(bombPosX) / sizeof(bombPosX[0]); i++)
+    {
+        // Skip bombs that are out of bounds
+        if (bombPosX[i] == -999 || bombPosY[i] == -999)
+            continue;
+
+        // Get the position of the bomb
+        float bombX = bombPosX[i];
+        float bombY = bombPosY[i];
+        float bombRadius = 0.05f; // Assuming a fixed radius for bombs
+
+        // Check if any corner of the aircraft border intersects with the bomb's circle
+        bool collision = (aircraftLeft <= bombX + bombRadius &&
+                          aircraftRight >= bombX - bombRadius &&
+                          aircraftBottom <= bombY + bombRadius &&
+                          aircraftTop >= bombY - bombRadius);
+
+        if (collision)
+        {
+            life_have --;
+            sound("bomb_explosion.wav");
+            printf("Collision with bomb %d detected! Game Over.\n", i);
+            gameOver = true;          // Trigger game-over state
+            glutDisplayFunc(gameOverScreen); // Switch to game-over screen
+            glutPostRedisplay();      // Redraw the screen immediately
+            return;           // Exit after handling the collision
+        }
+    }
+}
+
+
+
+
 /*
 void checkCollisions(float aircraftX, float aircraftY, int* score, int* life)
 {
@@ -675,7 +721,7 @@ void updateAircraftBorder(int value)
     {
         checkCollisions(aircraftBorderX, aircraftBorderY);
         checkObstacleCollisions(aircraftBorderX, aircraftBorderY);
-        //checkBombCollisions(aircraftBorderX, aircraftBorderY);
+        checkBombCollisions(aircraftBorderX, aircraftBorderY);
     }
 
     glutPostRedisplay();   // Request a redraw
@@ -2598,10 +2644,11 @@ void keyboard(unsigned char key, int x, int y)
     stopSound();
     if (key == 27 || gameOver)    // 27 is the ASCII code for Esc key
     {
-            gameOver = false; // Reset game state
-            timeLeft = 60;    // Reset the timer
-            returnToMainMenu(); // Function to switch back to main menu
-            score = -10;
+        gameOver = false; // Reset game state
+        timeLeft = 60;    // Reset the timer
+        returnToMainMenu(); // Function to switch back to main menu
+        score = -10;
+        life_have = 3;
         //isRunning = false;  // Stop the timer function
         selected_level = 0;
         returnToMainMenu();
