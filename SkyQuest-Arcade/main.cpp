@@ -2529,17 +2529,35 @@ void openLevel3()
 
 void resetItemsObstaclesBombs()
 {
-    // Assign values to itemPosX
-    float itemPosX[] = {0.6f, 0.8f, 1.2f, 0.0f, 0.3f, 0.0f, -0.2f};
-    float itemPosY[] = {0.75f, 0.42f, 0.16f, 0.05f, -0.3f, 0.0f, -0.55f};
+    // Reset values for itemPosX and itemPosY
+    GLfloat initialItemPosX[] = {0.6f, 0.8f, 1.2f, 0.0f, 0.3f, 0.0f, -0.2f};
+    GLfloat initialItemPosY[] = {0.75f, 0.42f, 0.16f, 0.05f, -0.3f, 0.0f, -0.55f};
 
-    // Assign values to obstaclePosX
-    float obstaclePosX[] = {1.27f, 1.5f, 1.8f, 0.8f, 0.6f, 1.0f, 2.1f, 1.95f, 2.5f};
-    float obstaclePosY[] = {-0.2f, 0.62f, -0.4f, 0.8f, -0.45f, 0.1f, 0.9f, 0.27f, -0.3f};
+    for (int i = 0; i < sizeof(itemPosX) / sizeof(itemPosX[0]); i++)
+    {
+        itemPosX[i] = initialItemPosX[i];
+        itemPosY[i] = initialItemPosY[i];
+    }
 
-    // Assign values to bombPosX
-    float bombPosX[] = {-0.17f, -0.8f, -0.6f, 0.2f, 0.5f, 0.75f, 0.9f, -0.4f, 0.1f};
-    float bombPosY[] = {1.6f, 1.1f, 0.95f, 1.3f, 1.5f, 1.6f, 1.2f, 1.7f, 1.0f};
+    // Reset values for obstaclePosX and obstaclePosY
+    GLfloat initialObstaclePosX[] = {1.27f, 1.5f, 1.8f, 0.8f, 0.6f, 1.0f, 2.1f, 1.95f, 2.5f};
+    GLfloat initialObstaclePosY[] = {-0.2f, 0.62f, -0.4f, 0.8f, -0.45f, 0.1f, 0.9f, 0.27f, -0.3f};
+
+    for (int i = 0; i < sizeof(obstaclePosX) / sizeof(obstaclePosX[0]); i++)
+    {
+        obstaclePosX[i] = initialObstaclePosX[i];
+        obstaclePosY[i] = initialObstaclePosY[i];
+    }
+
+    // Reset values for bombPosX and bombPosY
+    GLfloat initialBombPosX[] = {-0.17f, -0.8f, -0.6f, 0.2f, 0.5f, 0.75f, 0.9f, -0.4f, 0.1f};
+    GLfloat initialBombPosY[] = {1.6f, 1.1f, 0.95f, 1.3f, 1.5f, 1.6f, 1.2f, 1.7f, 1.0f};
+
+    for (int i = 0; i < sizeof(bombPosX) / sizeof(bombPosX[0]); i++)
+    {
+        bombPosX[i] = initialBombPosX[i];
+        bombPosY[i] = initialBombPosY[i];
+    }
 }
 
 
