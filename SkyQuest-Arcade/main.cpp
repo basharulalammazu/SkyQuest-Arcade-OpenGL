@@ -70,13 +70,9 @@ float aircraftBorderY = 0.0f; // Initial position of border
 float aircraftSpeed =0.01f;
 int currentDirection = 0;                  // Direction (0 = no movement, 1 = up, 2 = down, 3 = left, 4 = right)
 float translationOffset = 0.0f; // Offset for horizontal translation
-
 int score = -10, life_have = 3; bool gameOver = false;
-
-
-
-
 bool running = false; // Flag to check if the game is running
+bool isLevel1Active = false, isLevel2Active = false, isLevel3Active = false;
 
 
 
@@ -2347,11 +2343,18 @@ void openLevel1()
         glutSetWindow(mainWindow); // Keep using the same window
         glClearColor(0.2f, 0.2f, 0.2f, 1.0f); // Set background color for Level 1
         glutDisplayFunc(level1Display); // Register display callback for Level 1
-        glutTimerFunc(16, updateSky, 0);         // Start animation for Level 1
-        glutTimerFunc(16, updateLevel3, 0);
-        glutTimerFunc(16, updateAircraft, 0);
-        glutTimerFunc(16, updateAircraftBorder, 0);
-        glutPostRedisplay(); // Redraw to display Level 1 content
+
+        if (isLevel1Active == false)
+        {
+            glutTimerFunc(16, updateSky, 0);         // Start animation for Level 1
+            glutTimerFunc(16, updateLevel3, 0);
+            glutTimerFunc(16, updateAircraft, 0);
+            glutTimerFunc(16, updateAircraftBorder, 0);
+
+
+            glutPostRedisplay();
+        }
+         // Redraw to display Level 1 content
     }
 }
 
@@ -2363,10 +2366,13 @@ void openLevel2()
         glutSetWindow(mainWindow); // Keep using the same window
         glClearColor(0.2f, 0.2f, 0.2f, 1.0f); // Set background color for Level 2
         glutDisplayFunc(level2Display); // Register display callback for Level 2
-        glutTimerFunc(16, updateLevel3, 0); // obstacle moove
-        glutTimerFunc(16, updateAircraft, 0);
-        glutTimerFunc(16, updateAircraftBorder, 0);
-        glutPostRedisplay(); // Redraw to display Level 2 content
+         if (isLevel2Active == false)
+        {
+            glutTimerFunc(16, updateLevel3, 0); // obstacle moove
+            glutTimerFunc(16, updateAircraft, 0);
+            glutTimerFunc(16, updateAircraftBorder, 0);
+            glutPostRedisplay(); // Redraw to display Level 2 content
+        }
     }
     else if (selected_level == 2 && gameOver)
     {
@@ -2381,14 +2387,16 @@ void openLevel3()
     glLoadIdentity();
     glClearColor(0.2f, 0.2f, 0.2f, 1.0f); // Set background color for Level 3
     glutDisplayFunc(level3Display); // Register display callback for Level 3
-    glutTimerFunc(16, updateSky, 0);
-    glutTimerFunc(16, updateWave, 0);  // Start animation by calling update every 16ms
-    glutTimerFunc(16, updateLevel3, 0); // Start animation by calling update every 16ms
-    glutTimerFunc(16, updateAircraft, 0);
-    glutTimerFunc(16, updateAircraftBorder, 0);
-    glutPostRedisplay(); // Redraw to display Level 3 content
+    if (isLevel3Active == false)
+    {
+        glutTimerFunc(16, updateSky, 0);
+        glutTimerFunc(16, updateWave, 0);  // Start animation by calling update every 16ms
+        glutTimerFunc(16, updateLevel3, 0); // Start animation by calling update every 16ms
+        glutTimerFunc(16, updateAircraft, 0);
+        glutTimerFunc(16, updateAircraftBorder, 0);
+        glutPostRedisplay(); // Redraw to display Level 3 content
+    }
 }
-
 
 
 
@@ -2437,18 +2445,21 @@ void keyboard(unsigned char key, int x, int y)
             {
                 selected_level = 1;
                 openLevel1();
+                isLevel1Active = true;
                 playContinuousSound("backgorund_music.wav");  // Play sound when selecting level 1
             }
             else if (currentSelection == 1)
             {
                 selected_level = 2;
                 openLevel2();
+                isLevel2Active = true;
                 playContinuousSound("backgorund_music.wav");  // Play sound when selecting level 1
             }
             else if (currentSelection == 2)
             {
                 selected_level = 3;
                 openLevel3();
+                isLevel3Active = true;
                 playContinuousSound("backgorund_music.wav");  // Play sound when selecting level 1
             }
             break;
