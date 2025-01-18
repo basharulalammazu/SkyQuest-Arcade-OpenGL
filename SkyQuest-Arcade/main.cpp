@@ -1103,13 +1103,10 @@ void level1Display()
     // Prepare the score message
     char scoreMessage[50];
     if (score == -10)
-    {
         snprintf(scoreMessage, sizeof(scoreMessage), "Score: %d", 0);
-    }
     else
-    {
         snprintf(scoreMessage, sizeof(scoreMessage), "Score: %d", score);
-    }
+
     // Render the score message
     for (const char *c = scoreMessage; *c != '\0'; ++c)
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
@@ -1633,11 +1630,13 @@ void level2Display()
     aircraft_Border();
     aircraft();
     life();
+    showHighScore();  // For hightest score update
 
     // Draw message for Level 2
     glColor3ub(255, 255, 255);
     glRasterPos2f(-0.95f, 0.9f);
     // Prepare the score message
+
     char scoreMessage[50];
     if (score == -10)
     {
@@ -2284,6 +2283,8 @@ void level3Display()
     aircraft_Border();
     aircraft();
     life();
+    showHighScore();  // Score Update
+
 
     // Show message for Level 3
     glColor3ub(244, 244, 244);
