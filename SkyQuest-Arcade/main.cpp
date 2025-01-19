@@ -8,6 +8,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
+#include <bits/stdc++.h>
+
 
 
 # define PI 3.14159265358979323846
@@ -62,11 +64,14 @@ void openControl();
 void mouseHandler(int button, int state, int x, int y);
 void displayControls() ;
 void displaySoundControls();
+void displayCover();
+void init();
+void coverInit();
 
 
 // Variable
 int currentSelection = 0 , selected_level = 0; // 0 = Level 1, 1 = Level 2, 2 = Level 3
-const char *levels[] = {"Level 1", "Level 2", "Level 3", "Controls", "Cover"};
+const char *levels[] = {"Level 1", "Level 2", "Level 3", "Controls"};
 int mainWindow; // Main menu window ID
 int levelWindow; // Level window ID
 float cloud1X = -0.9f, cloud2X = -0.35f, cloud3X = 0.35f, cloud4X = 0.75f, cloud5X = -0.8f, cloud6X = 1.15f;
@@ -2560,14 +2565,14 @@ void displaySoundControls() {
 printf("Sound state: %s\n", isSoundOn ? "ON" : "OFF");
     renderText(0.3f, 0.03f, "Sound Controls");
     // Add sound state display
-    if (isSoundOn) 
+    if (isSoundOn)
     {
         isSoundOn = true;
         soundChecker = 1;
         renderText(0.5f, -0.8f, "Sound: ON");
         playContinuousSound("backgorund_music.wav");
-    } 
-    else 
+    }
+    else
     {
         isSoundOn = false;
         soundChecker = 0;
@@ -2745,8 +2750,12 @@ void keyboard(unsigned char key, int x, int y)
             break;
         case 'c': // For cover
         case 'C':
-//                cover();
-                playContinuousSound("backgorund_music.wav");  // Play sound when level selection moves down
+//                 selected_level = 5;
+
+                isLevel5Active = true;
+                coverInit(); // Initialize the OpenGL environment
+                glutDisplayFunc(displayCover); // Set the display function
+                playContinuousSound("backgorund_music.wav");  // Play sound when selecting level 1
             break;
         case 'm': // For sound on/off
         case 'M':
@@ -2791,18 +2800,12 @@ void keyboard(unsigned char key, int x, int y)
             else if (currentSelection == 3)  // For control Page
             {
                 selected_level = 4;
-                openControl();
+                init();
+
+                glutDisplayFunc(openControl);
 
                 playContinuousSound("backgorund_music.wav");  // Play sound when selecting level 1
             }
-            else if (currentSelection == 4)
-            {
-                selected_level = 5;
-
-                isLevel5Active = true;
-                playContinuousSound("backgorund_music.wav");  // Play sound when selecting level 1
-            }
-            break;
         }
     }
     glutPostRedisplay();
@@ -2982,6 +2985,7 @@ int main(int argc, char **argv)
     glutSpecialUpFunc(handleSpecialKeyRelease);  // Register key release handler
     glutMouseFunc(mouseHandler); // Register mouse callback
 
+
     glutMainLoop();
     return 0;
 }
@@ -3143,7 +3147,8 @@ void displayControls() {
 }
 
 // Initialization function
-void init() {
+void init()
+{
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Black background
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -3235,3 +3240,191 @@ void  resetAircraftBorder()
 
     aircraftBorderY = 0.0f;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Display function to render the cover page
+void displayCover() {
+    glClear(GL_COLOR_BUFFER_BIT); // Clear the screen with the background color
+
+    // Set the background color to a gradient or textured image
+    glBegin(GL_QUADS);
+    glColor3f(0.0f, 0.2f, 0.4f); // Top (Dark Blue)
+    glVertex2f(-1.0f, 1.0f);
+    glVertex2f(1.0f, 1.0f);
+    glColor3f(0.0f, 0.5f, 0.8f); // Bottom (Light Blue)
+    glVertex2f(1.0f, -1.0f);
+    glVertex2f(-1.0f, -1.0f);
+    glEnd();
+
+    // Set text color to white for better contrast
+    glColor3f(1.0f, 1.0f, 1.0f);
+
+    // Title
+    renderText(-0.7f, 0.85f, "*************************************************************************");
+    renderText(-0.6f, 0.8f, "American International University - Bangladesh (AIUB)");
+    renderText(-0.7f, 0.70f, "*************************************************************************");
+
+    // Add a decorative line
+    glColor3f(0.8f, 0.8f, 0.8f); // Light gray
+    glBegin(GL_LINES);
+    glVertex2f(-0.8f, 0.7f);
+    glVertex2f(0.8f, 0.7f);
+    glEnd();
+
+    // "Submitted to" section
+    glColor3f(1.0f, 1.0f, 0.0f); // Yellow for emphasis
+    renderText(-0.5f, 0.62f, "Submitted to:");
+    glColor3f(1.0f, 1.0f, 1.0f); // White
+    renderText(-0.5f, 0.50f, "MAHFUJUR RAHMAN");
+
+    // "Submitted by" section
+    glColor3f(0.0f, 1.0f, 0.0f); // Green
+    renderText(-0.5f, 0.3f, "Submitted by:");
+    glColor3f(1.0f, 1.0f, 1.0f); // White
+    renderText(-0.65f, 0.2f, "Serial No.                 Name                           Student ID");
+    renderText(-0.65f, 0.1f, "      1               Tatinee Rajbantee                21-44618-1");
+    renderText(-0.65f, 0.0f, "      2               MD. Tanjim Rahman             22-47647-2");
+    renderText(-0.65f, -0.1f, "      3               Rafiah Salsabil Labanya       22-47914-2");
+    renderText(-0.65f, -0.2f, "      4               Basharul-Alam-Mazu          22-47903-2");
+    renderText(-0.65f, -0.3f, "      5               Badrunnahar Ruku               22-48027-2");
+
+
+
+    // Flush OpenGL commands
+    glFlush();
+}
+
+
+
+// Initialization function to set up the OpenGL environment
+void coverInit() {
+glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluOrtho2D(-1.0, 1.0, -1.0, 1.0); // Set coordinate system for 2D rendering
+}
+
+
