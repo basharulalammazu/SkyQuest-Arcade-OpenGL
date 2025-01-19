@@ -252,6 +252,16 @@ void gameOverScreen()
     for (const char *c = scoreMessage; *c != '\0'; ++c)
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
 
+
+    int highScore = readHighScore(1);
+    glColor3ub(244, 10, 0);
+    glRasterPos2f(-0.07f, 0.0f);
+    char highestText[20];
+    sprintf(highestText, "Highest Score: %d", highScore);
+    for (char *c = highestText; *c != '\0'; ++c)
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
+
+
     // Set the color for the text
     glColor3ub(255, 0, 0);
     glRasterPos2f(0.6f, -0.9f);
@@ -1244,8 +1254,8 @@ void level1Display()
     // Show message for Level 1
     showHighScore();
 
-    glColor3ub(244, 244, 244);
-    glRasterPos2f(-0.975f, 0.9f);
+    glColor3ub(0, 200, 0);
+    glRasterPos2f(-0.975f, 0.8f);
     // Prepare the score message
     char scoreMessage[50];
     if (score == -10)
@@ -1264,7 +1274,7 @@ void level1Display()
         glutTimerFunc(1000, timer, 0);
     }
     // Display Timer
-    glColor3ub(244, 244, 244);
+    glColor3ub(244, 50, 0);
     glRasterPos2f(-0.18f, 0.9f);
     char timerText[20];
     sprintf(timerText, "Time Left: %d", timeLeft);
@@ -1273,8 +1283,8 @@ void level1Display()
 
 
     int highScore = readHighScore(1);
-    glColor3ub(244, 244, 244);
-    glRasterPos2f(-0.975f, 0.8f);
+    glColor3ub(255, 195, 0);
+    glRasterPos2f(-0.975f, 0.9f);
     char highestText[20];
     sprintf(highestText, "Highest Score: %d", highScore);
     for (char *c = highestText; *c != '\0'; ++c)
@@ -1833,8 +1843,8 @@ void level2Display()
     showHighScore();  // For hightest score update
 
     // Draw message for Level 2
-    glColor3ub(255, 255, 255);
-    glRasterPos2f(-0.975f, 0.9f);
+    glColor3ub(0, 200, 0);
+    glRasterPos2f(-0.975f, 0.8f);
     // Prepare the score message
 
     char scoreMessage[50];
@@ -1851,8 +1861,8 @@ void level2Display()
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
 
     int highScore = readHighScore(2);
-    glColor3ub(244, 244, 244);
-    glRasterPos2f(-0.975f, 0.8f);
+    glColor3ub(255, 195, 0);
+    glRasterPos2f(-0.975f, 0.9f);
     char highestText[20];
     sprintf(highestText, "Highest Score: %d", highScore);
     for (char *c = highestText; *c != '\0'; ++c)
@@ -2498,8 +2508,8 @@ void level3Display()
 
 
     // Show message for Level 3
-    glColor3ub(244, 244, 244);
-    glRasterPos2f(-0.975f, 0.9f);
+    glColor3ub(0, 200, 0);
+    glRasterPos2f(-0.975f, 0.8f);
     // Prepare the score message
     char scoreMessage[50];
     if (score == -10)
@@ -2513,8 +2523,8 @@ void level3Display()
 
 
         int highScore = readHighScore(2);
-    glColor3ub(244, 244, 244);
-    glRasterPos2f(-0.975f, 0.8f);
+    glColor3ub(255, 195, 0);
+    glRasterPos2f(-0.975f, 0.9f);
     char highestText[20];
     sprintf(highestText, "Highest Score: %d", highScore);
     for (char *c = highestText; *c != '\0'; ++c)
