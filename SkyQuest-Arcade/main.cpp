@@ -62,6 +62,7 @@ void openControl();
 void mouseHandler(int button, int state, int x, int y);
 void displayControls() ;
 void displaySoundControls();
+void toggleSound();
 
 
 // Variable
@@ -2560,18 +2561,18 @@ void displaySoundControls() {
 printf("Sound state: %s\n", isSoundOn ? "ON" : "OFF");
     renderText(0.3f, 0.03f, "Sound Controls");
     // Add sound state display
-    if (isSoundOn) 
+    if (isSoundOn)
     {
         isSoundOn = true;
         soundChecker = 1;
-        renderText(0.5f, -0.8f, "Sound: ON");
+        renderText(0.3f, -0.15f, "Sound: ON");
         playContinuousSound("backgorund_music.wav");
-    } 
-    else 
+    }
+    else
     {
         isSoundOn = false;
         soundChecker = 0;
-        renderText(0.5f, -0.8f, "Sound: OFF");
+        renderText(0.3f, -0.15f, "Sound: OFF");
         stopSound();
     }
 
@@ -2754,7 +2755,7 @@ void keyboard(unsigned char key, int x, int y)
             {
                 isSoundOn = false;
                 soundChecker = 0;
-                playContinuousSound("backgorund_music.wav");
+                //playContinuousSound("backgorund_music.wav");
                 displaySoundControls();
             }
             else
@@ -2994,13 +2995,14 @@ void toggleSound()
     {
         soundChecker = 0;
         isSoundOn = false;
-
+        stopSound();
     }
 
     else
     {
         soundChecker = 1;
         isSoundOn = true;
+        playContinuousSound("backgorund_music.wav");
     }
 
 }
@@ -3012,9 +3014,28 @@ void mouseHandler(int button, int state, int x, int y)
 {
     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
     {
-        toggleSound(); // Toggle sound on left mouse click
+        // Convert mouse coordinates to OpenGL coordinates
+        float xPos = (float)x / (700.0f / 2.0f) - 1.0f; // Assuming window width is 700
+        float yPos = -(float)y / (400.0f / 2.0f) + 1.0f; // Assuming window height is 400
+
+        // Define bounding box for "Sound: ON/OFF"
+        float left = 0.3f;   // X start position of the text
+        float right = 0.6f;  // X end position of the text
+        float top = -0.1f;   // Y start position of the text
+        float bottom = -0.2f; // Y end position of the text
+
+        // Check if mouse click is within the bounding box
+        if (xPos >= left && xPos <= right && yPos <= top && yPos >= bottom)
+        {
+            toggleSound();   // Only toggle sound if within bounds
+            glutPostRedisplay(); // Redraw the screen to reflect changes
+        }
+        // Do nothing if click is outside the boundary
     }
 }
+
+
+
 
 
 
