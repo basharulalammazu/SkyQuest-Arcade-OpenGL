@@ -73,7 +73,7 @@ GLfloat itemPosY[] = {0.75f, 0.42f, 0.16f, 0.05f, -0.3f, 0.0f, -0.55f};
 GLfloat obstaclePosX[] = {1.27f, 1.5f, 1.8f, 0.8f, 0.6f, 1.0f, 2.1f, 1.95f, 2.5f};  // Initial X positions for obstacles
 GLfloat obstaclePosY[] = {-0.2f, 0.62f, -0.4f, 0.8f, -0.45f, 0.1f, 0.9f, 0.27f, -0.3};
 GLfloat bombPosX[] = {-0.2f, -0.8f, -0.6f, 0.2f, 0.5f, 0.75f, 0.9f, -0.4f, 0.1f};
-GLfloat bombPosY[] = {1.6f, 1.1f, 0.95f, 1.3f, 1.5f, 1.6f, 1.2f, 1.7f, 1.0f};
+GLfloat bombPosY[] = {2.6f, 2.1f, 1.95f, 2.3f, 2.5f, 2.6f, 2.2f, 2.7f, 2.0f};
 GLfloat speed = 0.005f; // Speed of animation
 float translationX = 1.8f;
 float aircraftX = 0.0f;  // Initial X position of the aircraft
@@ -87,9 +87,8 @@ int score = -10, life_have = 3; bool gameOver = false;
 bool running = false; // Flag to check if the game is running
 bool isLevel1Active = false, isLevel2Active = false, isLevel3Active = false, isLevel4Active = false, isLevel5Active = false;
 int gameRunning = 1; // Game state: 1 for running, 0 for done
-int timeLeft = 10; // Timer set for 60 seconds
+int timeLeft = 60; // Timer set for 60 seconds
 int soundChecker = 1;
-
 
 
 
@@ -573,7 +572,7 @@ void aircraft_Border()
     glPopMatrix();
 
     // Disable blending to avoid affecting other parts of the program
-    glDisable(GL_BLEND);
+    //glDisable(GL_BLEND);
 }
 
 
@@ -650,22 +649,22 @@ void updateAircraft(int value)
     switch (currentDirection)
     {
         case 1: // Up
-            if (aircraftY + aircraftSpeed <= 0.3f)  // Check upper boundary
+            if (aircraftY + aircraftSpeed <= 0.33f)  // Check upper boundary
                 aircraftY += aircraftSpeed;
             break;
 
         case 2: // Down
-            if (aircraftY - aircraftSpeed >= -0.6f)  // Check lower boundary
+            if (aircraftY - aircraftSpeed >= -0.7f)  // Check lower boundary
                 aircraftY -= aircraftSpeed;
             break;
 
         case 3: // Left
-            if (aircraftX - aircraftSpeed >= -0.25f)  // Check left boundary
+            if (aircraftX - aircraftSpeed >= -0.4f)  // Check left boundary
                 aircraftX -= aircraftSpeed;
             break;
 
         case 4: // Right
-            if (aircraftX + aircraftSpeed <= 0.25f)  // Check right boundary
+            if (aircraftX + aircraftSpeed <= 0.4f)  // Check right boundary
                 aircraftX += aircraftSpeed;
             break;
 
@@ -690,22 +689,22 @@ void updateAircraftBorder(int value)
     switch (currentDirection)
     {
         case 1: // Up
-            if (aircraftBorderY + aircraftSpeed <= 0.3f) // Check upper boundary
+            if (aircraftBorderY + aircraftSpeed <= 0.33f) // Check upper boundary
                 aircraftBorderY += aircraftSpeed;
             break;
 
         case 2: // Down
-            if (aircraftBorderY - aircraftSpeed >= -0.6f) // Check lower boundary
+            if (aircraftBorderY - aircraftSpeed >= -0.7f) // Check lower boundary
                 aircraftBorderY -= aircraftSpeed;
             break;
 
         case 3: // Left
-            if (aircraftBorderX - aircraftSpeed >= -0.25f) // Check left boundary
+            if (aircraftBorderX - aircraftSpeed >= -0.4f) // Check left boundary
                 aircraftBorderX -= aircraftSpeed;
             break;
 
         case 4: // Right
-            if (aircraftBorderX + aircraftSpeed <= 0.25f) // Check right boundary
+            if (aircraftBorderX + aircraftSpeed <= 0.4f) // Check right boundary
                 aircraftBorderX += aircraftSpeed;
             break;
 
@@ -1225,7 +1224,7 @@ void level1Display()
     showHighScore();
 
     glColor3ub(244, 244, 244);
-    glRasterPos2f(-0.95f, 0.9f);
+    glRasterPos2f(-0.975f, 0.9f);
     // Prepare the score message
     char scoreMessage[50];
     if (score == -10)
@@ -1244,6 +1243,8 @@ void level1Display()
         glutTimerFunc(1000, timer, 0);
     }
     // Display Timer
+    glColor3ub(244, 244, 244);
+    glRasterPos2f(-0.18f, 0.9f);
     char timerText[20];
     sprintf(timerText, "Time Left: %d", timeLeft);
     for (char *c = timerText; *c != '\0'; ++c)
@@ -1251,6 +1252,8 @@ void level1Display()
 
 
     int highScore = readHighScore(1);
+    glColor3ub(244, 244, 244);
+    glRasterPos2f(-0.975f, 0.8f);
     char highestText[20];
     sprintf(highestText, "Highest Score: %d", highScore);
     for (char *c = highestText; *c != '\0'; ++c)
@@ -1749,12 +1752,6 @@ void level2Display()
     hills();
     drawCrescentMoon();
 
-    // Draw collectibles (move from right to left with fixed Y positions)
-    itemL3(itemPosX[0], itemPosY[0]);
-    itemL3(itemPosX[1], itemPosY[1]);
-    itemL3(itemPosX[2], itemPosY[2]);
-    itemL3(itemPosX[3], itemPosY[3]);
-    itemL3(itemPosX[4], itemPosY[4]);
 
     // Draw obstacles (move from right to left with fixed Y positions)
     obstaclesL3(obstaclePosX[0], obstaclePosY[0]);
@@ -1767,6 +1764,13 @@ void level2Display()
     obstaclesL3(obstaclePosX[7], obstaclePosY[7]);
     obstaclesL3(obstaclePosX[8], obstaclePosY[8]);
 
+    // Draw collectibles (move from right to left with fixed Y positions)
+    itemL3(itemPosX[0], itemPosY[0]);
+    itemL3(itemPosX[1], itemPosY[1]);
+    itemL3(itemPosX[2], itemPosY[2]);
+    itemL3(itemPosX[3], itemPosY[3]);
+    itemL3(itemPosX[4], itemPosY[4]);
+
     aircraft_Border();
     aircraft();
     lifeProcessing();
@@ -1774,7 +1778,7 @@ void level2Display()
 
     // Draw message for Level 2
     glColor3ub(255, 255, 255);
-    glRasterPos2f(-0.95f, 0.9f);
+    glRasterPos2f(-0.975f, 0.9f);
     // Prepare the score message
 
     char scoreMessage[50];
@@ -1791,6 +1795,8 @@ void level2Display()
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
 
     int highScore = readHighScore(2);
+    glColor3ub(244, 244, 244);
+    glRasterPos2f(-0.975f, 0.8f);
     char highestText[20];
     sprintf(highestText, "Highest Score: %d", highScore);
     for (char *c = highestText; *c != '\0'; ++c)
@@ -2031,7 +2037,7 @@ void obstaclesL3(GLfloat x, GLfloat y)
 {
     int i;
 
-    GLfloat radius = 0.065f; // Radius of the circle
+    GLfloat radius = 0.067f; // Radius of the circle
     int triangleAmount = 200; // Number of triangles used to draw the circle
     GLfloat twicePi = 2.0f * PI;
 
@@ -2437,7 +2443,7 @@ void level3Display()
 
     // Show message for Level 3
     glColor3ub(244, 244, 244);
-    glRasterPos2f(-0.95f, 0.9f);
+    glRasterPos2f(-0.975f, 0.9f);
     // Prepare the score message
     char scoreMessage[50];
     if (score == -10)
@@ -2447,6 +2453,15 @@ void level3Display()
 
     // Render the score message
     for (const char *c = scoreMessage; *c != '\0'; ++c)
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
+
+
+        int highScore = readHighScore(2);
+    glColor3ub(244, 244, 244);
+    glRasterPos2f(-0.975f, 0.8f);
+    char highestText[20];
+    sprintf(highestText, "Highest Score: %d", highScore);
+    for (char *c = highestText; *c != '\0'; ++c)
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
 
 
@@ -2543,7 +2558,7 @@ void openLevel1()
     {
         // Reset game state for Level 1
         gameOver = false;          // Reset the game-over state
-        timeLeft = 10;             // Reset timer
+        timeLeft = 60;             // Reset timer
         score = 0;                 // Reset score
         resetItems();              // Reset collectible item positions
         //resetAircraftPosition();   // Reset aircraft position
@@ -2645,8 +2660,8 @@ void resetItemsObstaclesBombs()
     }
 
     // Reset values for bombPosX and bombPosY
-    GLfloat initialBombPosX[] = {-0.17f, -0.8f, -0.6f, 0.2f, 0.5f, 0.75f, 0.9f, -0.4f, 0.1f};
-    GLfloat initialBombPosY[] = {1.6f, 1.1f, 0.95f, 1.3f, 1.5f, 1.6f, 1.2f, 1.7f, 1.0f};
+    GLfloat initialBombPosX[] = {-0.2f, -0.8f, -0.6f, 0.2f, 0.5f, 0.75f, 0.9f, -0.4f, 0.1f};
+    GLfloat initialBombPosY[] = {2.6f, 2.1f, 1.95f, 2.3f, 2.5f, 2.6f, 2.2f, 2.7f, 2.0f};
 
     for (int i = 0; i < sizeof(bombPosX) / sizeof(bombPosX[0]); i++)
     {
@@ -2671,6 +2686,8 @@ void keyboard(unsigned char key, int x, int y)
         selected_level = 0;
         returnToMainMenu();
         resetItemsObstaclesBombs();
+        resetAircraftBorder();
+        resetAircraftPosition();
     }
     else
     {
@@ -3151,9 +3168,7 @@ void resetAircraftPosition()
 
 void  resetAircraftBorder()
 {
-    // Define the actual dimensions of the aircraft border
-    float aircraftLeft = aircraftX - 0.09f;  // Left side of the aircraft border
-    float aircraftRight = aircraftX + 0.07f; // Right side of the aircraft border
-    float aircraftTop = aircraftY ;  // Top of the aircraft border
-    float aircraftBottom = aircraftY ; // Bottom of the aircraft border
+    aircraftBorderX = 0.0f;
+
+    aircraftBorderY = 0.0f;
 }
