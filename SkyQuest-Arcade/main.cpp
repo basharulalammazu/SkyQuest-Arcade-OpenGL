@@ -53,13 +53,16 @@ void resetItems();
 void resetObstacles();
 void resetAircraftBorder();
 void lifeProcessing();
-void life3(); void life2(); void life1();
+void life3();
+void life2();
+void life1();
+void openControl();
 
 
 
 // Variable
 int currentSelection = 0 , selected_level = 0; // 0 = Level 1, 1 = Level 2, 2 = Level 3
-const char *levels[] = {"Level 1", "Level 2", "Level 3"};
+const char *levels[] = {"Level 1", "Level 2", "Level 3", "Controls", "Cover"};
 int mainWindow; // Main menu window ID
 int levelWindow; // Level window ID
 float cloud1X = -0.9f, cloud2X = -0.35f, cloud3X = 0.35f, cloud4X = 0.75f, cloud5X = -0.8f, cloud6X = 1.15f;
@@ -69,7 +72,7 @@ GLfloat itemPosX[] = {0.6f, 0.8f, 1.2f, 0.0f, 0.3f, 0.0f, -0.2f};  // Initial X 
 GLfloat itemPosY[] = {0.75f, 0.42f, 0.16f, 0.05f, -0.3f, 0.0f, -0.55f};
 GLfloat obstaclePosX[] = {1.27f, 1.5f, 1.8f, 0.8f, 0.6f, 1.0f, 2.1f, 1.95f, 2.5f};  // Initial X positions for obstacles
 GLfloat obstaclePosY[] = {-0.2f, 0.62f, -0.4f, 0.8f, -0.45f, 0.1f, 0.9f, 0.27f, -0.3};
-GLfloat bombPosX[] = {-0.17f, -0.8f, -0.6f, 0.2f, 0.5f, 0.75f, 0.9f, -0.4f, 0.1f};
+GLfloat bombPosX[] = {-0.2f, -0.8f, -0.6f, 0.2f, 0.5f, 0.75f, 0.9f, -0.4f, 0.1f};
 GLfloat bombPosY[] = {1.6f, 1.1f, 0.95f, 1.3f, 1.5f, 1.6f, 1.2f, 1.7f, 1.0f};
 GLfloat speed = 0.005f; // Speed of animation
 float translationX = 1.8f;
@@ -82,11 +85,10 @@ int currentDirection = 0;                  // Direction (0 = no movement, 1 = up
 float translationOffset = 0.0f; // Offset for horizontal translation
 int score = -10, life_have = 3; bool gameOver = false;
 bool running = false; // Flag to check if the game is running
-bool isLevel1Active = false, isLevel2Active = false, isLevel3Active = false;
+bool isLevel1Active = false, isLevel2Active = false, isLevel3Active = false, isLevel4Active = false, isLevel5Active = false;
 int gameRunning = 1; // Game state: 1 for running, 0 for done
-int timeLeft = 60; // Timer set for 60 seconds
-int menu = 0;
-
+int timeLeft = 10; // Timer set for 60 seconds
+int soundChecker = 1;
 
 
 
@@ -648,22 +650,22 @@ void updateAircraft(int value)
     switch (currentDirection)
     {
         case 1: // Up
-            if (aircraftY + aircraftSpeed <= 0.33f)  // Check upper boundary
+            if (aircraftY + aircraftSpeed <= 0.3f)  // Check upper boundary
                 aircraftY += aircraftSpeed;
             break;
 
         case 2: // Down
-            if (aircraftY - aircraftSpeed >= -0.7f)  // Check lower boundary
+            if (aircraftY - aircraftSpeed >= -0.6f)  // Check lower boundary
                 aircraftY -= aircraftSpeed;
             break;
 
         case 3: // Left
-            if (aircraftX - aircraftSpeed >= -0.4f)  // Check left boundary
+            if (aircraftX - aircraftSpeed >= -0.25f)  // Check left boundary
                 aircraftX -= aircraftSpeed;
             break;
 
         case 4: // Right
-            if (aircraftX + aircraftSpeed <= 0.4f)  // Check right boundary
+            if (aircraftX + aircraftSpeed <= 0.25f)  // Check right boundary
                 aircraftX += aircraftSpeed;
             break;
 
@@ -688,22 +690,22 @@ void updateAircraftBorder(int value)
     switch (currentDirection)
     {
         case 1: // Up
-            if (aircraftBorderY + aircraftSpeed <= 0.33f) // Check upper boundary
+            if (aircraftBorderY + aircraftSpeed <= 0.3f) // Check upper boundary
                 aircraftBorderY += aircraftSpeed;
             break;
 
         case 2: // Down
-            if (aircraftBorderY - aircraftSpeed >= -0.7f) // Check lower boundary
+            if (aircraftBorderY - aircraftSpeed >= -0.6f) // Check lower boundary
                 aircraftBorderY -= aircraftSpeed;
             break;
 
         case 3: // Left
-            if (aircraftBorderX - aircraftSpeed >= -0.4f) // Check left boundary
+            if (aircraftBorderX - aircraftSpeed >= -0.25f) // Check left boundary
                 aircraftBorderX -= aircraftSpeed;
             break;
 
         case 4: // Right
-            if (aircraftBorderX + aircraftSpeed <= 0.4f) // Check right boundary
+            if (aircraftBorderX + aircraftSpeed <= 0.25f) // Check right boundary
                 aircraftBorderX += aircraftSpeed;
             break;
 
@@ -1223,7 +1225,7 @@ void level1Display()
     showHighScore();
 
     glColor3ub(244, 244, 244);
-    glRasterPos2f(-0.975f, 0.9f);
+    glRasterPos2f(-0.95f, 0.9f);
     // Prepare the score message
     char scoreMessage[50];
     if (score == -10)
@@ -1242,8 +1244,6 @@ void level1Display()
         glutTimerFunc(1000, timer, 0);
     }
     // Display Timer
-    glColor3ub(244, 244, 244);
-    glRasterPos2f(-0.18f, 0.9f);
     char timerText[20];
     sprintf(timerText, "Time Left: %d", timeLeft);
     for (char *c = timerText; *c != '\0'; ++c)
@@ -1251,8 +1251,6 @@ void level1Display()
 
 
     int highScore = readHighScore(1);
-    glColor3ub(244, 244, 244);
-    glRasterPos2f(-0.975f, 0.8f);
     char highestText[20];
     sprintf(highestText, "Highest Score: %d", highScore);
     for (char *c = highestText; *c != '\0'; ++c)
@@ -1751,6 +1749,13 @@ void level2Display()
     hills();
     drawCrescentMoon();
 
+    // Draw collectibles (move from right to left with fixed Y positions)
+    itemL3(itemPosX[0], itemPosY[0]);
+    itemL3(itemPosX[1], itemPosY[1]);
+    itemL3(itemPosX[2], itemPosY[2]);
+    itemL3(itemPosX[3], itemPosY[3]);
+    itemL3(itemPosX[4], itemPosY[4]);
+
     // Draw obstacles (move from right to left with fixed Y positions)
     obstaclesL3(obstaclePosX[0], obstaclePosY[0]);
     obstaclesL3(obstaclePosX[1], obstaclePosY[1]);
@@ -1762,15 +1767,6 @@ void level2Display()
     obstaclesL3(obstaclePosX[7], obstaclePosY[7]);
     obstaclesL3(obstaclePosX[8], obstaclePosY[8]);
 
-    // Draw collectibles (move from right to left with fixed Y positions)
-    itemL3(itemPosX[0], itemPosY[0]);
-    itemL3(itemPosX[1], itemPosY[1]);
-    itemL3(itemPosX[2], itemPosY[2]);
-    itemL3(itemPosX[3], itemPosY[3]);
-    itemL3(itemPosX[4], itemPosY[4]);
-
-
-
     aircraft_Border();
     aircraft();
     lifeProcessing();
@@ -1778,7 +1774,7 @@ void level2Display()
 
     // Draw message for Level 2
     glColor3ub(255, 255, 255);
-    glRasterPos2f(-0.975f, 0.9f);
+    glRasterPos2f(-0.95f, 0.9f);
     // Prepare the score message
 
     char scoreMessage[50];
@@ -1795,8 +1791,6 @@ void level2Display()
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
 
     int highScore = readHighScore(2);
-    glColor3ub(244, 244, 244);
-    glRasterPos2f(-0.975f, 0.8f);
     char highestText[20];
     sprintf(highestText, "Highest Score: %d", highScore);
     for (char *c = highestText; *c != '\0'; ++c)
@@ -2037,7 +2031,7 @@ void obstaclesL3(GLfloat x, GLfloat y)
 {
     int i;
 
-    GLfloat radius = 0.067f; // Radius of the circle
+    GLfloat radius = 0.065f; // Radius of the circle
     int triangleAmount = 200; // Number of triangles used to draw the circle
     GLfloat twicePi = 2.0f * PI;
 
@@ -2443,7 +2437,7 @@ void level3Display()
 
     // Show message for Level 3
     glColor3ub(244, 244, 244);
-    glRasterPos2f(-0.975f, 0.9f);
+    glRasterPos2f(-0.95f, 0.9f);
     // Prepare the score message
     char scoreMessage[50];
     if (score == -10)
@@ -2453,14 +2447,6 @@ void level3Display()
 
     // Render the score message
     for (const char *c = scoreMessage; *c != '\0'; ++c)
-        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
-
-    int highScore = readHighScore(2);
-    glColor3ub(244, 244, 244);
-    glRasterPos2f(-0.975f, 0.8f);
-    char highestText[20];
-    sprintf(highestText, "Highest Score: %d", highScore);
-    for (char *c = highestText; *c != '\0'; ++c)
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
 
 
@@ -2491,7 +2477,7 @@ void drawButtons()
 
 
     // Draw buttons
-    for (int i = 0; i < 3; ++i)
+    for (int i = 0; i < sizeof(levels)/ sizeof(levels[0]); ++i)
     {
         if (i == currentSelection)
             glColor3f(0.0, 1.0, 0.0); // Highlight selected button
@@ -2503,44 +2489,11 @@ void drawButtons()
             glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
     }
 
-    glFlush();
-}
-
-
-
-
-
-
-// Display function for the main menu
-void drawMainMenu()
-{
-    menu = 1;
-    glClear(GL_COLOR_BUFFER_BIT);
-    glColor3f(1.0f, 1.0f, 1.0f);
-
-    // Title: "Sky Quest"
-    glColor3f(0.0f, 1.0f, 1.0f); // Cyan color for the title
-    glRasterPos2f(-0.25f, 0.5f); // Position the title at the center
-    const char *title = "Sky Quest";
-    for (const char *c = title; *c != '\0'; ++c)
-        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *c);
-
-    // Menu options
-    const char *menuOptions[] = {"Play Game", "Options", "Instructions"};
-    for (int i = 0; i < 3; ++i)
-    {
-        if (i == currentSelection) // Highlight the current selection
-            glColor3f(0.0f, 1.0f, 0.0f); // Green for selected
-        else
-            glColor3f(1.0f, 1.0f, 1.0f); // White for others
-
-        glRasterPos2f(-0.15f, 0.2f - i * 0.2f); // Position each option
-        for (const char *c = menuOptions[i]; *c != '\0'; ++c)
-            glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
-    }
 
     glFlush();
 }
+
+
 
 
 
@@ -2554,8 +2507,6 @@ void drawMainMenu()
 // Switch to the main menu (level selector)
 void returnToMainMenu()
 {
-    if (menu == 1) return;
-
     // Reset global states
     gameOver = false;      // Ensure the game-over flag is reset
     timeLeft = 60;         // Reset timer for Level 1
@@ -2592,7 +2543,7 @@ void openLevel1()
     {
         // Reset game state for Level 1
         gameOver = false;          // Reset the game-over state
-        timeLeft = 60;             // Reset timer
+        timeLeft = 10;             // Reset timer
         score = 0;                 // Reset score
         resetItems();              // Reset collectible item positions
         //resetAircraftPosition();   // Reset aircraft position
@@ -2711,27 +2662,16 @@ void keyboard(unsigned char key, int x, int y)
     stopSound();
     if (key == 27 || gameOver)    // 27 is the ASCII code for Esc key
     {
-
-        if (menu == 2)
-        {
-            menu = 1;
-            glutDisplayFunc(drawMainMenu);
-
-        }
-        else
-        {
-            gameOver = false; // Reset game state
-            timeLeft = 60;    // Reset the timer
-            returnToMainMenu(); // Function to switch back to main menu
-            score = -10;
-            life_have = 3;
-            //isRunning = false;  // Stop the timer function
-            selected_level = 0;
-            returnToMainMenu();
-            resetItemsObstaclesBombs();
-        }
+        gameOver = false; // Reset game state
+        timeLeft = 60;    // Reset the timer
+        returnToMainMenu(); // Function to switch back to main menu
+        score = -10;
+        life_have = 3;
+        //isRunning = false;  // Stop the timer function
+        selected_level = 0;
+        returnToMainMenu();
+        resetItemsObstaclesBombs();
     }
-
     else
     {
         switch (key)
@@ -2747,46 +2687,64 @@ void keyboard(unsigned char key, int x, int y)
 
         case 's': // Move down
         case 'S':
-             if (currentSelection < 2)
+             if (currentSelection < sizeof(levels)/sizeof(levels[0])-1)
             {
                 currentSelection++;
                 sound("levelSelect.wav");  // Play sound when level selection moves down
             }
             break;
+        case 'c': // For cover
+        case 'C':
+//                cover();
+                playContinuousSound("backgorund_music.wav");  // Play sound when level selection moves down
+            break;
+        case 'm': // For sound on/off
+        case 'M':
+            if (soundChecker == 1)
+            {
+                soundChecker = 0;
+                stopSound();
+            }
+            else
+                soundChecker = 1;
+
+            break;
 
         case 13: // Enter key
-            if (menu == 1 && currentSelection == 0) // Play Game selected
+             if (currentSelection == 0)
             {
-                //glutSetWindow(drawButtons); // Switch to the level selector window
-                menu = 2;
-                glutDisplayFunc(drawButtons);
-                currentSelection = 0; // Reset the selection to the top in the level selector
-                glutPostRedisplay();
+                selected_level = 1;
+                openLevel1();
+                isLevel1Active = true;
+                playContinuousSound("backgorund_music.wav");  // Play sound when selecting level 1
             }
-            else if (menu == 2) // Level selected
+            else if (currentSelection == 1)
             {
+                selected_level = 2;
+                openLevel2();
+                isLevel2Active = true;
+                playContinuousSound("backgorund_music.wav");  // Play sound when selecting level 1
+            }
+            else if (currentSelection == 2)
+            {
+                selected_level = 3;
+                openLevel3();
+                isLevel3Active = true;
+                playContinuousSound("backgorund_music.wav");  // Play sound when selecting level 1
+            }
+            else if (currentSelection == 3)  // For control Page
+            {
+                selected_level = 4;
+                openControl();
 
-                 if (currentSelection == 0)
-                {
-                    selected_level = 1;
-                    openLevel1();
-                    isLevel1Active = true;
-                    playContinuousSound("backgorund_music.wav");  // Play sound when selecting level 1
-                }
-                else if (currentSelection == 1)
-                {
-                    selected_level = 2;
-                    openLevel2();
-                    isLevel2Active = true;
-                    playContinuousSound("backgorund_music.wav");  // Play sound when selecting level 1
-                }
-                else if (currentSelection == 2)
-                {
-                    selected_level = 3;
-                    openLevel3();
-                    isLevel3Active = true;
-                    playContinuousSound("backgorund_music.wav");  // Play sound when selecting level 1
-                }
+                playContinuousSound("backgorund_music.wav");  // Play sound when selecting level 1
+            }
+            else if (currentSelection == 4)
+            {
+                selected_level = 5;
+
+                isLevel5Active = true;
+                playContinuousSound("backgorund_music.wav");  // Play sound when selecting level 1
             }
             break;
         }
@@ -2955,28 +2913,20 @@ void displayHighScores()
 
 int main(int argc, char **argv)
 {
-    // Initialize GLUT and create the main window
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
-    glutInitWindowSize(700, 400);  // Set the window size
-    glutInitWindowPosition(300, 100); // Set the window position
-    mainWindow = glutCreateWindow("Sky Quest"); // Create the main menu window
+    glutInitWindowSize(700, 400);
+    glutInitWindowPosition(300, 100);
+    mainWindow = glutCreateWindow("SkyQuest");
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color for the main menu
 
-    // Set up the main menu display and keyboard callbacks
-    glutDisplayFunc(drawMainMenu); // Ensure drawMainMenu is displayed first
-    glutKeyboardFunc(keyboard);   // Keyboard function for navigation in the main menu
+    glutDisplayFunc(display);
+    glutKeyboardFunc(keyboard); // Register keyboard callback for main window
+    glutSpecialFunc(handleSpecialKeypress);  // Register key press handler
+    glutSpecialUpFunc(handleSpecialKeyRelease);  // Register key release handler
 
-    // Initialize OpenGL settings (background color, etc.)
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black
-
-    // Register special key handlers for other controls (if needed)
-    glutSpecialFunc(handleSpecialKeypress);     // Handle special keys
-    glutSpecialUpFunc(handleSpecialKeyRelease); // Handle key release
-
-    // Enter the GLUT event processing loop
     glutMainLoop();
-
-    return 0; // Return 0 (not reached, as GLUT enters an infinite loop)
+    return 0;
 }
 
 
@@ -3075,6 +3025,63 @@ int main(int argc, char **argv)
 
 
 
+
+
+
+// Function to render text
+void renderText(float x, float y, const char* text) {
+    glRasterPos2f(x, y);
+    for (int i = 0; i < strlen(text); i++) {
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, text[i]);
+    }
+}
+
+// Display function
+void displayControls() {
+    glClear(GL_COLOR_BUFFER_BIT);
+    glColor3f(1.0f, 1.0f, 1.0f); // White text color
+
+    // Title
+    renderText(-0.5f, 0.7f, "Game Controls");
+
+    // Main Menu Controls
+    renderText(-0.9f, 0.4f, "Main Menu Controls:");
+    renderText(-0.8f, 0.3f, "W: Navigate Up");
+    renderText(-0.8f, 0.2f, "S: Navigate Down");
+    renderText(-0.8f, 0.1f, "Enter: Select");
+    renderText(-0.8f, 0.0f, "Esc: Go Back / Replay");
+    renderText(-0.8f, -0.1f, "M: Sound On/Off");
+
+    // In-game Controls
+    renderText(-0.9f, -0.3f, "In-game Controls:");
+    renderText(-0.8f, -0.4f, "Up Arrow: Move Up");
+    renderText(-0.8f, -0.5f, "Down Arrow: Move Down");
+    renderText(-0.8f, -0.6f, "Left Arrow: Move Left");
+    renderText(-0.8f, -0.7f, "Right Arrow: Move Right");
+
+    glFlush();
+}
+
+// Initialization function
+void init() {
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Black background
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluOrtho2D(-1.0, 1.0, -1.0, 1.0); // Set coordinate system for 2D rendering
+}
+
+
+void openControl()
+{
+
+    if (selected_level == 4)
+    {
+        // glutCreateWindow("Game Controls");
+        init();
+        glutDisplayFunc(displayControls);
+        return;
+    }
+}
 
 
 
@@ -3085,14 +3092,18 @@ int main(int argc, char **argv)
 
 void sound(const char* soundFile)
 {
-    if (!PlaySound(soundFile, NULL, SND_ASYNC | SND_FILENAME))
+    if (soundChecker == 1)
+    {
+        if (!PlaySound(soundFile, NULL, SND_ASYNC | SND_FILENAME))
         printf("Error playing sound: %s\n", soundFile);
+    }
 }
 
 
 void playContinuousSound(const char* soundFile)
 {
-    PlaySound(TEXT(soundFile), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
+    if (soundChecker == 1)
+        PlaySound(TEXT(soundFile), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
 }
 
 void stopSound()
