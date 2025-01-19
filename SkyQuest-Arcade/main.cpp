@@ -3533,6 +3533,149 @@ void coverInit()
 
 
 
+void hill()
+{
+    if (gameOver) return; // Stop updates if game over
+    glPushMatrix();  // Save the current matrix state
+    glTranslatef(translationX, 0.0f, 0.0f);
+
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.3f, 0.3f, 0.5f);
+    glVertex2f(-0.8f-4.0, -1.0f);
+    glVertex2f(-0.1f-4.0, 0.0f);
+    glVertex2f(0.7f-4.0, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.5f, 0.5f, 0.7f);
+    glVertex2f(-1.0f-4.0, -1.0f);
+    glVertex2f(-0.4f-4.0, -0.1f);
+    glVertex2f(0.3f-4.0, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.6f, 0.6f, 0.8f);
+    glVertex2f(-1.15f-4.0, -1.0f);
+    glVertex2f(-0.7f-4.0, 0.05f);
+    glVertex2f(0.0f-4.0, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.2f, 0.2f, 0.4f);
+    glVertex2f(-0.5f-4.0, -1.0f);
+    glVertex2f(0.3f-4.0, -0.15f);
+    glVertex2f(0.9f-4.0, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.15f, 0.15f, 0.3f);
+    glVertex2f(0.3f-4.0, -1.0f);
+    glVertex2f(0.8f-4.0, -0.3f);
+    glVertex2f(1.5f-4.0, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.1f, 0.1f, 0.2f);
+    glVertex2f(0.02f-4.0, -1.0f);
+    glVertex2f(0.4f-4.0, -0.6f);
+    glVertex2f(0.8f-4.0, -1.0f);
+    glEnd();
+
+
+    ///////////////////////////////
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.3f, 0.3f, 0.5f);
+    glVertex2f(-0.8f-2.0, -1.0f);
+    glVertex2f(-0.1f-2.0, 0.0f);
+    glVertex2f(0.7f-2.0, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.5f, 0.5f, 0.7f);
+    glVertex2f(-1.0f-2.0, -1.0f);
+    glVertex2f(-0.4f-2.0, -0.1f);
+    glVertex2f(0.3f-2.0, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.6f, 0.6f, 0.8f);
+    glVertex2f(-1.15f-2.0, -1.0f);
+    glVertex2f(-0.7f-2.0, 0.05f);
+    glVertex2f(0.0f-2.0, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.2f, 0.2f, 0.4f);
+    glVertex2f(-0.5f-2.0, -1.0f);
+    glVertex2f(0.3f-2.0, -0.15f);
+    glVertex2f(0.9f-2.0, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.15f, 0.15f, 0.3f);
+    glVertex2f(0.3f-2.0, -1.0f);
+    glVertex2f(0.8f-2.0, -0.3f);
+    glVertex2f(1.5f-2.0, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.1f, 0.1f, 0.2f);
+    glVertex2f(0.02f-2.0, -1.0f);
+    glVertex2f(0.4f-2.0, -0.6f);
+    glVertex2f(0.8f-2.0, -1.0f);
+    glEnd();
+
+/////////////////////////////////////////////
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.3f, 0.3f, 0.5f);
+    glVertex2f(-0.8f, -1.0f);
+    glVertex2f(-0.1f, 0.0f);
+    glVertex2f(0.7f, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.5f, 0.5f, 0.7f);
+    glVertex2f(-1.0f, -1.0f);
+    glVertex2f(-0.4f, -0.1f);
+    glVertex2f(0.3f, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.6f, 0.6f, 0.8f);
+    glVertex2f(-1.15f, -1.0f);
+    glVertex2f(-0.7f, 0.05f);
+    glVertex2f(0.0f, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.2f, 0.2f, 0.4f);
+    glVertex2f(-0.5f, -1.0f);
+    glVertex2f(0.3f, -0.15f);
+    glVertex2f(0.9f, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.15f, 0.15f, 0.3f);
+    glVertex2f(0.3f, -1.0f);
+    glVertex2f(0.8f, -0.3f);
+    glVertex2f(1.5f, -1.0f);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(0.1f, 0.1f, 0.2f);
+    glVertex2f(0.02f, -1.0f);
+    glVertex2f(0.4f, -0.6f);
+    glVertex2f(0.8f, -1.0f);
+    glEnd();
+
+    glPopMatrix(); // Restore the transformation matrix
+}
+
+
+
 
 void mainpageDisplay()
 {
@@ -3542,8 +3685,7 @@ void mainpageDisplay()
 
     bg();
 
-    hills1();
-    hills();
+    hill();
     drawCrescentMoonMainPage();
 
 }
