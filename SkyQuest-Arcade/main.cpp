@@ -68,11 +68,13 @@ void displayCover();
 void init();
 void coverInit();
 void toggleSound();
+void mainpageDisplay();
+
 
 
 // Variable
 int currentSelection = 0 , selected_level = 0; // 0 = Level 1, 1 = Level 2, 2 = Level 3
-const char *levels[] = {"Level 1", "Level 2", "Level 3", "Controls"};
+const char *levels[] = {" Level 1", " Level 2", " Level 3", "Controls"};
 int mainWindow; // Main menu window ID
 int levelWindow; // Level window ID
 float cloud1X = -0.9f, cloud2X = -0.35f, cloud3X = 0.35f, cloud4X = 0.75f, cloud5X = -0.8f, cloud6X = 1.15f;
@@ -233,15 +235,15 @@ void gameOverScreen()
     glColor3ub(255, 0, 0); // Red color for "Game Over"
 
     // Position the text
-    glRasterPos2f(-0.15f, 0.25f); // Centered position
+    glRasterPos2f(-0.1f, 0.25f); // Centered position
 
     // Display the "Game Over" message
     const char *msg = "GAME OVER";
     for (const char *c = msg; *c != '\0'; ++c)
-        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *c);
 
     glColor3ub(244, 0, 0);
-    glRasterPos2f(-0.1f, 0.0f);
+    glRasterPos2f(-0.022f, 0.1f);
     // Prepare the score message
     char scoreMessage[50];
 
@@ -249,6 +251,14 @@ void gameOverScreen()
     // Render the score message
     for (const char *c = scoreMessage; *c != '\0'; ++c)
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
+
+    // Set the color for the text
+    glColor3ub(255, 0, 0);
+    glRasterPos2f(0.6f, -0.9f);
+    // Display the instruction message
+    const char *msssg = "Esc KEY to GO BACK";
+    for (const char *c = msssg; *c != '\0'; ++c)
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, *c);
 
     glFlush(); // Ensure the screen renders immediately
 }
@@ -437,7 +447,7 @@ void item(GLfloat x, GLfloat y)
 
 void bg()
 {
-    glColor3ub(50, 50, 50);
+    glColor3ub(0, 0, 0);
     glBegin(GL_POLYGON);
     glVertex2f (1.0f, 1.0f);
     glVertex2f (-1.0f, 1.0f);
@@ -1385,7 +1395,42 @@ void level1Display()
 
 
 
+void drawCrescentMoonMainPage()
+{
 
+    int i;
+    GLfloat radius = 0.1f;  // Outer moon radius
+    GLfloat innerRadius = 0.08f;  // Inner cutout radius
+    int triangleAmount = 360;  // Smoothness of the circle
+    GLfloat twicePi = 2.0f * PI;
+
+    // Outer white circle (main moon)
+    glColor3f(1.0f, 1.0f, 1.0f);  // White color
+    glBegin(GL_TRIANGLE_FAN);
+    glVertex2f(-0.75f, 0.75f);  // Center of the moon
+    for (i = 0; i <= triangleAmount; i++)
+    {
+        glVertex2f(
+            -0.75f + (radius * cos(i * twicePi / triangleAmount)),
+            0.75f + (radius * sin(i * twicePi / triangleAmount))
+        );
+    }
+    glEnd();
+
+    // Inner background-colored circle to create the crescent effect
+    glColor3f(0.0f, 0.0f, 0.0f);  // Same as background color for blending
+    glBegin(GL_TRIANGLE_FAN);
+    glVertex2f(-0.72f, 0.78f);  // Slight offset to create the curve
+    for (i = 0; i <= triangleAmount; i++)
+    {
+        glVertex2f(
+            -0.72f + (innerRadius * cos(i * twicePi / triangleAmount)),
+            0.78f + (innerRadius * sin(i * twicePi / triangleAmount))
+        );
+    }
+    glEnd();
+
+}
 
 
 
@@ -1442,7 +1487,7 @@ void drawCrescentMoon()
     }
     glEnd();
 
-    }
+}
 
 
 void darkclouds(float cx, float cy, float r, int num_segments)
@@ -2493,11 +2538,20 @@ void level3Display()
 void drawButtons()
 {
     glClear(GL_COLOR_BUFFER_BIT);
+    mainpageDisplay();
     glColor3f(1.0f, 1.0f, 1.0f);
 
     // Title
+    glColor3ub(18,72,190);
+    glRasterPos2f(-0.22f, 0.6f);
+    const char *gametitle = "        SKY QUEST";
+    for (const char *c = gametitle; *c != '\0'; ++c)
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *c);
+
+    // Title
+    glColor3ub(244,244,244);
     glRasterPos2f(-0.2f, 0.4f);
-    const char *title = "Select Level:";
+    const char *title = "         Select Level";
     for (const char *c = title; *c != '\0'; ++c)
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
 
@@ -2577,6 +2631,7 @@ printf("Sound state: %s\n", isSoundOn ? "ON" : "OFF");
     {
         isSoundOn = false;
         soundChecker = 0;
+        glColor3ub(244,0,0);
         renderText(0.3f, -0.15f, "Sound: OFF");
         stopSound();
     }
@@ -2712,18 +2767,13 @@ void resetItemsObstaclesBombs()
 
 void keyboard(unsigned char key, int x, int y)
 {
-    stopSound();
+     stopSound();
     if (key == 27 || gameOver)    // 27 is the ASCII code for Esc key
     {
-        menu = true;
         gameOver = false; // Reset game state
-        timeLeft = 60;    // Reset the timer
         returnToMainMenu(); // Function to switch back to main menu
-        score = -10;
-        life_have = 3;
-        //isRunning = false;  // Stop the timer function
+
         selected_level = 0;
-        returnToMainMenu();
         resetItemsObstaclesBombs();
         resetAircraftBorder();
         resetAircraftPosition();
@@ -2764,7 +2814,7 @@ void keyboard(unsigned char key, int x, int y)
             {
                 isSoundOn = false;
                 soundChecker = 0;
-                //playContinuousSound("backgorund_music.wav");
+                playContinuousSound("backgorund_music.wav");
                 displaySoundControls();
             }
             else
@@ -2776,7 +2826,6 @@ void keyboard(unsigned char key, int x, int y)
             break;
 
         case 13: // Enter key
-            menu = false;
              if (currentSelection == 0)
             {
                 selected_level = 1;
@@ -2801,12 +2850,18 @@ void keyboard(unsigned char key, int x, int y)
             else if (currentSelection == 3)  // For control Page
             {
                 selected_level = 4;
-                init();
-
-                glutDisplayFunc(openControl);
+                openControl();
 
                 playContinuousSound("backgorund_music.wav");  // Play sound when selecting level 1
             }
+            else if (currentSelection == 4)
+            {
+                selected_level = 5;
+
+                isLevel5Active = true;
+                playContinuousSound("backgorund_music.wav");  // Play sound when selecting level 1
+            }
+            break;
         }
     }
     glutPostRedisplay();
@@ -3023,10 +3078,10 @@ void mouseHandler(int button, int state, int x, int y)
         float yPos = -(float)y / (400.0f / 2.0f) + 1.0f; // Assuming window height is 400
 
         // Define bounding box for "Sound: ON/OFF"
-        float left = 0.3f;   // X start position of the text
-        float right = 0.6f;  // X end position of the text
-        float top = -0.1f;   // Y start position of the text
-        float bottom = -0.2f; // Y end position of the text
+        float left = 0.7f;   // X start position of the text
+        float right = 1.9f;  // X end position of the text
+        float top = 0.0f;   // Y start position of the text
+        float bottom = -1.6f; // Y end position of the text
 
         // Check if mouse click is within the bounding box
         if (xPos >= left && xPos <= right && yPos <= top && yPos >= bottom)
@@ -3147,22 +3202,23 @@ void displayControls() {
     glColor3f(1.0f, 1.0f, 1.0f); // White text color
 
     // Title
-    renderText(-0.5f, 0.7f, "Game Controls");
+    renderText(-0.55f, 0.7f+0.12, "Game Controls");
 
     // Main Menu Controls
-    renderText(-0.9f, 0.4f, "Main Menu Controls:");
-    renderText(-0.8f, 0.3f, "W: Navigate Up");
-    renderText(-0.8f, 0.2f, "S: Navigate Down");
-    renderText(-0.8f, 0.1f, "Enter: Select");
-    renderText(-0.8f, 0.0f, "Esc: Go Back / Replay");
-    renderText(-0.8f, -0.1f, "M: Sound On/Off");
+    renderText(-0.8f, 0.4f+0.2, "Main Menu Controls:");
+    renderText(-0.65f, 0.3f+0.2, "W: Navigate Up");
+    renderText(-0.65f, 0.2f+0.2, "S: Navigate Down");
+    renderText(-0.65f, 0.1f+0.2, "Enter: Select");
+    renderText(-0.65f, 0.0f+0.2, "M: Sound On/Off");
+    renderText(-0.65f, -0.1f+0.2, "Esc: Go Back / Replay");
+    renderText(-0.65f, -0.2f+0.2, "C: To see Cover Page");
 
     // In-game Controls
-    renderText(-0.9f, -0.3f, "In-game Controls:");
-    renderText(-0.8f, -0.4f, "Up Arrow: Move Up");
-    renderText(-0.8f, -0.5f, "Down Arrow: Move Down");
-    renderText(-0.8f, -0.6f, "Left Arrow: Move Left");
-    renderText(-0.8f, -0.7f, "Right Arrow: Move Right");
+    renderText(-0.8f, -0.3f, "In-game Controls:");
+    renderText(-0.65f, -0.45f, "Up Arrow: Move Up");
+    renderText(-0.65f, -0.55f, "Down Arrow: Move Down");
+    renderText(-0.65f, -0.65f, "Left Arrow: Move Left");
+    renderText(-0.65f, -0.75f, "Right Arrow: Move Right");
     displaySoundControls();
     glFlush();
 }
@@ -3387,7 +3443,9 @@ void  resetAircraftBorder()
 
 
 // Display function to render the cover page
-void displayCover() {
+void displayCover()
+{
+    stopSound();
     glClear(GL_COLOR_BUFFER_BIT); // Clear the screen with the background color
 
     // Set the background color to a gradient or textured image
@@ -3404,9 +3462,9 @@ void displayCover() {
     glColor3f(1.0f, 1.0f, 1.0f);
 
     // Title
-    renderText(-0.7f, 0.85f, "*************************************************************************");
-    renderText(-0.6f, 0.8f, "American International University - Bangladesh (AIUB)");
-    renderText(-0.7f, 0.70f, "*************************************************************************");
+    renderText(-0.7f, 0.85f, "                                                *************************************************************************");
+    renderText(-0.6f, 0.8f, "                                         American International University - Bangladesh (AIUB)");
+    renderText(-0.7f, 0.70f, "                                                *************************************************************************");
 
     // Add a decorative line
     glColor3f(0.8f, 0.8f, 0.8f); // Light gray
@@ -3417,20 +3475,20 @@ void displayCover() {
 
     // "Submitted to" section
     glColor3f(1.0f, 1.0f, 0.0f); // Yellow for emphasis
-    renderText(-0.5f, 0.62f, "Submitted to:");
+    renderText(-0.5f, 0.62f, "                                                            Submitted to");
     glColor3f(1.0f, 1.0f, 1.0f); // White
-    renderText(-0.5f, 0.50f, "MAHFUJUR RAHMAN");
+    renderText(-0.5f, 0.50f, "                                                      MAHFUJUR RAHMAN");
 
     // "Submitted by" section
     glColor3f(0.0f, 1.0f, 0.0f); // Green
-    renderText(-0.5f, 0.3f, "Submitted by:");
+    renderText(-0.5f, 0.3f, "                                                             Submitted by");
     glColor3f(1.0f, 1.0f, 1.0f); // White
-    renderText(-0.65f, 0.2f, "Serial No.                 Name                           Student ID");
-    renderText(-0.65f, 0.1f, "      1               Tatinee Rajbantee                21-44618-1");
-    renderText(-0.65f, 0.0f, "      2               MD. Tanjim Rahman             22-47647-2");
-    renderText(-0.65f, -0.1f, "      3               Rafiah Salsabil Labanya       22-47914-2");
-    renderText(-0.65f, -0.2f, "      4               Basharul-Alam-Mazu          22-47903-2");
-    renderText(-0.65f, -0.3f, "      5               Badrunnahar Ruku               22-48027-2");
+    renderText(-0.65f, 0.2f, "                                                  Name                                                                  Student ID");
+    renderText(-0.65f, 0.1f, "                                         Tatinee Rajbantee                                                      21-44618-1");
+    renderText(-0.65f, 0.0f, "                                         MD. Tanjim Rahman                                                   22-47647-2");
+    renderText(-0.65f, -0.1f, "                                         Rafiah Salsabil Labanya                                             22-47914-2");
+    renderText(-0.65f, -0.2f, "                                         Basharul-Alam-Mazu                                                 22-47903-2");
+    renderText(-0.65f, -0.3f, "                                         Badrunnahar Ruku                                                      22-48027-2");
 
 
 
@@ -3441,11 +3499,29 @@ void displayCover() {
 
 
 // Initialization function to set up the OpenGL environment
-void coverInit() {
-glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black
+void coverInit()
+{
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluOrtho2D(-1.0, 1.0, -1.0, 1.0); // Set coordinate system for 2D rendering
 }
 
 
+
+
+
+
+void mainpageDisplay()
+{
+    glClear(GL_COLOR_BUFFER_BIT);
+    glVertex2f (1.0f, -1.0f);
+    glEnd();
+
+    bg();
+
+    hills1();
+    hills();
+    drawCrescentMoonMainPage();
+
+}
