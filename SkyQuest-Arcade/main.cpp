@@ -140,12 +140,12 @@ void showWelcomeScreen() {
     renderText(-0.5f, 0.7f, "Submitted to-");
     renderText(-0.5f, 0.6f, "MAHFUJUR RAHMAN");
     renderText(-0.5f, 0.4f, "Submitted by-");
-    renderText(-0.9f, 0.3f, "Serial number:                                   Name:                                      Student ID:");
-    renderText(-0.9f, 0.2f, "2                                                  Tatinee Rajbantee                           21-44618-1");
-    renderText(-0.9f, 0.1f, "1                                                  MD. TANJIM RAHMAN                   22-47647-2");
-    renderText(-0.9f, 0.0f, "3                                                 Rafiah Salsabil Labanya                   22-47914-2");
-    renderText(-0.9f, -0.1f, "4                                                  Basharul-Alam-Mazu                       22-47903-1");
-    renderText(-0.9f, -0.2f, "5                                            Badrunnahar Ruku                           22-48027-2");
+    renderText(-0.9f, 0.3f, "Serial number:                                   Name:                                   Student ID:");
+    renderText(-0.9f, 0.2f, "2                                            Tatinee Rajbantee                           21-44618-1");
+    renderText(-0.9f, 0.1f, "0                                            MD. TANJIM RAHMAN                           22-47647-2");
+    renderText(-0.9f, 0.0f, "0                                            Rafiah Salsabil Labanya                     22-47914-2");
+    renderText(-0.9f, -0.1f, "0                                           Basharul-Alam-Mazu                          22-47903-1");
+    renderText(-0.9f, -0.2f, "0                                           Badrunnahar Ruku                            22-48027-2");
 
     glFlush();
     std::this_thread::sleep_for(std::chrono::seconds(3)); // Pause for 3 seconds

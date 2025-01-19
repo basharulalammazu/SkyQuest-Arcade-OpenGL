@@ -969,7 +969,7 @@
 
 1720558488 c:\program files\codeblocks\mingw\x86_64-w64-mingw32\include\_mingw_print_pop.h
 
-1737313908 source:f:\cg project\skyquest-arcade-opengl\skyquest-arcade\main.cpp
+1737314324 source:f:\cg project\skyquest-arcade-opengl\skyquest-arcade\main.cpp
 	<windows.h>
 	<GL/glut.h>
 	<iostream>
@@ -981,4 +981,7 @@
 	<string.h>
 	<stdbool.h>
 	<bits/stdc++.h>
+	<chrono>
+	<thread>
+	<cstring>
 
