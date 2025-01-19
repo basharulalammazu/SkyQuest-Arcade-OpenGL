@@ -53,7 +53,10 @@ void resetItems();
 void resetObstacles();
 void resetAircraftBorder();
 void lifeProcessing();
-void life3(); void life2(); void life1();
+void life3();
+void life2();
+void life1();
+void openControl();
 
 
 
@@ -2729,14 +2732,14 @@ void keyboard(unsigned char key, int x, int y)
                 isLevel3Active = true;
                 playContinuousSound("backgorund_music.wav");  // Play sound when selecting level 1
             }
-            else if (currentSelection == 4)
+            else if (currentSelection == 3)  // For control Page
             {
                 selected_level = 4;
-//                openCover();
-                isLevel4Active = true;
+                openControl();
+
                 playContinuousSound("backgorund_music.wav");  // Play sound when selecting level 1
             }
-            else if (currentSelection == 5)
+            else if (currentSelection == 4)
             {
                 selected_level = 5;
 
@@ -3022,6 +3025,63 @@ int main(int argc, char **argv)
 
 
 
+
+
+
+// Function to render text
+void renderText(float x, float y, const char* text) {
+    glRasterPos2f(x, y);
+    for (int i = 0; i < strlen(text); i++) {
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, text[i]);
+    }
+}
+
+// Display function
+void displayControls() {
+    glClear(GL_COLOR_BUFFER_BIT);
+    glColor3f(1.0f, 1.0f, 1.0f); // White text color
+
+    // Title
+    renderText(-0.5f, 0.7f, "Game Controls");
+
+    // Main Menu Controls
+    renderText(-0.9f, 0.4f, "Main Menu Controls:");
+    renderText(-0.8f, 0.3f, "W: Navigate Up");
+    renderText(-0.8f, 0.2f, "S: Navigate Down");
+    renderText(-0.8f, 0.1f, "Enter: Select");
+    renderText(-0.8f, 0.0f, "Esc: Go Back / Replay");
+    renderText(-0.8f, -0.1f, "M: Sound On/Off");
+
+    // In-game Controls
+    renderText(-0.9f, -0.3f, "In-game Controls:");
+    renderText(-0.8f, -0.4f, "Up Arrow: Move Up");
+    renderText(-0.8f, -0.5f, "Down Arrow: Move Down");
+    renderText(-0.8f, -0.6f, "Left Arrow: Move Left");
+    renderText(-0.8f, -0.7f, "Right Arrow: Move Right");
+
+    glFlush();
+}
+
+// Initialization function
+void init() {
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Black background
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluOrtho2D(-1.0, 1.0, -1.0, 1.0); // Set coordinate system for 2D rendering
+}
+
+
+void openControl()
+{
+
+    if (selected_level == 4)
+    {
+        // glutCreateWindow("Game Controls");
+        init();
+        glutDisplayFunc(displayControls);
+        return;
+    }
+}
 
 
 
