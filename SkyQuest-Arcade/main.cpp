@@ -12,6 +12,13 @@
 
 
 
+#include <chrono>
+#include <thread>
+#include <cstring>
+
+
+
+
 # define PI 3.14159265358979323846
 #define HIGHEST_SCORE_FILE "highest_scores.txt"
 #define NUM_LEVELS 3
@@ -110,6 +117,44 @@ GLfloat generateRandomFloat()
 {
     return (GLfloat)rand() / RAND_MAX * 2.0f - 1.0f; // Normalize rand() to range -1 to 1
 }
+
+
+
+
+// Function to render text
+void renderText(float x, float y, const char* text) {
+    glRasterPos2f(x, y);
+    for (int i = 0; i < strlen(text); i++) {
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, text[i]);
+    }
+}
+
+
+
+// Function to display the welcome screen
+void showWelcomeScreen() {
+    glClear(GL_COLOR_BUFFER_BIT);
+    glColor3f(1.0f, 1.0f, 1.0f); // White text color
+
+    renderText(-0.7f, 0.85f, "American International University - Bangladesh (AIUB)");
+    renderText(-0.5f, 0.7f, "Submitted to-");
+    renderText(-0.5f, 0.6f, "MAHFUJUR RAHMAN");
+    renderText(-0.5f, 0.4f, "Submitted by-");
+    renderText(-0.9f, 0.3f, "Serial number:                                   Name:                                      Student ID:");
+    renderText(-0.9f, 0.2f, "2                                                  Tatinee Rajbantee                           21-44618-1");
+    renderText(-0.9f, 0.1f, "1                                                  MD. TANJIM RAHMAN                   22-47647-2");
+    renderText(-0.9f, 0.0f, "3                                                 Rafiah Salsabil Labanya                   22-47914-2");
+    renderText(-0.9f, -0.1f, "4                                                  Basharul-Alam-Mazu                       22-47903-1");
+    renderText(-0.9f, -0.2f, "5                                            Badrunnahar Ruku                           22-48027-2");
+
+    glFlush();
+    std::this_thread::sleep_for(std::chrono::seconds(3)); // Pause for 3 seconds
+}
+
+
+
+
+
 
 void initializeRandomPositions()
 {
@@ -2911,6 +2956,7 @@ void handleSpecialKeyRelease(int key, int x, int y)
 
 void display()
 {
+    showWelcomeScreen();
     drawButtons();
 }
 
@@ -3171,30 +3217,6 @@ void mouseHandler(int button, int state, int x, int y)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Function to render text
-void renderText(float x, float y, const char* text) {
-    glRasterPos2f(x, y);
-    for (int i = 0; i < strlen(text); i++) {
-        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, text[i]);
-    }
-}
 
 // Display function
 void displayControls() {
