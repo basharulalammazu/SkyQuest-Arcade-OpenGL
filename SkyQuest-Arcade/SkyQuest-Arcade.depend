@@ -902,7 +902,7 @@
 	<stdlib.h>
 	<time.h>
 
-1737269717 source:d:\university\semester-7\final\computer graphics\project\skyquest-arcade-opengl\skyquest-arcade\main.cpp
+1737273618 source:d:\university\semester-7\final\computer graphics\project\skyquest-arcade-opengl\skyquest-arcade\main.cpp
 	<windows.h>
 	<GL/glut.h>
 	<iostream>
@@ -912,6 +912,7 @@
 	<time.h>
 	<stdio.h>
 	<string.h>
+	<stdbool.h>
 
 1736662868 source:c:\users\anany\downloads\skyquest-arcade-opengl\skyquest-arcade\main.cpp
 	<GL/glut.h>

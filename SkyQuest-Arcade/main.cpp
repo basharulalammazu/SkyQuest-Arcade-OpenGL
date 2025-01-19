@@ -7,6 +7,7 @@
 #include<time.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>
 
 
 # define PI 3.14159265358979323846
@@ -56,8 +57,11 @@ void lifeProcessing();
 void life3();
 void life2();
 void life1();
+void renderText(float x, float y, const char* text);
 void openControl();
-
+void mouseHandler(int button, int state, int x, int y);
+void displayControls() ;
+void displaySoundControls();
 
 
 // Variable
@@ -89,6 +93,7 @@ bool isLevel1Active = false, isLevel2Active = false, isLevel3Active = false, isL
 int gameRunning = 1; // Game state: 1 for running, 0 for done
 int timeLeft = 60; // Timer set for 60 seconds
 int soundChecker = 1;
+bool isSoundOn = true;
 
 
 
@@ -2505,6 +2510,8 @@ void drawButtons()
     }
 
 
+
+
     glFlush();
 }
 
@@ -2545,6 +2552,32 @@ void returnToMainMenu()
     // Redraw the main menu
     glutPostRedisplay();
 }
+
+
+void displaySoundControls() {
+    glColor3f(1.0f, 1.0f, 1.0f); // White text color
+
+printf("Sound state: %s\n", isSoundOn ? "ON" : "OFF");
+    renderText(0.3f, 0.03f, "Sound Controls");
+    // Add sound state display
+    if (isSoundOn) 
+    {
+        isSoundOn = true;
+        soundChecker = 1;
+        renderText(0.5f, -0.8f, "Sound: ON");
+        playContinuousSound("backgorund_music.wav");
+    } 
+    else 
+    {
+        isSoundOn = false;
+        soundChecker = 0;
+        renderText(0.5f, -0.8f, "Sound: OFF");
+        stopSound();
+    }
+
+    glFlush();
+}
+
 
 
 
@@ -2673,7 +2706,6 @@ void resetItemsObstaclesBombs()
 
 void keyboard(unsigned char key, int x, int y)
 {
-
     stopSound();
     if (key == 27 || gameOver)    // 27 is the ASCII code for Esc key
     {
@@ -2717,14 +2749,19 @@ void keyboard(unsigned char key, int x, int y)
             break;
         case 'm': // For sound on/off
         case 'M':
-            if (soundChecker == 1)
+            if (soundChecker == 1 || isSoundOn)
             {
+                isSoundOn = false;
                 soundChecker = 0;
-                stopSound();
+                playContinuousSound("backgorund_music.wav");
+                displaySoundControls();
             }
             else
+            {
+                isSoundOn = true;
                 soundChecker = 1;
-
+                displaySoundControls();
+            }
             break;
 
         case 13: // Enter key
@@ -2941,6 +2978,7 @@ int main(int argc, char **argv)
     glutKeyboardFunc(keyboard); // Register keyboard callback for main window
     glutSpecialFunc(handleSpecialKeypress);  // Register key press handler
     glutSpecialUpFunc(handleSpecialKeyRelease);  // Register key release handler
+    glutMouseFunc(mouseHandler); // Register mouse callback
 
     glutMainLoop();
     return 0;
@@ -2948,10 +2986,33 @@ int main(int argc, char **argv)
 
 
 
+void toggleSound()
+{
+    if (isSoundOn)
+    {
+        soundChecker = 0;
+        isSoundOn = false;
+
+    }
+
+    else
+    {
+        soundChecker = 1;
+        isSoundOn = true;
+    }
+
+}
 
 
 
 
+void mouseHandler(int button, int state, int x, int y)
+{
+    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+    {
+        toggleSound(); // Toggle sound on left mouse click
+    }
+}
 
 
 
@@ -3075,7 +3136,7 @@ void displayControls() {
     renderText(-0.8f, -0.5f, "Down Arrow: Move Down");
     renderText(-0.8f, -0.6f, "Left Arrow: Move Left");
     renderText(-0.8f, -0.7f, "Right Arrow: Move Right");
-
+    displaySoundControls();
     glFlush();
 }
 
@@ -3109,7 +3170,7 @@ void openControl()
 
 void sound(const char* soundFile)
 {
-    if (soundChecker == 1)
+    if (soundChecker == 1 || soundChecker)
     {
         if (!PlaySound(soundFile, NULL, SND_ASYNC | SND_FILENAME))
         printf("Error playing sound: %s\n", soundFile);
@@ -3119,7 +3180,7 @@ void sound(const char* soundFile)
 
 void playContinuousSound(const char* soundFile)
 {
-    if (soundChecker == 1)
+    if (soundChecker == 1 || soundChecker)
         PlaySound(TEXT(soundFile), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
 }
 
