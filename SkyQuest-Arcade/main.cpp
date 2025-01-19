@@ -94,7 +94,7 @@ int gameRunning = 1; // Game state: 1 for running, 0 for done
 int timeLeft = 60; // Timer set for 60 seconds
 int soundChecker = 1;
 bool isSoundOn = true;
-
+bool menu = true;
 
 
 
@@ -2709,6 +2709,7 @@ void keyboard(unsigned char key, int x, int y)
     stopSound();
     if (key == 27 || gameOver)    // 27 is the ASCII code for Esc key
     {
+        menu = true;
         gameOver = false; // Reset game state
         timeLeft = 60;    // Reset the timer
         returnToMainMenu(); // Function to switch back to main menu
@@ -2727,7 +2728,7 @@ void keyboard(unsigned char key, int x, int y)
         {
         case 'w': // Move up
         case 'W':
-            if (currentSelection > 0)
+            if (currentSelection > 0 && menu)
             {
                 currentSelection--;
                 sound("levelSelect.wav");  // Play sound when level selection moves up
@@ -2736,7 +2737,7 @@ void keyboard(unsigned char key, int x, int y)
 
         case 's': // Move down
         case 'S':
-             if (currentSelection < sizeof(levels)/sizeof(levels[0])-1)
+             if (currentSelection < sizeof(levels)/sizeof(levels[0])-1 && menu)
             {
                 currentSelection++;
                 sound("levelSelect.wav");  // Play sound when level selection moves down
@@ -2765,6 +2766,7 @@ void keyboard(unsigned char key, int x, int y)
             break;
 
         case 13: // Enter key
+            menu = false;
              if (currentSelection == 0)
             {
                 selected_level = 1;
