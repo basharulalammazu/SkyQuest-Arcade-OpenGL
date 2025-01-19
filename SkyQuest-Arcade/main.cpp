@@ -238,12 +238,12 @@ void gameOverScreen()
     glRasterPos2f(-0.1f, 0.25f); // Centered position
 
     // Display the "Game Over" message
-    const char *msg = "GAME OVER";
+    const char *msg = "   GAME OVER";
     for (const char *c = msg; *c != '\0'; ++c)
         glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *c);
 
     glColor3ub(244, 0, 0);
-    glRasterPos2f(-0.022f, 0.1f);
+    glRasterPos2f(-0.027f, 0.1f);
     // Prepare the score message
     char scoreMessage[50];
 
