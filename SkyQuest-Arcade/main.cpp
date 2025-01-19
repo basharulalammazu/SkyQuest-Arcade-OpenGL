@@ -142,9 +142,9 @@ void showWelcomeScreen() {
     renderText(-0.5f, 0.4f, "Submitted by-");
     renderText(-0.9f, 0.3f, "Serial number:                                   Name:                                   Student ID:");
     renderText(-0.9f, 0.2f, "2                                            Tatinee Rajbantee                           21-44618-1");
-    renderText(-0.9f, 0.1f, "0                                            MD. TANJIM RAHMAN                           22-47647-2");
-    renderText(-0.9f, 0.0f, "0                                            Rafiah Salsabil Labanya                     22-47914-2");
-    renderText(-0.9f, -0.1f, "0                                           Basharul-Alam-Mazu                          22-47903-1");
+    renderText(-0.9f, 0.1f, "0                                            MD. TANJIM RAHMAN                      22-47647-2");
+    renderText(-0.9f, 0.0f, "0                                            Rafiah Salsabil Labanya                   22-47914-2");
+    renderText(-0.9f, -0.1f, "0                                           Basharul-Alam-Mazu                        22-47903-1");
     renderText(-0.9f, -0.2f, "0                                           Badrunnahar Ruku                            22-48027-2");
 
     glFlush();
