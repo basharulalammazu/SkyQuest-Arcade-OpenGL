@@ -253,7 +253,7 @@ void gameOverScreen()
     char scoreMessage[50];
     snprintf(scoreMessage, sizeof(scoreMessage), "Your Score: %d", score);
     glColor3ub(255, 255, 255); // White text
-    glRasterPos2f(-0.11f+0.005, 0.05f);
+    glRasterPos2f(-0.11f, 0.05f);
     for (const char *c = scoreMessage; *c != '\0'; ++c)
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
 
@@ -2798,6 +2798,7 @@ void keyboard(unsigned char key, int x, int y)
         returnToMainMenu(); // Function to switch back to main menu
 
         selected_level = 0;
+        life_have=3;
         resetItemsObstaclesBombs();
         resetAircraftBorder();
         resetAircraftPosition();
