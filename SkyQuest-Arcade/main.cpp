@@ -239,13 +239,13 @@ void gameOverScreen()
 
     // Add "Game Over" text with shadow
     glColor3ub(0, 0, 0); // Black shadow
-    glRasterPos2f(-0.11f, 0.26f);
+    glRasterPos2f(-0.1448f+0.01+0.005, 0.2425f);
     const char *msg = "GAME OVER";
     for (const char *c = msg; *c != '\0'; ++c)
         glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *c);
 
     glColor3ub(255, 50, 50); // Bright red text
-    glRasterPos2f(-0.1f, 0.25f);
+    glRasterPos2f(-0.145f+0.01+0.005, 0.25f);
     for (const char *c = msg; *c != '\0'; ++c)
         glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *c);
 
@@ -253,7 +253,7 @@ void gameOverScreen()
     char scoreMessage[50];
     snprintf(scoreMessage, sizeof(scoreMessage), "Your Score: %d", score);
     glColor3ub(255, 255, 255); // White text
-    glRasterPos2f(-0.11f, 0.05f);
+    glRasterPos2f(-0.11f+0.005, 0.05f);
     for (const char *c = scoreMessage; *c != '\0'; ++c)
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
 
@@ -262,14 +262,14 @@ void gameOverScreen()
     char highestText[50];
     snprintf(highestText, sizeof(highestText), "Highest Score: %d", highScore);
     glColor3ub(255, 215, 0); // Gold color for high score
-    glRasterPos2f(-0.11f, -0.05f);
+    glRasterPos2f(-0.135f, -0.05f);
     for (const char *c = highestText; *c != '\0'; ++c)
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
 
     // Add an instruction message
     glColor3ub(0, 255, 0); // Green text
-    glRasterPos2f(-0.14f, -0.2f);
-    const char *instruction = "Press 'R' to Restart or 'Esc' to Exit";
+    glRasterPos2f(-0.09, -0.2f);
+    const char *instruction = "Press 'Esc' to Exit";
     for (const char *c = instruction; *c != '\0'; ++c)
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, *c);
 
@@ -2802,6 +2802,7 @@ void keyboard(unsigned char key, int x, int y)
         resetAircraftBorder();
         resetAircraftPosition();
     }
+
     else
     {
         switch (key)
@@ -2849,7 +2850,7 @@ void keyboard(unsigned char key, int x, int y)
             }
             break;
 
-        case 13: // Enter key
+        case 13:// Enter key
              if (currentSelection == 0)
             {
                 selected_level = 1;
