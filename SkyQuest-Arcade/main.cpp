@@ -223,55 +223,69 @@ void timer(int value)
 }
 
 
-
-
 void gameOverScreen()
 {
-    // Clear the screen with black
+    // Clear the screen with a dark gradient background
     glClear(GL_COLOR_BUFFER_BIT);
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Black background
+    glBegin(GL_QUADS);
+        glColor3f(0.1f, 0.1f, 0.3f); // Dark blue gradient top
+        glVertex2f(-1.0f, 1.0f);
+        glVertex2f(1.0f, 1.0f);
 
-    // Set the color for the text
-    glColor3ub(255, 0, 0); // Red color for "Game Over"
+        glColor3f(0.0f, 0.0f, 0.0f); // Black gradient bottom
+        glVertex2f(1.0f, -1.0f);
+        glVertex2f(-1.0f, -1.0f);
+    glEnd();
 
-    // Position the text
-    glRasterPos2f(-0.1f, 0.25f); // Centered position
-
-    // Display the "Game Over" message
-    const char *msg = "   GAME OVER";
+    // Add "Game Over" text with shadow
+    glColor3ub(0, 0, 0); // Black shadow
+    glRasterPos2f(-0.1448f+0.01+0.005, 0.2425f);
+    const char *msg = "GAME OVER";
     for (const char *c = msg; *c != '\0'; ++c)
         glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *c);
 
-    glColor3ub(244, 0, 0);
-    glRasterPos2f(-0.027f, 0.1f);
-    // Prepare the score message
-    char scoreMessage[50];
+    glColor3ub(255, 50, 50); // Bright red text
+    glRasterPos2f(-0.145f+0.01+0.005, 0.25f);
+    for (const char *c = msg; *c != '\0'; ++c)
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *c);
 
-    snprintf(scoreMessage, sizeof(scoreMessage), "Score: %d", score);
-    // Render the score message
+    // Render the player's score
+    char scoreMessage[50];
+    snprintf(scoreMessage, sizeof(scoreMessage), "Your Score: %d", score);
+    glColor3ub(255, 255, 255); // White text
+    glRasterPos2f(-0.11f+0.005, 0.05f);
     for (const char *c = scoreMessage; *c != '\0'; ++c)
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
 
-
-    int highScore = readHighScore(1);
-    glColor3ub(244, 10, 0);
-    glRasterPos2f(-0.07f, 0.0f);
-    char highestText[20];
-    sprintf(highestText, "Highest Score: %d", highScore);
-    for (char *c = highestText; *c != '\0'; ++c)
+    // Display the high score
+    int highScore = readHighScore(selected_level);
+    char highestText[50];
+    snprintf(highestText, sizeof(highestText), "Highest Score: %d", highScore);
+    glColor3ub(255, 215, 0); // Gold color for high score
+    glRasterPos2f(-0.135f, -0.05f);
+    for (const char *c = highestText; *c != '\0'; ++c)
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
 
-
-    // Set the color for the text
-    glColor3ub(255, 0, 0);
-    glRasterPos2f(0.6f, -0.9f);
-    // Display the instruction message
-    const char *msssg = "Esc KEY to GO BACK";
-    for (const char *c = msssg; *c != '\0'; ++c)
+    // Add an instruction message
+    glColor3ub(0, 255, 0); // Green text
+    glRasterPos2f(-0.09, -0.2f);
+    const char *instruction = "Press 'Esc' to Exit";
+    for (const char *c = instruction; *c != '\0'; ++c)
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, *c);
+
+    // Draw a border around the screen for better aesthetics
+    glColor3ub(255, 50, 50); // Red border
+    glLineWidth(3.0f);
+    glBegin(GL_LINE_LOOP);
+        glVertex2f(-0.95f, 0.95f);
+        glVertex2f(0.95f, 0.95f);
+        glVertex2f(0.95f, -0.95f);
+        glVertex2f(-0.95f, -0.95f);
+    glEnd();
 
     glFlush(); // Ensure the screen renders immediately
 }
+
 
 
 
@@ -2788,6 +2802,7 @@ void keyboard(unsigned char key, int x, int y)
         resetAircraftBorder();
         resetAircraftPosition();
     }
+
     else
     {
         switch (key)
@@ -2835,7 +2850,7 @@ void keyboard(unsigned char key, int x, int y)
             }
             break;
 
-        case 13: // Enter key
+        case 13:// Enter key
              if (currentSelection == 0)
             {
                 selected_level = 1;
